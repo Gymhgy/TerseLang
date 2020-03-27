@@ -22,8 +22,6 @@ namespace GolfingLanguage1 {
 
         public Tokenizer(string start) { 
             reader = new StringReader(start);
-            // Initialize current
-            current = ReadNext();
         }
 
         public Token Next() {
@@ -39,17 +37,24 @@ namespace GolfingLanguage1 {
 
         private Token ReadNext() {
             if (!EOF()) {
-                var next = ReadChar();
-                if (char.IsDigit(next))
+                var next = PeekChar();
+                if (next == '.' || char.IsDigit(next))
                     return ReadNumber();
                 if (next == STRING_DELIMITER)
                     return ReadString();
+                int i = 0;
+                if (next == SINGLE_CHAR_STRING)
+                    return new Token(ReadWhile(_ => i++ < 1), TokenType.String);
+                if (next == DOUBLE_CHAR_STRING)
+                    return new Token(ReadWhile(_ => i++ < 2), TokenType.String);
+                if (next == TRIPLE_CHAR_STRING)
+                    return new Token(ReadWhile(_ => i++ < 3), TokenType.String);
                 if (next == COMPRESSED_STRING_DELIMITER)
                     return ReadCompressedString();
                 if (VARIABLES.Contains(next))
-                    return new Token(next.ToString(), TokenType.Variable);
+                    return new Token(ReadNext().ToString(), TokenType.Variable);
                 if (PUNCTUATION.Contains(next))
-                    return new Token(next.ToString(), TokenType.Punctuation);
+                    return new Token(ReadNext().ToString(), TokenType.Punctuation);
 
             }
             throw new InvalidOperationException();
@@ -57,12 +62,17 @@ namespace GolfingLanguage1 {
 
         //TODO
         private Token ReadCompressedString() {
+            ReadChar();
             var str = ReadWhile(x => x != COMPRESSED_STRING_DELIMITER);
+            if (!EOF()) ReadChar();
+
             throw new NotImplementedException();
         }
 
         private Token ReadString() {
+            ReadChar();
             var str = ReadWhile(x => x != STRING_DELIMITER);
+            if (!EOF()) ReadChar();
             return new Token(str, TokenType.String);
         }
 
