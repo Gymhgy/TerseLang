@@ -1,26 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using System.Collections;
+using System.Reflection;
 
-namespace UnitTestProject1 {
-    public class Utilities {
-        public static bool EqualByProperties<T>(T self, T to, params string[] ignore) where T : class {
-            if (self != null && to != null) {
-                Type type = typeof(T);
-                List<string> ignoreList = new List<string>(ignore);
-                foreach (System.Reflection.PropertyInfo pi in type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance)) {
-                    if (!ignoreList.Contains(pi.Name)) {
-                        object selfValue = type.GetProperty(pi.Name).GetValue(self, null);
-                        object toValue = type.GetProperty(pi.Name).GetValue(to, null);
+namespace GolfingLanguage1.Tests {
+    public static class Utilities {
 
-                        if (selfValue != toValue && (selfValue == null || !selfValue.Equals(toValue))) {
+
+        public static bool EqualByProperties(object self, object to, params string[] ignore) {
+            Type type = self.GetType();
+            if (type != to.GetType()) return false;
+            if (self == null || to == null) return self == to;
+            if (IsSimpleType(type)) return self.Equals(to);
+            if (typeof(IEnumerable).IsAssignableFrom(type)) {
+                var selfIEnumerable = ((IEnumerable)self).Cast<object>();
+                var toEnumerable = ((IEnumerable)to).Cast<object>();
+                if (selfIEnumerable.Count() != toEnumerable.Count()) return false;
+                else {
+                    return selfIEnumerable.Zip(toEnumerable, (a, b) => (a, b)).All(x => EqualByProperties(x.a, x.b));
+                }
+            }
+            else {
+                foreach (PropertyInfo pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
+                    if (!ignore.Contains(pi.Name)) {
+                        object selfValue = pi.GetValue(self);
+                        object toValue = pi.GetValue(to);
+
+                        if (!EqualByProperties(selfValue, toValue))
                             return false;
-                        }
                     }
                 }
-                return true;
             }
-            return self == to;
+            return true;
+        }
+        public static bool IsSimpleType(Type type) {
+            return
+                type.IsPrimitive ||
+                new Type[] {
+                    typeof(string),
+                    typeof(decimal),
+                    typeof(DateTime),
+                    typeof(DateTimeOffset),
+                    typeof(TimeSpan),
+                    typeof(Guid)
+                }.Contains(type) ||
+                type.IsEnum ||
+                Convert.GetTypeCode(type) != TypeCode.Object ||
+                (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>) && IsSimpleType(type.GetGenericArguments()[0]))
+                ;
         }
     }
+
+
 }

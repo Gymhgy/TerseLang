@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Text;
+using static GolfingLanguage1.Constants;
 
 namespace GolfingLanguage1 {
+    public enum ArgumentType {
+        Normal,
+        Function
+    }
     public class BuiltinFunction {
         private Func<VObject, VObject[], VObject> Behavior { get; }
 
@@ -26,20 +32,25 @@ namespace GolfingLanguage1 {
         }
 
         public static int GetTier(string func) {
-            throw new NotImplementedException();
+            if (IsUnary(func)) return 0;
+            if (TIER_ZERO.Contains(func)) return 0;
+            if (TIER_ONE.Contains(func)) return 1;
+            if (TIER_TWO.Contains(func)) return 2;
+            if (TIER_UNLIMITED.Contains(func)) return -1;
+            throw new ArgumentException("func");
         }
 
         public static BuiltinFunction Get(string val) {
-            throw new NotImplementedException();
+            return Functions[val];
         }
 
         public static bool IsUnary(string next) {
-            throw new NotImplementedException();
+            return UNARY_FUNCTIONS.Contains(next);
         }
-    }
 
-    public enum ArgumentType {
-        Normal,
-        Function
+        private static readonly ReadOnlyDictionary<string, BuiltinFunction> Functions = new ReadOnlyDictionary<string, BuiltinFunction>(new Dictionary<string, BuiltinFunction>
+        {
+
+        });
     }
 }

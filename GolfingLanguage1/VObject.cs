@@ -13,7 +13,7 @@ namespace GolfingLanguage1 {
                 return val;
             }
             set {
-                if (value is List<VObject> l) {
+                if (value is IEnumerable<VObject> l) {
                     val = l;
                     ObjectType = ObjectType.List;
                 }

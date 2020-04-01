@@ -9,87 +9,106 @@ namespace GolfingLanguage1 {
 
         private readonly Stack<int> breaks = new Stack<int>();
         private readonly Tokenizer tokenizer;
-        public Parser(Tokenizer tok) {
+        private Parser(Tokenizer tok) {
             tokenizer = tok;
         }
 
-        public List<Expression> GetAST() {
+        public static List<Expression> Parse(string str) {
+            return new Parser(new Tokenizer(str)).GetAST();
+        }
+
+        private List<Expression> GetAST() {
             var list = new List<Expression>();
             while(!tokenizer.EOF()) {
-                list.Add(ParseExpression());
-                if (!tokenizer.EOF() && BRACKETS.Contains(tokenizer.Peek().Value) && tokenizer.Peek().Type == TokenType.Punctuation) {
-                    bracket = -1;
-                    tokenizer.Next();
-                }
+                list.Add(ParseExpression(true));
             }
             return list;
         }
 
         private int bracket = -1;
-        private bool AttemptExitBracket() {
-            if (tokenizer.EOF()) return false;
+        private void ProcessBrackets() {
+            if (tokenizer.EOF()) return;
             var tok = tokenizer.Peek();
-            if (tok.Type != TokenType.Punctuation) return false;
-            if (tok.Value == CLOSE_ALL.ToString()) return false;
-            if (BRACKETS.Contains(tok.Value)) {
-                if (bracket == -1) {
-                    bracket = BRACKETS.IndexOf(tokenizer.Peek().Value);
-                }
-                else {
-                    bracket--;
-                }
-                if(bracket == 0) {
-                    tokenizer.Next();
-                    return true;
-                }
+            if (!IsBracket()) return;
+            if (tok.Value == CLOSE_ALL.ToString()) return;
+            if (bracket == -1) {
+                bracket = BRACKETS.IndexOf(tokenizer.Peek().Value);
             }
-            return false;
+            else {
+                bracket--;
+            }
+            if(bracket == 0) {
+                tokenizer.Next();
+            }
         }
 
-        private bool UpdateBreaks() {
+        private bool IsBracket() {
+            if (tokenizer.EOF()) return false;
+            var tok = tokenizer.Peek();
+            return tok.Type == TokenType.Punctuation && (BRACKETS.Contains(tok.Value) || CLOSE_ALL.ToString() == tok.Value);
+        }
+
+        private void UpdateBreaks(bool pop, bool update) {
             var x = ShouldExit();
-            if (x) breaks.Pop();
-            else breaks.Push(breaks.Pop() - 1);
-            return x;
+            if (x) {
+                if(pop)
+                breaks.Pop(); 
+            }
+            else {
+                if (update && breaks.Count > 0)
+                    breaks.Push(breaks.Pop() - 1);
+            }
         }
 
         private bool ShouldExit() {
-            return breaks.Count == 0 || breaks.Peek() == 0;
+            return breaks.Count != 0 && breaks.Peek() == 0;
         }
 
-        private bool GetNextValue(out Expression ret) {
-            ret = null;
-            if (tokenizer.EOF()) return false;
-            var tok = tokenizer.Peek();
-            if(ShouldExit()) {
-                ret = new AutoExpression(); 
-                return false;
+        private Expression GetNextValue() {
+            Expression ret = new AutoExpression();
+            if(tokenizer.EOF()) {
+                return ret;
             }
+            var tok = tokenizer.Peek();
             if (tok.Type == TokenType.Number) ret = new NumericLiteralExpression(double.Parse(tok.Value));
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
-            if(ret != null) {
+            if(!(ret is AutoExpression)) {
                 tokenizer.Next();
-                ret = new AutoExpression();
+                UpdateBreaks(false, true);
             }
-            return UpdateBreaks();
+            return ret;
         }
 
-        private Expression ParseExpression() {
-            GetNextValue(out var val);
+        private Expression ParseExpression(bool topLevel) {
+            var val = GetNextValue();
             while (!tokenizer.EOF() && !ShouldExit() && tokenizer.Peek().Type == TokenType.Function) {
                 var next = tokenizer.Next().Value;
-                breaks.Push(BuiltinFunction.GetTier(next));
-                var func = BuiltinFunction.Get(next);
+                UpdateBreaks(false, true);
                 if(BuiltinFunction.IsUnary(next)) {
-                    val = new FunctionInvocationExpression(func, true);
+                    val = new FunctionInvocationExpression(val, next, Array.Empty<Expression>()) ;
                 }
                 else {
-                    var arg = ParseExpression();
-                    val = new FunctionInvocationExpression(func, arg);
+                    var tier = BuiltinFunction.GetTier(next);
+                    breaks.Push(tier);
+                    List<Expression> args = new List<Expression>();
+                    do {
+                        var arg = ParseExpression(false);
+                        args.Add(arg);
+                    } while (tier < 0 && !tokenizer.EOF() && !IsBracket());
+                    val = new FunctionInvocationExpression(val, next, args);
                 }
-                if (AttemptExitBracket()) break;
+                if (topLevel) {
+                    bracket = -1;
+                    while (IsBracket())
+                        tokenizer.Next();
+                    breaks.Clear();
+                }
+                else
+                    ProcessBrackets();
             }
+            UpdateBreaks(true, false);
+
             return val;
         }
     }

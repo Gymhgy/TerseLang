@@ -20,28 +20,15 @@ namespace GolfingLanguage1.Expressions {
     }
 
     public class FunctionInvocationExpression : Expression {
-        public FunctionInvocationExpression(BuiltinFunction function, Expression argument) {
+        public FunctionInvocationExpression(Expression caller, string function, IList<Expression> arguments) {
+            Caller = caller;
             Function = function;
-            Argument = argument;
+            Arguments = new ReadOnlyCollection<Expression>(arguments);
         }
 
-        public FunctionInvocationExpression(BuiltinFunction function, bool isUnary) {
-            Function = function;
-            IsUnary = isUnary;
-        }
-
-        public BuiltinFunction Function { get; }
-
-        public bool IsUnary { get; } = false;
-        public Expression Argument { get; }
-    }
-
-    public class FunctionArgumentExpression : Expression {
-        public FunctionArgumentExpression(Expression body) {
-            Body = body;
-        }
-
-        public Expression Body { get; }
+        public Expression Caller { get; }
+        public string Function { get; }
+        public ReadOnlyCollection<Expression> Arguments { get; }
     }
 
     public class ArrayExpression : Expression {

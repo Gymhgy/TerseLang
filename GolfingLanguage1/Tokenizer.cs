@@ -38,12 +38,15 @@ namespace GolfingLanguage1 {
         private Token ReadNext() {
             if (!EOF()) {
                 var next = PeekChar();
-                if (next == '.' || char.IsDigit(next))
+                if (char.IsDigit(next))
                     return ReadNumber();
+                next = ReadChar();
+                if (next == '.') 
+                    return HandleDot();
                 if (next == STRING_DELIMITER)
                     return ReadString();
                 int i = 0;
-                if (next == SINGLE_CHAR_STRING)
+                if (next == SINGLE_CHAR_STRING) 
                     return new Token(ReadWhile(_ => i++ < 1), TokenType.String);
                 if (next == DOUBLE_CHAR_STRING)
                     return new Token(ReadWhile(_ => i++ < 2), TokenType.String);
@@ -52,17 +55,30 @@ namespace GolfingLanguage1 {
                 if (next == COMPRESSED_STRING_DELIMITER)
                     return ReadCompressedString();
                 if (VARIABLES.Contains(next))
-                    return new Token(ReadNext().ToString(), TokenType.Variable);
+                    return new Token(next.ToString(), TokenType.Variable);
                 if (PUNCTUATION.Contains(next))
-                    return new Token(ReadNext().ToString(), TokenType.Punctuation);
+                    return new Token(next.ToString(), TokenType.Punctuation);
+                if (FUNCTIONS.Contains(next))
+                    return new Token(next.ToString(), TokenType.Function);
 
             }
             throw new InvalidOperationException();
         }
 
+        private Token HandleDot () {
+            if(!EOF()) {
+                var str = "";
+                while (char.IsDigit(PeekChar()))
+                    str += ReadChar();
+                if (str != "") return new Token("0." + str, TokenType.Number);
+                else return new Token(".", TokenType.Punctuation);
+            }
+            //Single dot
+            return new Token(".", TokenType.Punctuation);
+        }
+
         //TODO
         private Token ReadCompressedString() {
-            ReadChar();
             var str = ReadWhile(x => x != COMPRESSED_STRING_DELIMITER);
             if (!EOF()) ReadChar();
 
@@ -70,8 +86,18 @@ namespace GolfingLanguage1 {
         }
 
         private Token ReadString() {
-            ReadChar();
-            var str = ReadWhile(x => x != STRING_DELIMITER);
+            var str = "";
+            while(!EOF() && PeekChar() != STRING_DELIMITER && PeekChar() != '\n') {
+                var ch = ReadChar();
+                if (ch == NEWLINE_SUBSTITUTE) {
+                    str += "\n";
+                }
+                else if (CHARSET.Contains(ch) && (ch > 126 || ch < 32)) {
+                    throw new NotImplementedException("No support for certain unicode characters in strings yet. " +
+                        "I'm working on a feature that unicode characters do special things in strings.");
+                }
+                else str += ch;
+            }
             if (!EOF()) ReadChar();
             return new Token(str, TokenType.String);
         }
@@ -90,7 +116,7 @@ namespace GolfingLanguage1 {
             return new Token(num, TokenType.Number);
         }
 
-        public bool EOF() => reader.Peek() == -1;
+        public bool EOF() => reader.Peek() == -1 && current == null;
 
     }
 } 
