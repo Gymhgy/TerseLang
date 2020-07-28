@@ -12,6 +12,8 @@ namespace GolfingLanguage1 {
         private char PeekChar() => (char)reader.Peek();
         private char ReadChar() => (char)reader.Read();
 
+        // Helper function
+        // Reads until EOF() or the predicate returns false for the next character
         private string ReadWhile(Predicate<char> f) {
             string res = "";
             while (!EOF() && f(PeekChar())) {
@@ -62,9 +64,14 @@ namespace GolfingLanguage1 {
                     return new Token(next.ToString(), TokenType.Function);
 
             }
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("This shouldn't happen.");
         }
 
+        // Handles two cases:
+        // Case 1: .### (where ### is any number of digits)
+        // Returns a token representing a number, where the number is < 1
+        // Case 2: .x (where x is anything else)
+        // Not implemented yet, hoping this could be something that modifies function behaviour
         private Token HandleDot () {
             if(!EOF()) {
                 var str = "";
@@ -94,7 +101,7 @@ namespace GolfingLanguage1 {
                 }
                 else if (CHARSET.Contains(ch) && (ch > 126 || ch < 32)) {
                     throw new NotImplementedException("No support for certain unicode characters in strings yet. " +
-                        "I'm working on a feature that unicode characters do special things in strings.");
+                        "Currently working on a feature that unicode characters do special things in strings.");
                 }
                 else str += ch;
             }
@@ -102,6 +109,7 @@ namespace GolfingLanguage1 {
             return new Token(str, TokenType.String);
         }
 
+        // Reads number in form of ##.## (where # are digits)
         private Token ReadNumber() {
             bool encounteredDot = false;
             var num = ReadWhile(x => {

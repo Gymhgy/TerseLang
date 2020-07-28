@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Numerics;
 
 namespace GolfingLanguage1.Expressions {
     public abstract class Expression {
-        
+
     }
 
-    public class AutoExpression : Expression { 
+    // An AutoExpression tells the Interpreter that this value will be filled in based on the state of the program
+    public class AutoExpression : Expression {
     }
 
     public class VariableReferenceExpression : Expression {
@@ -31,7 +33,7 @@ namespace GolfingLanguage1.Expressions {
         public ReadOnlyCollection<Expression> Arguments { get; }
     }
 
-    public class ArrayExpression : Expression {
+    public class ListExpression : Expression {
         public ReadOnlyCollection<Expression> Contents { get; }
     }
 
@@ -55,6 +57,18 @@ namespace GolfingLanguage1.Expressions {
 
         public ReadOnlyCollection<Expression> Interpolations { get; }
         public string Value { get; }
+    }
+
+    public class ConditionalExpression : Expression {
+        public ConditionalExpression(Expression condition, Expression trueExpression, Expression falseExpression) {
+            Condition = condition;
+            TrueExpression = trueExpression;
+            FalseExpression = falseExpression;
+        }
+
+        public Expression Condition { get; }
+        public Expression TrueExpression { get; }
+        public Expression FalseExpression { get; }
     }
 
 }

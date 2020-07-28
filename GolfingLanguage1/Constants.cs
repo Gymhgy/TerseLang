@@ -8,10 +8,10 @@ namespace GolfingLanguage1 {
     public static class Constants {
 
 
-        public const string CHARSET = 
+        public const string CHARSET =
             //FUNCTIONS
-            "!#$%&(*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\" +
-            "^_`abcdefghijklmnopqrstuvwxyz{|~？、！￥…（—你我的是了不" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&(*+,-/:;<=>@\\^" +
+            "abcdefghijklmnopqrstuvwxyz_`{|~？、！￥…（—你我的是了不" +
             "们这一他么在有个好来人那要会就什没到说吗为想能上去道她很看可知得过吧还对里以都事子生时样也" +
             "和下真现做大啊怎出点起天把开让给但谢着只些如家后儿多意别所话小自回然果发见心走定听觉太该当" +
             // UNARY FUNCTIONS
@@ -23,15 +23,15 @@ namespace GolfingLanguage1 {
             //DIGITS
             "0123456789" +
             //PUNCTUATION
-            "[])}）】."+
+            "?[])}）】."+
             //For later use
             " \n\t" +
             //For later use
             "【：；。，";
 
         public const string 
-            TIER_ZERO = "!#$%&(*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ\\",
-            TIER_ONE = "^_`abcdefghijklmnopqrstuvwxyz{|~？、！￥…（—你我的是了不",
+            TIER_ZERO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&(*+,-/:;<=>?@\\",
+            TIER_ONE = "abcdefghijklmnopqrstuvwxyz^_`{|~？、！￥…（—你我的是了不",
             TIER_TWO = "们这一他么在有个好来人那要会就什没到说吗为想能上去道她很看可知得过吧还对里以都事子生时样也",
             TIER_UNLIMITED = "和下真现做大啊怎出点起天把开让给但谢着只些如家后儿多意别所话小自回然果发见心走定听觉太该当";
 
@@ -55,6 +55,13 @@ namespace GolfingLanguage1 {
 
         public const string BRACKETS = ")}）";
         public const char CLOSE_ALL = '】';
+        public const char LIST_START = '[';
+        public const char LIST_END = ']';
+
+        public const string PARAMETER_VARIABLES = "孩斯成它感干法";
+        public const string INPUT_VARIABLES = "哦情作跟";
+
+        public const char IF = '?';
 
         public const string USAGE = "PLACEHOLDER";
 
