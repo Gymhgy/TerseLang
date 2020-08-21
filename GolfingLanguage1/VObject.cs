@@ -61,6 +61,16 @@ namespace GolfingLanguage1 {
             return false;
         }
 
+        public T ConvertTo<T> () {
+            List<Type> types = new List<Type> { typeof(double), typeof(string), (typeof(List<VObject>)) };
+            List<ObjectType> objTypes = new List<ObjectType> { ObjectType.Number, ObjectType.String, ObjectType.List };
+            if (types.IndexOf(typeof(T)) == objTypes.IndexOf(this.ObjectType)) {
+                return (T)this.Value;
+            }
+            else
+                throw new ArgumentException("Generic type provided was not a type that VObject supports or contains currently.");
+        }
+
         public ObjectType ObjectType { get; private set; }
 
         public VObject(object value) {
@@ -100,5 +110,5 @@ namespace GolfingLanguage1 {
         }
     }
 
-    public enum ObjectType { String, Number, List }
+    public enum ObjectType { Number, String, List }
 }
