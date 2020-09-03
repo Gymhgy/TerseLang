@@ -1,31 +1,46 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using static TerseLang.Constants;
 
 namespace TerseLang {
-    public class Program {
+
+    class Program {
         static void Main(string[] args) {
             if (args.Length == 0 || args[0] == "help") {
                 Console.WriteLine(USAGE);
                 return;
             }
-            if (args.Length == 1) {
+            if (args.Length == 1 && args[0] != "-i") {
                 Console.WriteLine("Invalid Usage");
                 Console.WriteLine(USAGE);
             }
             string program = "";
 
             if (args[0] == "-f") {
-                program = File.ReadAllText(args[1]);
+                var bytes = File.ReadAllBytes(args[1]);
+                foreach(byte b in bytes) {
+                  program += CHARSET[b];
+                }
             }
             if (args[0] == "-p") {
                 program = args[1];
             }
+
             List<VObject> inputs = new List<VObject>();
+
+            //Interactive Mode
+            if(args[0] == "-i") {
+
+              Console.Write(">>> ");
+              program = Console.ReadLine();
+              Console.Write(">>> ");
+              foreach(var input in Console.ReadLine().Split())
+                inputs.Add(ParseInput(input));
+            }
             //2 is for flag + program
-            if (args.Length > 2) {
+            else if (args.Length > 2) {
                 foreach(var input in args.Skip(2)) {
                     inputs.Add(ParseInput(input));
                 }
@@ -41,8 +56,7 @@ namespace TerseLang {
             Console.WriteLine(result.ToString());
         }
 
-        public static VObject ParseInput(string input) {
-            input = input.Trim();
+        static VObject ParseInput(string input) {
             if (double.TryParse(input, out double d))
                 return d;
             if(input[0] == '"' && input.Last() == '"' || input[0] == '\'' && input.Last() == '\'') {
@@ -56,8 +70,8 @@ namespace TerseLang {
                     char strClose = '\0';
                     int depth = 0;
                     int j = 0;
-                    for (; j + i < contents.Length && (depth > 0 || inStr || contents[j + i] != ','); j++) {
-                        if (contents[j + i] == '"') {
+                    for (; (depth > 0 || inStr || input[j + i] != ',') && j + i < contents.Length; j++) {
+                        if (input[j + i] == '"') {
                             if (!inStr) {
                                 strClose = '"';
                                 inStr = true;
@@ -66,7 +80,7 @@ namespace TerseLang {
                                 inStr = false;
                             }
                         }
-                        if (contents[j + i] == '\'') {
+                        if (input[j + i] == '\'') {
                             if (!inStr) {
                                 strClose = '\'';
                                 inStr = true;
@@ -75,20 +89,20 @@ namespace TerseLang {
                                 inStr = false;
                             }
                         }
-                        if (!inStr && contents[j + i] == '[') {
+                        if (!inStr && input[j + i] == '[') {
                             depth++;
                         }
-                        if (!inStr && contents[j + i] == ']') {
+                        if (!inStr && input[j + i] == ']') {
                             depth--;
                         }
                     }
-                    list.Add(ParseInput(contents.Substring(i, j)));
                     i += j;
+                    list.Add(contents.Substring(i, j));
                 }
                 return list;
             }
             else {
-                ErrorHandler.Error("Unable to parse input:" + input);
+                ErrorHandler.Error("Unable to parse input");
                 throw new Exception();
             }
         }
