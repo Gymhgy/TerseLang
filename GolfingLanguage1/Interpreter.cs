@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using GolfingLanguage1.Expressions;
+using TerseLang.Expressions;
 using System.Linq;
-using static GolfingLanguage1.Constants;
+using static TerseLang.Constants;
 
-namespace GolfingLanguage1 {
+namespace TerseLang {
     public class Interpreter {
 
 
@@ -25,7 +25,7 @@ namespace GolfingLanguage1 {
             }
         }
 
-        public IList<VObject> Interpret () {
+        public IList<VObject> Interpret() {
             //For each expression in the pareser, evaluate them and add them to the list or results
             List<VObject> results = new List<VObject>();
             foreach (var expr in AST) {
@@ -37,7 +37,7 @@ namespace GolfingLanguage1 {
 
         //How the value of an AutoExpression is decided
         //If the AutoExpression is the parameter to a higher order function
-        // - Use the identity function
+        // - Return the input
         //If we are inside a higher-order function
         // - The 'parameter variables' are 斯,成,它,感,干,法
         // - They are placed upon a stack
@@ -57,6 +57,7 @@ namespace GolfingLanguage1 {
         //   - Else just use the first
 
         VObject Evaluate(Expression ast) {
+#if !__MonoCS__
             switch (ast) {
                 //Self-explanatory
                 case NumericLiteralExpression number:
@@ -70,7 +71,7 @@ namespace GolfingLanguage1 {
                     return ProgramState.Variables[variable.Name];
 
                 case ConditionalExpression conditional:
-                    if (IsTruthy(Evaluate(conditional.Condition))) {
+                    if (Evaluate(conditional.Condition).IsTruthy()) {
                         return Evaluate(conditional.TrueExpression);
                     }
                     else
@@ -85,32 +86,116 @@ namespace GolfingLanguage1 {
                         caller = ProgramState.Autofill_1;
                     else
                         caller = Evaluate(funcExpr.Caller);
-                    Function func = Function.Get(funcExpr.Function, caller.ObjectType);
-                    //If this function is a higher order function
-                    if (func.LambdaParameters > 0) {
-                        Func<VObject[], VObject> lambda;
+
+                    if (Function.IsHigherOrder(funcExpr.Function, caller.ObjectType)) {
+                        HigherOrderFunction func = (HigherOrderFunction)Function.Get(funcExpr.Function, caller.ObjectType);
+                        Lambda lambda;
                         // If an autoexpression is submitted as a lambda, then return 1st input
                         if (funcExpr.Arguments[0] is AutoExpression) {
                             lambda = _ => ProgramState.Autofill_1;
                         }
                         else
                             lambda = CreateLambda(funcExpr.Arguments[0], func.LambdaParameters);
-                        //We skip the first element because first element was a lambda
-                        return func.Invoke(caller, lambda,
-                            funcExpr.Arguments.Skip(1).Select(x => x is AutoExpression ? ProgramState.Autofill_2 : Evaluate(x)).ToArray());
+
+
+                        //We pass the lambda that we created into the function
+                        var res = func.Invoke(caller, lambda);
+                        //Re-rotate the parameter variables back
+                        //We rotated them in the CreateLambda method
+                        for (int i = 0; i < PARAMETER_VARIABLES.Length - func.LambdaParameters; i++) {
+                            ParamVars.Enqueue(ParamVars.Dequeue());
+                        }
+
+                        return res;
                     }
-                    //We replace AutoExpression(s) with the second input and not with Evaluate(x)
-                    return func.Invoke(caller, funcExpr.Arguments.Select(x => x is AutoExpression ?
-                    ProgramState.Autofill_2 : Evaluate(x)).ToArray());
+
+                    if (Function.IsUnary(funcExpr.Function)) {
+                        UnaryFunction func = (UnaryFunction)Function.Get(funcExpr.Function, caller.ObjectType);
+                        return func.Invoke(caller);
+                    }
+                    else {
+                        VObject arg = funcExpr.Arguments[0] is AutoExpression ? ProgramState.Autofill_2 : Evaluate(funcExpr.Arguments[0]);
+                        BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
+                        return func.Invoke(caller, arg);
+                    }
+                    throw new Exception();
                 default:
-                    throw new Exception("This shouldn't happen.");
+                    ErrorHandler.InternalError("This shouldn't happen.");
+                    throw new Exception();
             }
-            throw new Exception("This shouldn't happen.");
+#else
+            //Self-explanatory
+            if(ast is NumericLiteralExpression number) {
+                return new VObject(number.Value);
+            }
+            if(ast is StringLiteralExpression str) {
+                return new VObject(str.Value);
+            }
+            if(ast is ListExpression array) {
+                return new VObject(array.Contents.Select(Evaluate).ToList());
+            }
+            if(ast is VariableReferenceExpression variable) {
+                return ProgramState.Variables[variable.Name];
+            }
+            if(ast is ConditionalExpression conditional) {
+                if (Evaluate(conditional.Condition).IsTruthy()) {
+                    return Evaluate(conditional.TrueExpression);
+                }
+                else
+                    return Evaluate(conditional.FalseExpression);
+            }
+            //Use the first input as autofill by default
+            if(ast is AutoExpression _) {
+                return ProgramState.Autofill_1;
+            }
+            if(ast is FunctionInvocationExpression funcExpr) {
+                VObject caller;
+                if (funcExpr.Caller is AutoExpression)
+                    caller = ProgramState.Autofill_1;
+                else
+                    caller = Evaluate(funcExpr.Caller);
+
+                if(Function.IsHigherOrder(funcExpr.Function, caller.ObjectType)) {
+                    HigherOrderFunction func = (HigherOrderFunction)Function.Get(funcExpr.Function, caller.ObjectType);
+                    Lambda lambda;
+                    // If an autoexpression is submitted as a lambda, then return 1st input
+                    if (funcExpr.Arguments[0] is AutoExpression) {
+                        lambda = _1 => ProgramState.Autofill_1;
+                    }
+                    else
+                        lambda = CreateLambda(funcExpr.Arguments[0], func.LambdaParameters);
+
+
+                    //We pass the lambda that we created into the function
+                    var res = func.Invoke(caller, lambda);
+                    //Re-rotate the parameter variables back
+                    //We rotated them in the CreateLambda method
+                    for(int i = 0; i < PARAMETER_VARIABLES.Length - func.LambdaParameters; i++) {
+                        ParamVars.Enqueue(ParamVars.Dequeue());
+                    }
+
+                    return res;
+                }
+
+                if (Function.IsUnary(funcExpr.Function)) {
+                    UnaryFunction func = (UnaryFunction)Function.Get(funcExpr.Function, caller.ObjectType);
+                    return func.Invoke(caller);
+                }
+                else {
+                    VObject arg = Evaluate(funcExpr.Arguments[0]);
+                    BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
+                    return func.Invoke(caller, arg);
+                }
+                throw new Exception();
+            }
+            ErrorHandler.InternalError("This shouldn't happen.");
+            throw new Exception();
+#endif
         }
 
         // When a function takes in a lambda expression
         // This creates it
-        Func<VObject[], VObject> CreateLambda(Expression lambda, int lambdaParams) {
+        Lambda CreateLambda(Expression lambda, int lambdaParams) {
             //Set up the list of parameters that this lambda will use
             List<string> parameterNames = new List<string>(lambdaParams);
             for (int i = 0; i < lambdaParams; i++) {
@@ -120,7 +205,11 @@ namespace GolfingLanguage1 {
             }
             //This is the function that will be returned
             //Everytime the lambda is used, this is what is being executed
+#if __MonoCS__
+            Lambda func = args => {
+#else
             VObject func(VObject[] args) {
+#endif
                 var paramArgPairs = parameterNames.Zip(args).ToList();
                 var oldValues = new VObject[lambdaParams];
                 int i = 0;
@@ -155,13 +244,13 @@ namespace GolfingLanguage1 {
 
                 return result;
             }
+#if __MonoCS__
+            ;
+#endif
             return func;
         }
 
-        //Helper function that determines whether a value is truthy or not
-        bool IsTruthy(VObject obj) {
-            return obj != 0 && string.IsNullOrEmpty(obj) && ((List<VObject>)obj).Count != 0;
-        }
+
 
     }
 

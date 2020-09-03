@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections;
 using System.Reflection;
 
-namespace GolfingLanguage1.Tests {
+namespace TerseLang.Tests {
     public static class Utilities {
 
 

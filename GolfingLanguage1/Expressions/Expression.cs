@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Numerics;
 
-namespace GolfingLanguage1.Expressions {
+namespace TerseLang.Expressions {
     public abstract class Expression {
 
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GolfingLanguage1 {
+namespace TerseLang {
 
     //Contains all the constants
     public static class Constants {
@@ -58,12 +58,12 @@ namespace GolfingLanguage1 {
         public const char LIST_START = '[';
         public const char LIST_END = ']';
 
-        public const string PARAMETER_VARIABLES = "孩斯成它感干法";
+        public const string PARAMETER_VARIABLES = "斯成它感干法";
         public const string INPUT_VARIABLES = "哦情作跟";
 
         public const char IF = '?';
 
-        public const string USAGE = "PLACEHOLDER";
+        public const string USAGE = @"Usage: terselang [-f path|-p program] [arguments...]";
 
     }
 }

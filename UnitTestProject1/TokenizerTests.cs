@@ -1,11 +1,11 @@
-﻿using GolfingLanguage1;
+﻿using TerseLang;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static GolfingLanguage1.Tests.Utilities;
+using static TerseLang.Tests.Utilities;
 
-namespace GolfingLanguage1.Tests {
+namespace TerseLang.Tests {
     [TestClass]
     public class TokenizerTests {
 

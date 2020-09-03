@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
-using GolfingLanguage1.Expressions;
-using static GolfingLanguage1.Constants;
+using TerseLang.Expressions;
+using static TerseLang.Constants;
 
-namespace GolfingLanguage1 {
+namespace TerseLang {
     public class Parser {
 
         // The breaks "break" a ParseExpression call
@@ -117,11 +117,8 @@ namespace GolfingLanguage1 {
                     var tier = Function.GetTier(next);
                     breaks.Push(tier);
                     List<Expression> args = new List<Expression>();
-                    //Only executed once if tier is not unlimited
-                    do {
-                        var arg = ParseExpression(false);
-                        args.Add(arg);
-                    } while (tier < 0 && !tokenizer.EOF() && !IsBracket());
+                    var arg = ParseExpression(false);
+                    args.Add(arg);
                     val = new FunctionInvocationExpression(val, next, args);
                 }
                 // Get rid of all the brackets if this expression is a top level one

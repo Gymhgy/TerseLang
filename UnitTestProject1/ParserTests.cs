@@ -1,12 +1,12 @@
-﻿using GolfingLanguage1;
-using GolfingLanguage1.Expressions;
+﻿using TerseLang;
+using TerseLang.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static GolfingLanguage1.Tests.Utilities;
+using static TerseLang.Tests.Utilities;
 
-namespace GolfingLanguage1.Tests {
+namespace TerseLang.Tests {
     [TestClass]
     public class ParserTests {
         private static IList<Expression> none = Array.Empty<Expression>();
@@ -75,19 +75,6 @@ namespace GolfingLanguage1.Tests {
         }
 
         [TestMethod]
-        public void Parser_TierUnlimitedMultipleArguments() {
-            var actual = Parser.Parse("怎3感4感");
-            var expected = new List<Expression> { new FunctionInvocationExpression(new AutoExpression(), "怎", new Expression[] {
-                    new NumericLiteralExpression(3),
-                    new VariableReferenceExpression("感"),
-                    new NumericLiteralExpression(4),
-                    new VariableReferenceExpression("感")
-                })
-            };
-            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-        }
-
-        [TestMethod]
         public void Parser_MultipleExpressions() {
             var actual = Parser.Parse("3感4感");
             var expected = new List<Expression> { 
@@ -112,5 +99,7 @@ namespace GolfingLanguage1.Tests {
             };
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
         }
+
+
     }
 }

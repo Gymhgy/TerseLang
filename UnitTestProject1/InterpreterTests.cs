@@ -1,9 +1,9 @@
-﻿using GolfingLanguage1;
+﻿using TerseLang;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GolfingLanguage1.Tests {
+namespace TerseLang.Tests {
     [TestClass]
     public class InterpreterTests {
         [TestMethod]
@@ -16,9 +16,9 @@ namespace GolfingLanguage1.Tests {
 
         [TestMethod]
         public void Interpreter_String() {
-            var interpreter = new Interpreter("“string", new VObject[0]);
+            var interpreter = new Interpreter("“Hello, World!", new VObject[0]);
             var result = new VObject(interpreter.Interpret());
-            var expected = new List<VObject> { new VObject("string") };
+            var expected = new List<VObject> { new VObject("Hello, World!") };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
         }
 
@@ -41,7 +41,20 @@ namespace GolfingLanguage1.Tests {
             Assert.IsTrue(result.Equals(vExpected), result.Dump());
         }
 
-        //Wraps the single element into a VObject list
-        private static List<VObject> Wrap(VObject x) => new List<VObject> { x };
+        [TestMethod]
+        public void Interpreter_LambdaTest() {
+            var interpreter = new Interpreter("点最因中", new VObject[] { "string" });
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { new List<VObject> { "t","u","s","j","o","h" } };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
+        }
+
+        [TestMethod]
+        public void Interpreter_FilterTest() {
+            var interpreter = new Interpreter("“string“起当's", new VObject[0]);
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { "s" };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
+        }
     }
 }

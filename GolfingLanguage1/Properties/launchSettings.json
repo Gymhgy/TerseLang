@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TerseLang": {
+      "commandName": "Project",
+      "commandLineArgs": "-p “string“点2"
+    }
+  }
+}

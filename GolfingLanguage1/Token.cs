@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GolfingLanguage1 {
+namespace TerseLang {
     public class Token {
         public string Value { get; }
         public TokenType Type { get; }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-namespace GolfingLanguage1.Tests {
+namespace TerseLang.Tests {
     public static class ObjectDumpHelper {
         public static string Dump(this object element, int indentSize) {
             var instance = new ObjectDumper(indentSize);

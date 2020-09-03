@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using static GolfingLanguage1.Constants;
+using static TerseLang.Constants;
 
-namespace GolfingLanguage1 {
+namespace TerseLang {
     public class Tokenizer {
         private readonly StringReader reader;
         private Token current = null;

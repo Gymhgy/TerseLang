@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 using System.Text;
 using System.Linq;
-using static GolfingLanguage1.Constants;
+using static TerseLang.Constants;
 
-namespace GolfingLanguage1 {
+namespace TerseLang {
     public static class ProgramState {
 
         //Default values, which are the input variables
@@ -37,14 +37,15 @@ namespace GolfingLanguage1 {
             ["之"] = "\n",
             ["问"] = "",
             ["错"] = -1,
-            //Function parameters
             ["孩"] = 10,
+            //Function parameters
             ["斯"] = 16,
             ["成"] = 15,
             ["它"] = 14,
             ["感"] = 13,
             ["干"] = 12,
             ["法"] = 11,
+
             ["电"] = 100,
             //Assign
 
