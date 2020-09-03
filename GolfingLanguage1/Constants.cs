@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -63,7 +63,8 @@ namespace TerseLang {
 
         public const char IF = '?';
 
-        public const string USAGE = @"Usage: terselang [-f path|-p program] [arguments...]";
+        public const string USAGE = "Usage: terse [-f path|-p program] [arguments...]\n" + 
+                                    "       terse -i (interactive mode, enter program on first line, enter input on second)";
 
     }
 }

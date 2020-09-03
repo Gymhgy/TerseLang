@@ -1,0 +1,1 @@
+eval "csc -out:terse TerseLang/Constants.cs TerseLang/ErrorHandler.cs TerseLang/Expressions/Expression.cs TerseLang/Function.cs TerseLang/Interpreter.cs TerseLang/Parser.cs TerseLang/ProgramState.cs TerseLang/Token.cs TerseLang/Tokenizer.cs TerseLang/VObject.cs main.cs"
