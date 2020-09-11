@@ -6,7 +6,7 @@ using static TerseLang.Constants;
 
 namespace TerseLang {
 
-    class Program {
+    public class Program {
         static void Main(string[] args) {
             if (args.Length == 0 || args[0] == "help") {
                 Console.WriteLine(USAGE);
@@ -56,7 +56,8 @@ namespace TerseLang {
             Console.WriteLine(result.ToString());
         }
 
-        static VObject ParseInput(string input) {
+        public static VObject ParseInput(string input) {
+            input = input.Trim();
             if (double.TryParse(input, out double d))
                 return d;
             if(input[0] == '"' && input.Last() == '"' || input[0] == '\'' && input.Last() == '\'') {
@@ -70,8 +71,8 @@ namespace TerseLang {
                     char strClose = '\0';
                     int depth = 0;
                     int j = 0;
-                    for (; (depth > 0 || inStr || input[j + i] != ',') && j + i < contents.Length; j++) {
-                        if (input[j + i] == '"') {
+                    for (; j + i < contents.Length && (depth > 0 || inStr || contents[j + i] != ','); j++) {
+                        if (contents[j + i] == '"') {
                             if (!inStr) {
                                 strClose = '"';
                                 inStr = true;
@@ -80,7 +81,7 @@ namespace TerseLang {
                                 inStr = false;
                             }
                         }
-                        if (input[j + i] == '\'') {
+                        if (contents[j + i] == '\'') {
                             if (!inStr) {
                                 strClose = '\'';
                                 inStr = true;
@@ -89,20 +90,20 @@ namespace TerseLang {
                                 inStr = false;
                             }
                         }
-                        if (!inStr && input[j + i] == '[') {
+                        if (!inStr && contents[j + i] == '[') {
                             depth++;
                         }
-                        if (!inStr && input[j + i] == ']') {
+                        if (!inStr && contents[j + i] == ']') {
                             depth--;
                         }
                     }
+                    list.Add(ParseInput(contents.Substring(i, j)));
                     i += j;
-                    list.Add(contents.Substring(i, j));
                 }
                 return list;
             }
             else {
-                ErrorHandler.Error("Unable to parse input");
+                ErrorHandler.Error("Unable to parse input:" + input);
                 throw new Exception();
             }
         }

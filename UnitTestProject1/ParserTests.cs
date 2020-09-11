@@ -34,6 +34,13 @@ namespace TerseLang.Tests {
         }
 
         [TestMethod]
+        public void Parser_AutoAsArgument() {
+            var actual = Parser.Parse("2$$2");
+            var expected = new List<Expression> { new FunctionInvocationExpression(new FunctionInvocationExpression(new NumericLiteralExpression(2), "$", auto), "$", auto), new NumericLiteralExpression(2) };
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
+        }
+
+        [TestMethod]
         public void Parser_TiersOneAndZero() {
             var actual = Parser.Parse("感$x之$");
             var expected = new List<Expression> { new FunctionInvocationExpression(new FunctionInvocationExpression(

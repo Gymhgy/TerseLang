@@ -83,15 +83,19 @@ namespace TerseLang {
         // If the next token is punctuation or a function, return an AutoExpression
         private Expression GetNextValue() {
             Expression ret = new AutoExpression();
+            
             if(tokenizer.EOF()) {
                 return ret;
             }
+            if(ShouldExit()) {
+                return ret;
+            }
+
             var tok = tokenizer.Peek();
             if (tok.Type == TokenType.Number) ret = new NumericLiteralExpression(double.Parse(tok.Value));
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
             else if (tok.Type == TokenType.Punctuation && tok.Value == LIST_START.ToString()) {
-                throw new NotImplementedException();
             }
             if(!(ret is AutoExpression)) {
                 tokenizer.Next();
