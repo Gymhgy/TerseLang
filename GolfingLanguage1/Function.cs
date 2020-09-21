@@ -182,7 +182,7 @@ namespace TerseLang {
 			//Prepend N to l
 			("和", new BinaryFunction<double, List<VObject>>((x, y) => y.Prepend(new VObject(x)).ToList())),
 
-			//Function "真", Binary (Number, Number) -> Number
+			//Function "下", Binary (Number, Number) -> Number
 			//Subtraction
 			("下", new BinaryFunction<double, double>((x, y) => x - y)),
 
@@ -625,13 +625,6 @@ namespace TerseLang {
 				}
 				return x;
 			})),
-
-			//Function "出", Binary (String, string) -> String
-			//Delete all instances of s from S
-			("出", new BinaryFunction<string,string>((x,y) => x)),
-			//Function "出", Binary (String, string) -> String
-			//For each pair of strings (s1, s2) in l, replace each instance of s1 in S with s2. If there are odd number of elements in l, for the last element it is replaced with empty string
-			("出", new BinaryFunction<string,string>((x,y) => x)),
 
 			//Function "点", Binary (String, Lambda[T,Number]) -> List
 			//Map
