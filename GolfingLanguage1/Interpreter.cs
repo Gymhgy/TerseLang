@@ -57,7 +57,6 @@ namespace TerseLang {
         //   - Else just use the first
 
         VObject Evaluate(Expression ast) {
-#if !__MonoCS__
             switch (ast) {
                 //Self-explanatory
                 case NumericLiteralExpression number:
@@ -123,74 +122,6 @@ namespace TerseLang {
                     ErrorHandler.InternalError("This shouldn't happen.");
                     throw new Exception();
             }
-#else
-            //Self-explanatory
-            if(ast is NumericLiteralExpression number) {
-                return new VObject(number.Value);
-            }
-            if(ast is StringLiteralExpression str) {
-                return new VObject(str.Value);
-            }
-            if(ast is ListExpression array) {
-                return new VObject(array.Contents.Select(Evaluate).ToList());
-            }
-            if(ast is VariableReferenceExpression variable) {
-                return ProgramState.Variables[variable.Name];
-            }
-            if(ast is ConditionalExpression conditional) {
-                if (Evaluate(conditional.Condition).IsTruthy()) {
-                    return Evaluate(conditional.TrueExpression);
-                }
-                else
-                    return Evaluate(conditional.FalseExpression);
-            }
-            //Use the first input as autofill by default
-            if(ast is AutoExpression _) {
-                return ProgramState.Autofill_1;
-            }
-            if(ast is FunctionInvocationExpression funcExpr) {
-                VObject caller;
-                if (funcExpr.Caller is AutoExpression)
-                    caller = ProgramState.Autofill_1;
-                else
-                    caller = Evaluate(funcExpr.Caller);
-
-                if(Function.IsHigherOrder(funcExpr.Function, caller.ObjectType)) {
-                    HigherOrderFunction func = (HigherOrderFunction)Function.Get(funcExpr.Function, caller.ObjectType);
-                    Lambda lambda;
-                    // If an autoexpression is submitted as a lambda, then return 1st input
-                    if (funcExpr.Arguments[0] is AutoExpression) {
-                        lambda = _1 => ProgramState.Autofill_1;
-                    }
-                    else
-                        lambda = CreateLambda(funcExpr.Arguments[0], func.LambdaParameters);
-
-
-                    //We pass the lambda that we created into the function
-                    var res = func.Invoke(caller, lambda);
-                    //Re-rotate the parameter variables back
-                    //We rotated them in the CreateLambda method
-                    for(int i = 0; i < PARAMETER_VARIABLES.Length - func.LambdaParameters; i++) {
-                        ParamVars.Enqueue(ParamVars.Dequeue());
-                    }
-
-                    return res;
-                }
-
-                if (Function.IsUnary(funcExpr.Function)) {
-                    UnaryFunction func = (UnaryFunction)Function.Get(funcExpr.Function, caller.ObjectType);
-                    return func.Invoke(caller);
-                }
-                else {
-                    VObject arg = Evaluate(funcExpr.Arguments[0]);
-                    BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
-                    return func.Invoke(caller, arg);
-                }
-                throw new Exception();
-            }
-            ErrorHandler.InternalError("This shouldn't happen.");
-            throw new Exception();
-#endif
         }
 
         // When a function takes in a lambda expression
@@ -205,11 +136,7 @@ namespace TerseLang {
             }
             //This is the function that will be returned
             //Everytime the lambda is used, this is what is being executed
-#if __MonoCS__
-            Lambda func = args => {
-#else
             VObject func(VObject[] args) {
-#endif
                 var paramArgPairs = parameterNames.Zip(args).ToList();
                 var oldValues = new VObject[lambdaParams];
                 int i = 0;
@@ -244,9 +171,6 @@ namespace TerseLang {
 
                 return result;
             }
-#if __MonoCS__
-            ;
-#endif
             return func;
         }
 
