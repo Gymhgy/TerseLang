@@ -35,6 +35,10 @@ namespace TerseLang.Expressions {
 
     public class ListExpression : Expression {
         public ReadOnlyCollection<Expression> Contents { get; }
+
+        public ListExpression(IList<Expression> contents) {
+            Contents = new ReadOnlyCollection<Expression>(contents);
+        }
     }
 
     public class NumericLiteralExpression : Expression {

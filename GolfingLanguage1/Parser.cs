@@ -96,8 +96,17 @@ namespace TerseLang {
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
             else if (tok.Type == TokenType.Punctuation && tok.Value == LIST_START.ToString()) {
+                tokenizer.Next();
+                List<Expression> list = new List<Expression>();
+                while(!tokenizer.EOF() && !ShouldExit() && !(tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString())) {
+                    list.Add(ParseExpression(false));
+                }
+                if(tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString()) {
+                    tokenizer.Next();
+                }
+                ret = new ListExpression(list);
             }
-            if(!(ret is AutoExpression)) {
+            if(!(ret is AutoExpression) && !(ret is ListExpression)) {
                 tokenizer.Next();
                 UpdateBreaks(false, true);
             }
