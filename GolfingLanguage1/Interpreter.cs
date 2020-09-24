@@ -91,7 +91,7 @@ namespace TerseLang {
                         Lambda lambda;
                         // If an autoexpression is submitted as a lambda, then return 1st input
                         if (funcExpr.Arguments[0] is AutoExpression) {
-                            lambda = _ => ProgramState.Autofill_1;
+                            lambda = func.DefaultLambda;
                         }
                         else
                             lambda = CreateLambda(funcExpr.Arguments[0], func.LambdaParameters);

@@ -908,7 +908,7 @@ namespace TerseLang {
 
 			#endregion
 
-			#region List Unary (List) -> List
+			#region List Unary
 			//Function "经", Unary (List) -> List
 			//Stores the current expression result into the assignable variable "间"
 			("经", new UnaryFunction<List<VObject>>(x => {
@@ -1480,9 +1480,18 @@ namespace TerseLang {
 
 		//Designates how much parameters a lambda that is passed into this function takes
 		public int LambdaParameters { get; }
+		//If user does not pass in a lambda, use this
+		public Lambda DefaultLambda { get; }
+
+		protected HigherOrderFunction(int lambdaParameters, Lambda defaultLambda) {
+			LambdaParameters = lambdaParameters;
+			DefaultLambda = defaultLambda;
+		}
 
 		protected HigherOrderFunction(int lambdaParameters) {
 			LambdaParameters = lambdaParameters;
+			//Identity Function
+			DefaultLambda = _ => ProgramState.Autofill_1;
 		}
 
 		public abstract VObject Invoke(VObject caller, Lambda lambda);
@@ -1494,6 +1503,10 @@ namespace TerseLang {
 		private Func<T, Lambda, VObject> Behavior { get; }
 
 		public HigherOrderFunction(Func<T, Lambda, VObject> behavior, int lambdaParameters) : base(lambdaParameters) {
+			Behavior = behavior;
+		}
+
+		public HigherOrderFunction(Func<T, Lambda, VObject> behavior, int lambdaParameters, Lambda defaultLambda) : base(lambdaParameters, defaultLambda) {
 			Behavior = behavior;
 		}
 
