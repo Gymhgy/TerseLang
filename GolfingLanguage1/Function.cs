@@ -319,8 +319,8 @@ namespace TerseLang {
 			("多", new BinaryFunction<double,double>((x,y) => x <= y)),
 
 			//Function "意", Binary (Number, Number) -> Number
-			//
-			("意", new BinaryFunction<double,double>((x,y) => x)),
+			//Return whether N is divisible by n 
+			("意", new BinaryFunction<double,double>((x,y) => x % y == 0 ? 1 : 0)),
 
 			//Function "别", Binary (Number, Number) -> Number
 			//
@@ -797,22 +797,53 @@ namespace TerseLang {
 				}
 				return res;
 			})),
-
+			
 			//Function "话", Binary (String, String) -> String
-			//Remove all
-			("话", new BinaryFunction<string,string>((x,y) => x)),
+			//Repeat S enough times so that it is as long as y
+			("话", new BinaryFunction<string,string>((x,y) => x == "" ? "" : string.Concat(y.Select((_, i) => y[i % x.Length])))),
+			//Function "话", Binary (String, Number) -> String
+			//Repeat S n times
+			("话", new BinaryFunction<string,double>((x,y) => string.Concat(Enumerable.Repeat(x,Math.Max(0, (int)y))))),
 
-			//Function "小", Binary (String, String) -> String
-			//
-			("小", new BinaryFunction<string,string>((x,y) => x)),
+			//Function "小", Binary (String, Number) -> String
+			//Get every nth character of S
+			("小", new BinaryFunction<string,double>((x,y) => string.Concat(x.Where((_, i) => i % y == 0)))),
 
 			//Function "自", Binary (String, String) -> String
-			//
-			("自", new BinaryFunction<string,string>((x,y) => x)),
+			//Number of occurences of s in S
+			("自", new BinaryFunction<string,string>((x,y) => {
+				int count = 0, n = 0;
 
-			//Function "回", Binary (String, String) -> String
-			//
-			("回", new BinaryFunction<string,string>((x,y) => x)),
+				if(y == "") {
+					return 0;
+				}
+				while ((n = x.IndexOf(y, n, StringComparison.InvariantCulture)) != -1) {
+					n += y.Length;
+					count++;
+				}
+				return count;
+			})),
+			//Function "自", Binary (String, Number) -> String
+			//Number of occurences of n in S
+			("自", new BinaryFunction<string,double>((x,y) => {
+				int count = 0, n = 0;
+				string substring = y.ToString();
+				if(substring == "") {
+					return 0;
+				}
+				while ((n = x.IndexOf(substring, n, StringComparison.InvariantCulture)) != -1) {
+					n += substring.Length;
+					count++;
+				}
+				return count;
+			})),
+
+			//Function "回", Binary (String, Lambda[String, String, Number]) -> List
+			//Pass each consecutive pair of characters thru L
+			("回", new HigherOrderFunction<string>((x,y) => {
+				int index = 0;
+				return x.Zip(x.Skip(1), (a,b) => y(a,b,index++)).ToList(); 
+			}, 3)),
 
 			//Function "然", Binary (String, String) -> String
 			//
