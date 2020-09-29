@@ -843,7 +843,7 @@ namespace TerseLang {
 			("回", new HigherOrderFunction<string>((x,y) => {
 				int index = 0;
 				return x.Zip(x.Skip(1), (a,b) => y(a,b,index++)).ToList(); 
-			}, 3)),
+			}, 3, x => new List<VObject>{ x[0], x[1] })),
 
 			//Function "然", Binary (String, String) -> String
 			//
