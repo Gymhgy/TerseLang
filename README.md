@@ -1,4 +1,4 @@
-![i](https://i.ibb.co/ZBcgCNq/Terse.png)
+![i](https://github.com/Gymhgy/TerseLang/blob/master/Terse.png)
 
 Welcome to Terse, the shortest coding language. Terse aims to be able to write problems in as little bytes as possible.
 
