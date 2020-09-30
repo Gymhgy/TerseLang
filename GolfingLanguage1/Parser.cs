@@ -12,6 +12,7 @@ namespace TerseLang {
         // It prevents it from applying a function to it
         private readonly Stack<int> breaks = new Stack<int>();
 
+        private bool parseAsList = false;
 
         private readonly Tokenizer tokenizer;
         private Parser(Tokenizer tok) {
@@ -98,10 +99,11 @@ namespace TerseLang {
             else if (tok.Type == TokenType.Punctuation && tok.Value == LIST_START.ToString()) {
                 tokenizer.Next();
                 List<Expression> list = new List<Expression>();
-                while(!tokenizer.EOF() && !ShouldExit() && !(tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString())) {
+                parseAsList = true;
+                while (parseAsList && !tokenizer.EOF() && !ShouldExit() && !(tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString())) {
                     list.Add(ParseExpression(false));
                 }
-                if(tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString()) {
+                if(!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString()) {
                     tokenizer.Next();
                 }
                 ret = new ListExpression(list);
@@ -148,8 +150,10 @@ namespace TerseLang {
                 if(!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == IF.ToString()) {
                     val = new ConditionalExpression(val, ParseExpression(false), ParseExpression(false));
                 }
+
             }
             UpdateBreaks(true, false);
+            if (ShouldExit()) parseAsList = false;
 
             return val;
         }
