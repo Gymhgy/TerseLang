@@ -50,7 +50,7 @@ namespace TerseLang {
         public const char NEWLINE_SUBSTITUTE = '￥';
 
         public const string VARIABLES = "哦情作跟面诉爱已之问错孩斯成它感干法电间";
-        public const string PUNCTUATION = "[])}）】.";
+        public const string PUNCTUATION = "[])}）】.?";
         public const string FUNCTIONS = TIER_ZERO + TIER_ONE + TIER_TWO + TIER_UNLIMITED + UNARY_FUNCTIONS;
 
         public const string BRACKETS = ")}）";
