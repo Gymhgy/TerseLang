@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using static TerseLang.Constants;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Numerics;
 
 namespace TerseLang {
     public class Tokenizer {
@@ -126,5 +130,105 @@ namespace TerseLang {
 
         public bool EOF() => reader.Peek() == -1 && current == null;
 
+
+        #region String Compression
+
+        public static BigInteger FromBase254(string str) {
+            BigInteger res = 0, multiplier = 1;
+            string map = CHARSET.Replace(STRING_SEPARATOR.ToString(), "").Replace(COMPRESSED_STRING_DELIMITER.ToString(), "");
+            for(int i = str.Length - 1; i >= 0; i--) {
+                res += map.IndexOf(str[i]) * multiplier;
+                multiplier *= 254;
+            }
+            return res;
+        }
+
+        public static string ToBase254(BigInteger i) {
+            string res = "";
+            string map = CHARSET.Replace(STRING_SEPARATOR.ToString(), "").Replace(COMPRESSED_STRING_DELIMITER.ToString(), "");
+            while(i > 0) {
+                res = map[(int)(i % 254)] + res;
+                i /= 254;
+            }
+            return res;
+        }
+
+        static readonly int longest = DICTIONARY.Max(x => x.Length);
+        public static string CompressionAlgoA(string src) {
+            BigInteger[] compressedInts = new BigInteger[src.Length + 1];
+            for (int i = src.Length - 1; i >= 0; i--) {
+                BigInteger compressed = compressedInts[i + 1];
+                char target = src[i];
+                if (target >= ' ' && target <= '~')
+                    compressed = compressed * 96 + (target - 32);
+                else if (target == '\n')
+                    compressed = compressed * 96 + 95;
+                else
+                    throw new ArgumentException("A character in 'src' is neither a linefeed or printable ASCII.");
+                compressed *= 2;
+                compressedInts[i] = compressed;
+
+                for(int j = i + 3; j < Math.Min(i + 31, src.Length + 1); j++) {
+                    string word = src.Substring(i, j - i);
+                    string entryWord = (word[0] == ' ' ? word.Substring(1) : word).ToUpper();
+                    if (DICTIONARY.Contains(entryWord)) {
+                        var wordIndex = DICTIONARY.IndexOf(entryWord);
+                        int modifiers = 0;
+                        if (word[0] == ' ') {
+                            if (char.IsUpper(word[0]))
+                                modifiers = 3;
+                            else modifiers = 1;
+                        }
+                        if(char.IsUpper(word[0])) {
+                            modifiers = 2;
+                        }
+                        BigInteger start = compressedInts[j];
+                        start = start * 2 + 1;
+                        start = start * DICTIONARY.Count + wordIndex;
+                        start = start * 4 + modifiers;
+                        compressedInts[i] = BigInteger.Min(compressedInts[i], start); 
+                    }
+                }
+            }
+            return ToBase254(compressedInts[0]);
+
+        }
+
+        public static string DecompressionAlgoA(string src) {
+            BigInteger data = FromBase254(src);
+            string res = "";
+            //*96+index
+            while (data > 0) {
+                data = BigInteger.DivRem(data, 2, out BigInteger mode);
+                if (mode == 0) {
+                    data = BigInteger.DivRem(data, 96, out BigInteger charIndex);
+                    res += charIndex == 95 ? '\n' : (char)(charIndex + 32);
+                }
+                else {
+                    data = BigInteger.DivRem(data, DICTIONARY.Count, out BigInteger dictIndex);
+                    string word = DICTIONARY[(int)dictIndex];
+                    data = BigInteger.DivRem(data, 4, out mode);
+                    switch ((int)mode) {
+                        //Cap + Space
+                        case 3:
+                            word = " " + char.ToUpper(word[0]) + word.Substring(1);
+                            break;
+                        //Cap
+                        case 2:
+                            word = char.ToUpper(word[0]) + word.Substring(1);
+                            break;
+                        //Space
+                        case 1:
+                            word = " " + word;
+                            break;
+                        default: break;
+                    }
+                    res += word;
+                }
+            }
+            return res;
+        }
+
+        #endregion
     }
 } 

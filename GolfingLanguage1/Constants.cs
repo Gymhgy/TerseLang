@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace TerseLang {
 
@@ -27,7 +29,9 @@ namespace TerseLang {
             //For later use
             " \n\t" +
             //For later use
-            "【：；。，";
+            "【：；。" +
+            //More string stuff
+            "，";
 
         public const string 
             TIER_ZERO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&(*+,-/:;<=>?@\\",
@@ -47,6 +51,8 @@ namespace TerseLang {
         public const char DOUBLE_CHAR_STRING = '’';
         public const char TRIPLE_CHAR_STRING = '‘';
 
+        public const char STRING_SEPARATOR = '，';
+
         public const char NEWLINE_SUBSTITUTE = '￥';
 
         public const string VARIABLES = "哦情作跟面诉爱已之问错孩斯成它感干法电间";
@@ -65,6 +71,8 @@ namespace TerseLang {
 
         public const string USAGE = "Usage: terse [-f path|-p program] [arguments...]\n" + 
                                     "       terse -i (interactive mode, enter program on first line, enter input on second)";
+
+        public static readonly ReadOnlyCollection<string> DICTIONARY = new ReadOnlyCollection<string>(Properties.Resources.DICTIONARY.Split());
 
     }
 }
