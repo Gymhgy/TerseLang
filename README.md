@@ -3,7 +3,7 @@
 Welcome to Terse, the shortest coding language. Terse aims to be able to write problems in as little bytes as possible.
 
 ## How do I program in Terse?
-Go to the [spec file](https://github.com/Gymhgy/TerseLang/blob/master/spec.md). It has all the info you need to construct programs in Terse.
+Go to the [wiki](https://github.com/Gymhgy/TerseLang/wiki). It has all the info you need to construct programs in Terse.
 
 ## How do I run the interpreter?
 
