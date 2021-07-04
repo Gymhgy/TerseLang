@@ -57,6 +57,8 @@ namespace TerseLang {
 			throw new Exception();
 		}
 
+		
+
 		//Unary Functions:
 		//经妈用打地再因呢女告最手前找行快而死先像等被从明中
 		//Binary Functions:
@@ -65,16 +67,16 @@ namespace TerseLang {
 			#region Number Unary
 			//Function "经", Unary (Number) -> Number
 			//Stores the current value into the assignable variable "间"
-			("经", new UnaryFunction<double>(x => {
-				ProgramState.Variables["间"] = x;
+			("经", new UnaryFunctionWithProgramState<double>((x, p) => {
+				p.Variables["间"] = x;
 				return x;
 			})),
 
 			//Function "妈", Unary (Number) -> Number
 			//Makes the first autofill in this scope the current value
-			("妈", new UnaryFunction<double>(x => {
-				ProgramState.Variables["HiddenAutofill"] = x;
-				ProgramState.Autofill1Name = "HiddenAutofill";
+			("妈", new UnaryFunctionWithProgramState<double>((x, p) => {
+				p.Variables["HiddenAutofill"] = x;
+				p.Autofill1Name = "HiddenAutofill";
 				return x;
 			})),
 
@@ -410,16 +412,16 @@ namespace TerseLang {
 			#region String Unary
 			//Function "经", Unary (String) -> String
 			//Stores the current expression result into the assignable variable "间"
-			("经", new UnaryFunction<string>(x => {
-				ProgramState.Variables["间"] = x;
+			("经", new UnaryFunctionWithProgramState<string>((x, p) => {
+				p.Variables["间"] = x;
 				return x;
 			})),
 
 			//Function "妈", Unary (String) -> String
 			//Makes the first autofill in this scope the current value
-			("妈", new UnaryFunction<string>(x => {
-				ProgramState.Variables["HiddenAutofill"] = x;
-				ProgramState.Autofill1Name = "HiddenAutofill";
+			("妈", new UnaryFunctionWithProgramState<string>((x, p) => {
+				p.Variables["HiddenAutofill"] = x;
+				p.Autofill1Name = "HiddenAutofill";
 				return x;
 			})),
 
@@ -911,16 +913,16 @@ namespace TerseLang {
 			#region List Unary
 			//Function "经", Unary (List) -> List
 			//Stores the current expression result into the assignable variable "间"
-			("经", new UnaryFunction<List<VObject>>(x => {
-				ProgramState.Variables["间"] = x;
+			("经", new UnaryFunctionWithProgramState<List<VObject>>((x,p) => {
+				p.Variables["间"] = x;
 				return x;
 			})),
 
 			//Function "妈", Unary (List) -> List
 			//Makes the first autofill in this scope the current value
-			("妈", new UnaryFunction<List<VObject>>(x => {
-				ProgramState.Variables["HiddenAutofill"] = x;
-				ProgramState.Autofill1Name = "HiddenAutofill";
+			("妈", new UnaryFunctionWithProgramState<List<VObject>>((x,p) => {
+				p.Variables["HiddenAutofill"] = x;
+				p.Autofill1Name = "HiddenAutofill";
 				return x;
 			})),
 
@@ -1458,6 +1460,26 @@ namespace TerseLang {
 		}
 	}
 
+	public abstract class UnaryFunctionWithProgramState : UnaryFunction {
+		public abstract VObject Invoke(VObject caller, ProgramState programState);
+    }
+
+	public class UnaryFunctionWithProgramState<T> : UnaryFunctionWithProgramState {
+
+		private Func<T, ProgramState, VObject> Behavior { get; }
+		public UnaryFunctionWithProgramState(Func<T, ProgramState, VObject> behavior) {
+			Behavior = behavior;
+        }
+		public override VObject Invoke(VObject caller, ProgramState programState) {
+			return Behavior(caller.ConvertTo<T>(), programState);
+        }
+		
+		//For abstract
+		public override VObject Invoke(VObject caller) {
+			return null;
+		}
+	}
+
 	public abstract class BinaryFunction : Function {
 		public abstract VObject Invoke(VObject caller, VObject arg);
 	}
@@ -1490,8 +1512,8 @@ namespace TerseLang {
 
 		protected HigherOrderFunction(int lambdaParameters) {
 			LambdaParameters = lambdaParameters;
-			//Identity Function
-			DefaultLambda = _ => ProgramState.Autofill_1;
+			//Filled in interpreter
+			DefaultLambda = null;
 		}
 
 		public abstract VObject Invoke(VObject caller, Lambda lambda);

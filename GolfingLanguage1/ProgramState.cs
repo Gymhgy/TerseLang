@@ -7,19 +7,19 @@ using System.Linq;
 using static TerseLang.Constants;
 
 namespace TerseLang {
-    public static class ProgramState {
+    public class ProgramState {
 
         //Default values, which are the input variables
         //These will change when a lambda is evaluated
         //in which they will have the value of a lambda parameter variable name
         //Or it can change when a function that changes autofills is called
-        public static string Autofill1Name = INPUT_VARIABLES[0].ToString();
-        public static string Autofill2Name = INPUT_VARIABLES[1].ToString();
+        public string Autofill1Name = INPUT_VARIABLES[0].ToString();
+        public string Autofill2Name = INPUT_VARIABLES[1].ToString();
 
-        public static VObject Autofill_1 => Variables[Autofill1Name];
-        public static VObject Autofill_2 => Variables[Autofill2Name];
+        public VObject Autofill_1 => Variables[Autofill1Name];
+        public VObject Autofill_2 => Variables[Autofill2Name];
 
-        public static Dictionary<string, VObject> Variables = new Dictionary<string, object>
+        public Dictionary<string, VObject> Variables = new Dictionary<string, object>
         {
             //Inputs
             ["哦"] = 0,
@@ -56,7 +56,7 @@ namespace TerseLang {
 
         }.ToDictionary(x => x.Key, x => new VObject(x.Value));
 
-        public static void Initialize(IList<VObject> Inputs) {
+        public ProgramState(IList<VObject> Inputs) {
             //Initialize input variables
             INPUT_VARIABLES.Zip(Inputs).Take(4).ToList().ForEach(pair => {
                 var (varName, val) = pair;
