@@ -139,12 +139,12 @@ namespace TerseLang {
                 case ObjectType.String:
                     return (string)this;
                 case ObjectType.List:
-                    string str = "[";
-                    foreach (var x in (List<VObject>)this) {
-                        str += x.ToString();
-                    }
-                    str += "]";
-                    return str;
+                    string str = string.Join(", ", ((List<VObject>)this).Select(x => {
+                        var ret = x.ToString();
+                        if (x.ObjectType == ObjectType.String) ret = '"' + ret.Replace("\\", "\\\\").Replace("\"", "\\\"") + '"';
+                        return ret;
+                    }));
+                    return "[" + str + "]";
                 default:
                     ErrorHandler.InternalError("VObject has no type (?)");
                     throw new Exception();
