@@ -5,11 +5,16 @@ Welcome to Terse, the shortest coding language. Terse aims to be able to write p
 ## How do I program in Terse?
 Go to the [wiki](https://github.com/Gymhgy/TerseLang/wiki). It has all the info you need to construct programs in Terse.
 
-## How do I run the interpreter?
+## Run Online!
+Work in Progress Online Interpreter: https://gymhgy.github.io/TerseIDE/
 
+## How do I run this from the command line?
+Non-windows: you will need to have mono installed
 ```
-Usage: mono terse [-f path|-p program] [arguments...]
+mono terse [-f path|-p program] [arguments...]
 ```
 
-## Where do I find the list of functions?
-The docs aren't complete yet. Once they're done, however, they'll be in the [Functions.md](https://github.com/Gymhgy/TerseLang/blob/master/functions.md) file
+Windows:
+```
+terse [-f path|-p program] [arguments...]
+```
