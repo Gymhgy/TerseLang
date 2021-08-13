@@ -56,5 +56,21 @@ namespace TerseLang.Tests {
             var expected = new List<VObject> { "s" };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
         }
+
+        [TestMethod]
+        public void Interpreter_HigherOrderTiers() {
+            var interpreter = new Interpreter("j因j因", new VObject[] { new List<VObject> { 1, 2, 3 } });
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { new List<VObject> { 3, 4, 5 } };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
+        }
+
+        [TestMethod]
+        public void Interpreter_LambdaParameterTest() {
+            var interpreter = new Interpreter("点斯J起它不1", new VObject[] { new List<VObject> { new List<VObject> { 1, 2 } } } );
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { new List<VObject> { new List<VObject> {1 } } };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
+        }
     }
 }

@@ -55,6 +55,7 @@ namespace TerseLang {
             }
             if(bracket == 0) {
                 tokenizer.Next();
+                bracket = -1;
             }
         }
 

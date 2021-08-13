@@ -146,5 +146,26 @@ namespace TerseLang.Tests {
                     };
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
         }
+
+        [TestMethod]
+        public void Parser_HigherOrderTiers() {
+            var actual = Parser.Parse("j因j因");
+            var expected = new List<Expression> {
+                new FunctionInvocationExpression(new FunctionInvocationExpression(new AutoExpression(), "j", new[]{
+new FunctionInvocationExpression(new AutoExpression(), "因", none)
+                    }), "j", new[]{
+new FunctionInvocationExpression(new AutoExpression(), "因", none)
+                    })
+                
+            };
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump() + "\n" + expected.Dump());
+        }
+
+        [TestMethod]
+        public void Parser_BracketMultiple() {
+            var actual = Parser.Parse("点点点点来)))用");
+            var expected = Parser.Parse("点点点点来})用");
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump() + "\n" + expected.Dump());
+        }
     }
 }

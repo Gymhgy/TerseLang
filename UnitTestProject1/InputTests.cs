@@ -67,7 +67,8 @@ namespace TerseLang.Tests {
             {
                 ("[[0,1,2], [3,4,5], [6,7,8]]", new VObject[]{ new List<VObject> { 0,1,2 } , new List<VObject> { 3,4,5 }, new List<VObject> { 6,7,8 } }),
                 ("[[\"abc\"], [\"def\", '[]'], [\"'ghi'\"]]", new VObject[]{ new List<VObject> { "abc" } , new List<VObject> { "def", "[]" }, new List<VObject> { "'ghi'" } }),
-                ("[['abc']]", new VObject[]{ new List<VObject> { "abc" } })
+                ("[['abc']]", new VObject[]{ new List<VObject> { "abc" } }),
+                ("[[1,2]]", new VObject[]{ new List<VObject> { 1,2 } })
 
             };
             foreach (var (test, expected) in tests) {

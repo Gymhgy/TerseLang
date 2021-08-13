@@ -91,20 +91,27 @@ namespace TerseLang {
                     if (Function.IsHigherOrder(funcExpr.Function, caller.ObjectType)) {
                         HigherOrderFunction func = (HigherOrderFunction)Function.Get(funcExpr.Function, caller.ObjectType);
                         Lambda lambda;
-                        // If an autoexpression is submitted as a lambda, then either use the default lambda or if not available, a lambda that returns the first autofill (the first input)
+                        bool createdLambda = false;
+                        // If an autoexpression is submitted as a lambda, then either use the default lambda or if not available, a lambda that returns the first input
                         if (funcExpr.Arguments[0] is AutoExpression) {
-                            lambda = func.DefaultLambda ??  (_ => programState.Autofill_1);
+                            lambda = func.DefaultLambda ?? (x => x[0]);
                         }
-                        else
+                        else {
                             lambda = CreateLambda(funcExpr.Arguments[0], func.LambdaParameters);
+                            createdLambda = true;
+                        }
 
 
                         //We pass the lambda that we created into the function
                         var res = func.Invoke(caller, lambda);
+
                         //Re-rotate the parameter variables back
                         //We rotated them in the CreateLambda method
-                        for (int i = 0; i < PARAMETER_VARIABLES.Length - func.LambdaParameters; i++) {
-                            ParamVars.Enqueue(ParamVars.Dequeue());
+                        //Note this only triggers if CreateLambda was called
+                        if (createdLambda) {
+                            for (int i = 0; i < PARAMETER_VARIABLES.Length - func.LambdaParameters; i++) {
+                                ParamVars.Enqueue(ParamVars.Dequeue());
+                            }
                         }
 
                         return res;

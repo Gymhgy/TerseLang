@@ -13,6 +13,17 @@ using System.Net;
 namespace TerseLang {
 	public abstract class Function {
 
+		//Returns base form of the function
+		private static string GetBase(string func) {
+			//Also checks if func is actually a function
+			var tier = GetTier(func);
+			if (!IsUnary(func)) {
+				var tierList = new[] { TIER_UNLIMITED, TIER_ZERO, TIER_ONE, TIER_TWO }[tier + 1];
+				func = TIER_UNLIMITED[tierList.IndexOf(func)].ToString();
+			}
+			return func;
+		}
+
 		public static int GetTier(String func) {
 			if (IsUnary(func)) return 0;
 			if (TIER_ZERO.Contains(func)) return 0;
@@ -26,6 +37,7 @@ namespace TerseLang {
 			return UNARY_FUNCTIONS.Contains(next);
 		}
 		public static bool IsHigherOrder(string func, ObjectType callerType) {
+			func = GetBase(func);
 			if (IsUnary(func))
 				return false;
 				return Functions.Count(funcs => 
@@ -36,12 +48,8 @@ namespace TerseLang {
 		}
 
 		public static Function Get(String func, params ObjectType[] types) {
-			//We don't need to check if func is actually a function because that is handled within GetTier()
-			var tier = GetTier(func);
-			if (!IsUnary(func)) {
-				var tierList = new[] { TIER_UNLIMITED, TIER_ZERO, TIER_ONE, TIER_TWO }[tier + 1];
-				func = TIER_UNLIMITED[tierList.IndexOf(func)].ToString();
-			}
+			//We don't need to check if func is actually a function because that is handled within GetBase()
+			func = GetBase(func);
 			if (types.Length > 2 || types.Length < 1) throw new ArgumentException("types");
 			try {
 				return Functions.Single(funcs => {
