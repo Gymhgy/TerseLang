@@ -147,15 +147,17 @@ namespace TerseLang {
                 }
                 else
                     ProcessBrackets();
-                //If a '?' follows this expression, it means it's a conditional expression
-                if(!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == IF.ToString()) {
-                    val = new ConditionalExpression(val, ParseExpression(false), ParseExpression(false));
-                }
+
 
             }
             UpdateBreaks(true, false);
             if (ShouldExit()) parseAsList = false;
-
+            //If a '?' follows this expression, it means it's a conditional expression
+            if (!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == IF.ToString())
+            {
+                tokenizer.Next();
+                val = new ConditionalExpression(val, ParseExpression(false), ParseExpression(false));
+            }
             return val;
         }
     }

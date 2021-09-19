@@ -167,5 +167,16 @@ new FunctionInvocationExpression(new AutoExpression(), "因", none)
             var expected = Parser.Parse("点点点点来})用");
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump() + "\n" + expected.Dump());
         }
+
+        [TestMethod]
+        public void Parser_SimpleIf()
+        {
+            var actual = Parser.Parse("1?2..3");
+            var expected = new List<Expression>
+            {
+                new ConditionalExpression(new NumericLiteralExpression(1), new NumericLiteralExpression(2), new NumericLiteralExpression(0.3))
+            };
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
+        }
     }
 }
