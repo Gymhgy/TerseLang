@@ -108,46 +108,6 @@ namespace TerseLang.Tests {
         }
 
         [TestMethod]
-        public void Parser_EmptyList() {
-            var actual = Parser.Parse("[]");
-            var expected = new List<Expression> {
-                new ListExpression(none)
-            };
-            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-        }
-
-        [TestMethod]
-        public void Parser_1DList() {
-            var actual = Parser.Parse("[12]");
-            var expected = new List<Expression> {
-                new ListExpression(new[]{new NumericLiteralExpression(12) })
-            };
-            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-        }
-
-        [TestMethod]
-        public void Parser_1DListMultipleItems() {
-            var actual = Parser.Parse("[12$12$12$]");
-            var expected = new List<Expression> {
-                new ListExpression(new[]{
-                    new FunctionInvocationExpression(new NumericLiteralExpression(12), "$", auto), 
-                    new FunctionInvocationExpression(new NumericLiteralExpression(12), "$", auto),
-                    new FunctionInvocationExpression(new NumericLiteralExpression(12), "$", auto) })
-            };
-            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-        }
-        [TestMethod]
-        public void Parser_1DListAsArgumentToTier2Func() {
-            var actual = Parser.Parse("去[12$1");
-            var expected = new List<Expression> {
-                    new FunctionInvocationExpression(new AutoExpression(), "去", new[]{new ListExpression(new[]{
-                        new FunctionInvocationExpression(new NumericLiteralExpression(12), "$", auto)
-                    }) }), new NumericLiteralExpression(1)
-                    };
-            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-        }
-
-        [TestMethod]
         public void Parser_HigherOrderTiers() {
             var actual = Parser.Parse("j因j因");
             var expected = new List<Expression> {

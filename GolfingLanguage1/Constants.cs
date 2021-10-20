@@ -23,11 +23,11 @@ namespace TerseLang {
             //DIGITS
             "0123456789" +
             //PUNCTUATION
-            "?[])}）】."+
+            "?)}）】."+
             //For later use
             " \n\t" +
             //For later use
-            "【：；。，";
+            "[]【：；。，";
 
         public const string 
             TIER_ZERO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&(*+,-/:;<=>?@\\",
@@ -55,8 +55,6 @@ namespace TerseLang {
 
         public const string BRACKETS = ")}）";
         public const char CLOSE_ALL = '】';
-        public const char LIST_START = '[';
-        public const char LIST_END = ']';
 
         public const string PARAMETER_VARIABLES = "斯成它感干法";
         public const string INPUT_VARIABLES = "哦情作跟";

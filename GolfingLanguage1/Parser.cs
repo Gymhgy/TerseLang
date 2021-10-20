@@ -8,12 +8,6 @@ using static TerseLang.Constants;
 namespace TerseLang {
     public class Parser {
 
-        // The breaks "break" a ParseExpression call
-        // It prevents it from applying a function to it
-        private readonly Stack<int> breaks = new Stack<int>();
-
-        private bool parseAsList = false;
-
         private readonly Tokenizer tokenizer;
         private Parser(Tokenizer tok) {
             tokenizer = tok;
@@ -65,53 +59,27 @@ namespace TerseLang {
             return tok.Type == TokenType.Punctuation && (BRACKETS.Contains(tok.Value) || CLOSE_ALL.ToString() == tok.Value);
         }
 
-        private void UpdateBreaks(bool pop, bool update) {
-            var x = ShouldExit();
-            if (x) {
-                if(pop)
-                breaks.Pop(); 
-            }
-            else {
-                if (update && breaks.Count > 0)
-                    breaks.Push(breaks.Pop() - 1);
-            }
-        }
 
-        private bool ShouldExit() {
-            return breaks.Count != 0 && breaks.Peek() == 0;
-        }
 
         // Based off of the next token, return the appropriate value
         // If the next token is punctuation or a function, return an AutoExpression
-        private Expression GetNextValue() {
+        private Expression GetNextValue(ref int toks) {
             Expression ret = new AutoExpression();
             
             if(tokenizer.EOF()) {
                 return ret;
             }
-            if(ShouldExit()) {
+            if (toks == 0) {
                 return ret;
             }
-
             var tok = tokenizer.Peek();
             if (tok.Type == TokenType.Number) ret = new NumericLiteralExpression(double.Parse(tok.Value));
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
-            else if (tok.Type == TokenType.Punctuation && tok.Value == LIST_START.ToString()) {
-                tokenizer.Next();
-                List<Expression> list = new List<Expression>();
-                parseAsList = true;
-                while (parseAsList && !tokenizer.EOF() && !ShouldExit() && !(tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString())) {
-                    list.Add(ParseExpression(false));
-                }
-                if(!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == LIST_END.ToString()) {
-                    tokenizer.Next();
-                }
-                ret = new ListExpression(list);
-            }
+
             if(!(ret is AutoExpression) && !(ret is ListExpression)) {
+                toks--;
                 tokenizer.Next();
-                UpdateBreaks(false, true);
             }
             return ret;
         }
@@ -119,21 +87,21 @@ namespace TerseLang {
         // An expression starts out with a starting value, which we get from GetNextValue
         // Functions are applied to that starting value
         // Each function has a "tier", which means how many tokens can go after it
-        private Expression ParseExpression(bool topLevel) {
-            var val = GetNextValue();
-            while (!tokenizer.EOF() && !ShouldExit() && tokenizer.Peek().Type == TokenType.Function) {
+        // toks: the max amount of tokens that should be parsed (determined by tier)
+        private Expression ParseExpression(bool topLevel, int toks = -1) {
+            var val = GetNextValue(ref toks);
+            while (!tokenizer.EOF() && toks != 0 && tokenizer.Peek().Type == TokenType.Function) {
                 // Another token has been consumed; therefore we need to update the breaks
                 var next = tokenizer.Next().Value;
-                UpdateBreaks(false, true);
+                toks--;
 
                 if(Function.IsUnary(next)) {
                     val = new FunctionInvocationExpression(val, next, Array.Empty<Expression>()) ;
                 }
                 else {
                     var tier = Function.GetTier(next);
-                    breaks.Push(tier);
                     List<Expression> args = new List<Expression>();
-                    var arg = ParseExpression(false);
+                    var arg = ParseExpression(false, tier);
                     args.Add(arg);
                     val = new FunctionInvocationExpression(val, next, args);
                 }
@@ -143,15 +111,10 @@ namespace TerseLang {
                     bracket = -1;
                     while (IsBracket())
                         tokenizer.Next();
-                    breaks.Clear();
                 }
                 else
                     ProcessBrackets();
-
-
             }
-            UpdateBreaks(true, false);
-            if (ShouldExit()) parseAsList = false;
             //If a '?' follows this expression, it means it's a conditional expression
             if (!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == IF.ToString())
             {
