@@ -77,7 +77,7 @@ namespace TerseLang {
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
 
-            if(!(ret is AutoExpression) && !(ret is ListExpression)) {
+            if(!(ret is AutoExpression)) {
                 toks--;
                 tokenizer.Next();
             }
