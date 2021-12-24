@@ -88,12 +88,12 @@ namespace TerseLang {
         // Functions are applied to that starting value
         // Each function has a "tier", which means how many tokens can go after it
         // toks: the max amount of tokens that should be parsed (determined by tier)
-        private Expression ParseExpression(bool topLevel, int toks = -1) {
+        private Expression ParseExpression(bool topLevel=false, int toks = -1) {
             var val = GetNextValue(ref toks);
             while (!tokenizer.EOF() && toks != 0 && tokenizer.Peek().Type == TokenType.Function) {
                 // Another token has been consumed; therefore we need to update the breaks
                 var next = tokenizer.Next().Value;
-                toks--;
+                toks--; 
 
                 if(Function.IsUnary(next)) {
                     val = new FunctionInvocationExpression(val, next, Array.Empty<Expression>()) ;
@@ -119,7 +119,7 @@ namespace TerseLang {
             if (!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == IF.ToString())
             {
                 tokenizer.Next();
-                val = new ConditionalExpression(val, ParseExpression(false), ParseExpression(false));
+                val = new ConditionalExpression(val, ParseExpression(), ParseExpression());
             }
             return val;
         }
