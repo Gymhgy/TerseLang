@@ -76,12 +76,34 @@ namespace TerseLang {
             if (tok.Type == TokenType.Number) ret = new NumericLiteralExpression(double.Parse(tok.Value));
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
-
+            else if (tok.Type == TokenType.InterpolatedString) ret = HandleInterpolatedString(tok.Value);
             if(!(ret is AutoExpression)) {
                 toks--;
                 tokenizer.Next();
             }
             return ret;
+        }
+
+        private InterpolatedStringExpression HandleInterpolatedString(string str) {
+            List<Expression> exprs = new List<Expression>();
+            string currStr = "";
+            for(int i = 0; i < str.Length; i++) {
+                if (str[i] >= 32 && str[i] <= 126) currStr += str[i];
+                else {
+                    exprs.Add(new StringLiteralExpression(currStr));
+                    currStr = "";
+
+                    string currInterpolation = "";
+                    for (; i < str.Length && str[i] > 126; i++) currInterpolation += str[i];
+                    i--; //decrement since it will be re-incremented, if no decrement then we skip a char
+                    Parser interpolationParser = new Parser(new Tokenizer(currInterpolation));
+                    var expr = interpolationParser.ParseExpression();
+                    exprs.Add(expr);
+                }
+            }
+            exprs.Add(new StringLiteralExpression(currStr));
+
+            return new InterpolatedStringExpression(exprs);
         }
 
         // An expression starts out with a starting value, which we get from GetNextValue

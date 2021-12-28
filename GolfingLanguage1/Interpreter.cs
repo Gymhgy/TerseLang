@@ -128,6 +128,9 @@ namespace TerseLang {
                         return func.Invoke(caller, arg);
                     }
                     throw new Exception();
+
+                case InterpolatedStringExpression intpStr:
+                    return string.Concat(intpStr.Expressions.Select(x => Evaluate(x).ToString()));
                 default:
                     ErrorHandler.InternalError("This shouldn't happen.");
                     throw new Exception();

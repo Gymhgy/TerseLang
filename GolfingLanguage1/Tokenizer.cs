@@ -94,19 +94,20 @@ namespace TerseLang {
 
         private Token ReadString() {
             var str = "";
+            TokenType type = TokenType.String;
             while(!EOF() && PeekChar() != STRING_DELIMITER && PeekChar() != '\n') {
                 var ch = ReadChar();
                 if (ch == NEWLINE_SUBSTITUTE) {
                     str += "\n";
                 }
                 else if (CHARSET.Contains(ch) && (ch > 126 || ch < 32)) {
-                    throw new NotImplementedException("No support for certain unicode characters in strings yet. " +
-                        "Currently working on a feature that unicode characters do special things in strings.");
+                    type = TokenType.InterpolatedString;
+                    str += ch;
                 }
                 else str += ch;
             }
             if (!EOF()) ReadChar();
-            return new Token(str, TokenType.String);
+            return new Token(str, type);
         }
 
         // Reads number in form of ##.## (where # are digits)

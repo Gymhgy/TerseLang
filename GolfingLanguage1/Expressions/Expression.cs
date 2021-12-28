@@ -53,14 +53,14 @@ namespace TerseLang.Expressions {
         public StringLiteralExpression(string value) {
             Value = value;
         }
-
-        public StringLiteralExpression(IList<Expression> interpolations, string value) {
-            Interpolations = new ReadOnlyCollection<Expression>(interpolations);
-            Value = value;
-        }
-
-        public ReadOnlyCollection<Expression> Interpolations { get; }
         public string Value { get; }
+    }
+
+    public class InterpolatedStringExpression : Expression {
+        public IEnumerable<Expression> Expressions { get; }
+        public InterpolatedStringExpression(IEnumerable<Expression> expressions) {
+            Expressions = expressions;
+        }
     }
 
     public class ConditionalExpression : Expression {

@@ -99,14 +99,6 @@ namespace TerseLang.Tests {
             Assert.IsTrue(TokenListEqual(actual, expected));
         }
 
-        [TestMethod]
-        public void Tokenizer_StringWithUnicodeFail() {
-            Assert.ThrowsException<NotImplementedException>(() =>
-            {
-                GetTokens("“最");
-            });
-        }
-
         private static List<Token> GetTokens(string s) {
             List<Token> tokens = new List<Token>();
             Tokenizer t = new Tokenizer(s);
