@@ -65,9 +65,6 @@ namespace TerseLang {
                     return new VObject(number.Value);
                 case StringLiteralExpression str:
                     return new VObject(str.Value);
-                case ListExpression array:
-                    return new VObject(array.Contents.Select(Evaluate).ToList());
-
                 case VariableReferenceExpression variable:
                     return programState.Variables[variable.Name];
 
@@ -93,11 +90,11 @@ namespace TerseLang {
                         Lambda lambda;
                         bool createdLambda = false;
                         // If an autoexpression is submitted as a lambda, then either use the default lambda or if not available, a lambda that returns the first input
-                        if (funcExpr.Arguments[0] is AutoExpression) {
+                        if (funcExpr.Argument is AutoExpression) {
                             lambda = func.DefaultLambda ?? (x => x[0]);
                         }
                         else {
-                            lambda = CreateLambda(funcExpr.Arguments[0], func.LambdaParameters);
+                            lambda = CreateLambda(funcExpr.Argument, func.LambdaParameters);
                             createdLambda = true;
                         }
 
@@ -123,7 +120,7 @@ namespace TerseLang {
                         else return func.Invoke(caller);
                     }
                     else {
-                        VObject arg = funcExpr.Arguments[0] is AutoExpression ? programState.Autofill_2 : Evaluate(funcExpr.Arguments[0]);
+                        VObject arg = funcExpr.Argument is AutoExpression ? programState.Autofill_2 : Evaluate(funcExpr.Argument);
                         BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
                         return func.Invoke(caller, arg);
                     }

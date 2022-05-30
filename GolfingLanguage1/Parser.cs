@@ -77,7 +77,7 @@ namespace TerseLang {
             else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
             else if (tok.Type == TokenType.InterpolatedString) ret = HandleInterpolatedString(tok.Value);
-            if(!(ret is AutoExpression)) {
+            if(ret is not AutoExpression) {
                 toks--;
                 tokenizer.Next();
             }
@@ -118,14 +118,12 @@ namespace TerseLang {
                 toks--; 
 
                 if(Function.IsUnary(next)) {
-                    val = new FunctionInvocationExpression(val, next, Array.Empty<Expression>()) ;
+                    val = new FunctionInvocationExpression(val, next) ;
                 }
                 else {
                     var tier = Function.GetTier(next);
-                    List<Expression> args = new List<Expression>();
                     var arg = ParseExpression(false, tier);
-                    args.Add(arg);
-                    val = new FunctionInvocationExpression(val, next, args);
+                    val = new FunctionInvocationExpression(val, next, arg);
                 }
                 // Get rid of all the brackets if this expression is a top level one
                 // And also clear out all the breaks
