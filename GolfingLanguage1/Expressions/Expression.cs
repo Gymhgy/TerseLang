@@ -22,23 +22,21 @@ namespace TerseLang.Expressions {
     }
 
     public class FunctionInvocationExpression : Expression {
-        public FunctionInvocationExpression(Expression caller, string function, IList<Expression> arguments) {
+        public FunctionInvocationExpression(Expression caller, string function) {
             Caller = caller;
             Function = function;
-            Arguments = new ReadOnlyCollection<Expression>(arguments);
         }
+
+        public FunctionInvocationExpression(Expression caller, string function, Expression argument) {
+            Caller = caller;
+            Function = function;
+            Argument = argument;
+        }
+
 
         public Expression Caller { get; }
         public string Function { get; }
-        public ReadOnlyCollection<Expression> Arguments { get; }
-    }
-
-    public class ListExpression : Expression {
-        public ReadOnlyCollection<Expression> Contents { get; }
-
-        public ListExpression(IList<Expression> contents) {
-            Contents = new ReadOnlyCollection<Expression>(contents);
-        }
+        public Expression Argument { get; }
     }
 
     public class NumericLiteralExpression : Expression {

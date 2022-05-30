@@ -10,9 +10,9 @@ namespace TerseLang.Tests {
 
 
         public static bool EqualByProperties(object self, object to, params string[] ignore) {
+            if (self == null || to == null) return self == to;
             Type type = self.GetType();
             if (type != to.GetType()) return false;
-            if (self == null || to == null) return self == to;
             if (IsSimpleType(type)) return self.Equals(to);
             if (typeof(IEnumerable).IsAssignableFrom(type)) {
                 var selfIEnumerable = ((IEnumerable)self).Cast<object>();

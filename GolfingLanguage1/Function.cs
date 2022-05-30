@@ -30,7 +30,7 @@ namespace TerseLang {
 			if (TIER_ONE.Contains(func)) return 1;
 			if (TIER_TWO.Contains(func)) return 2;
 			if (TIER_UNLIMITED.Contains(func)) return -1;
-			throw new ArgumentException("func");
+			throw new ArgumentException("Argument is not a function");
 		}
 
 		public static bool IsUnary(String next) {
@@ -50,7 +50,7 @@ namespace TerseLang {
 		public static Function Get(String func, params ObjectType[] types) {
 			//We don't need to check if func is actually a function because that is handled within GetBase()
 			func = GetBase(func);
-			if (types.Length > 2 || types.Length < 1) throw new ArgumentException("types");
+			if (types.Length > 2 || types.Length < 1) throw new ArgumentException("Incorrect number of types");
 			try {
 				return Functions.Single(funcs => {
 
