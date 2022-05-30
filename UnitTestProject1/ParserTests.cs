@@ -36,7 +36,7 @@ namespace TerseLang.Tests {
         public void Parser_AutoAsArgument() {
             var actual = Parser.Parse("2$$2");
             var expected = new List<Expression> { 
-                new NumericLiteralExpression(2).Invoke("$", auto).Invoke("$"),
+                new NumericLiteralExpression(2).Invoke("$", auto).Invoke("$", auto),
                 new NumericLiteralExpression(2)
             };
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
@@ -77,7 +77,7 @@ namespace TerseLang.Tests {
         public void Parser_Brackets() {
             var actual = Parser.Parse("3怎3怎}");
             var expected = new List<Expression> { 
-                new NumericLiteralExpression(3).Invoke("怎", new NumericLiteralExpression(3).Invoke("怎"))
+                new NumericLiteralExpression(3).Invoke("怎", new NumericLiteralExpression(3).Invoke("怎", auto))
             };
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
         }
@@ -98,7 +98,7 @@ namespace TerseLang.Tests {
         public void Parser_CloseAll() {
             var actual = Parser.Parse("怎怎怎怎】$");
             var expected = new List<Expression> {
-                    auto.Invoke("怎", auto.Invoke("怎", auto.Invoke("怎", auto.Invoke("怎", auto)))).Invoke("$")
+                    auto.Invoke("怎", auto.Invoke("怎", auto.Invoke("怎", auto.Invoke("怎", auto)))).Invoke("$", auto)
             };
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
         }
@@ -120,6 +120,15 @@ namespace TerseLang.Tests {
 			Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump() + "\n" + expected.Dump());
 		}
 
+        [TestMethod]
+        public void Parser_CloseAll2() {
+            var actual = Parser.Parse("定定定定】定");
+            var expected = new List<Expression> {
+                    auto.Invoke("定", auto.Invoke("定", auto.Invoke("定", auto.Invoke("定", auto)))).Invoke("定", auto)
+            };
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
+        }
+
 		[TestMethod]
 		public void Parser_SimpleIf()
 		{
@@ -137,7 +146,7 @@ namespace TerseLang.Tests {
 			var expected = new List<Expression> {
 				new InterpolatedStringExpression(new List<Expression> {
 					new StringLiteralExpression("abcd"),
-					new FunctionInvocationExpression(new AutoExpression(), "定", new[]{new AutoExpression() }),
+					new FunctionInvocationExpression(new AutoExpression(), "定", auto),
 					new StringLiteralExpression("efgh"),
 					new VariableReferenceExpression("情"),
 					new StringLiteralExpression("ijk")
@@ -152,17 +161,12 @@ namespace TerseLang.Tests {
 			var actual = Parser.Parse("“abcd定定定）定efgh定定定定】定ijk");
 			var expected = new List<Expression> {
 				new InterpolatedStringExpression(new List<Expression> {
-					new StringLiteralExpression("abcd"),
-					new FunctionInvocationExpression(new FunctionInvocationExpression(new AutoExpression(), "定", new[]{ 
-						new FunctionInvocationExpression(new AutoExpression(), "定", new[]{ 
-							new FunctionInvocationExpression(new AutoExpression(), "定", new[] { new AutoExpression() }) }) }),  "定", new[] { new AutoExpression() }),
-					new StringLiteralExpression("efgh"),
-					new FunctionInvocationExpression(new FunctionInvocationExpression(new AutoExpression(), "定", new[]{
-						new FunctionInvocationExpression(new AutoExpression(), "定", new[]{
-							new FunctionInvocationExpression(new AutoExpression(), "定", new[] { 
-								new FunctionInvocationExpression(new AutoExpression(), "定", new[] { new AutoExpression() }) }) }) }),  "定", new[] { new AutoExpression() }),
-					new StringLiteralExpression("ijk")
-				})
+                    new StringLiteralExpression("abcd"),
+                    auto.Invoke("定", auto.Invoke("定", auto.Invoke("定", auto))).Invoke("定",auto),
+                    new StringLiteralExpression("efgh"),
+                    auto.Invoke("定", auto.Invoke("定", auto.Invoke("定", auto.Invoke("定", auto)))).Invoke("定", auto),
+                    new StringLiteralExpression("ijk")
+                })
 			};
 
 			Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());

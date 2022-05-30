@@ -94,9 +94,17 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Tokenizer_StringWithNoClosing() {
-            var expected = GetTokens("“hello");
-            var actual = new List<Token> { new Token("hello", TokenType.String) };
+            var actual = GetTokens("“hello");
+            var expected = new List<Token> { new Token("hello", TokenType.String) };
             Assert.IsTrue(TokenListEqual(actual, expected));
+        }
+
+        [TestMethod]
+        public void Tokenizer_InterpolatedString() {
+            var actual = GetTokens("“abcd定efgh情ijk");
+            var expected = new List<Token> { new Token("abcd定efgh情ijk", TokenType.InterpolatedString) };
+            Assert.IsTrue(TokenListEqual(actual, expected), actual.Dump());
+
         }
 
         private static List<Token> GetTokens(string s) {

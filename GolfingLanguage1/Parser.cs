@@ -96,9 +96,10 @@ namespace TerseLang {
                     string currInterpolation = "";
                     for (; i < str.Length && str[i] > 126; i++) currInterpolation += str[i];
                     i--; //decrement since it will be re-incremented, if no decrement then we skip a char
+
                     Parser interpolationParser = new Parser(new Tokenizer(currInterpolation));
-                    var expr = interpolationParser.ParseExpression();
-                    exprs.Add(expr);
+                    var interps = interpolationParser.GetAST();
+                    exprs.AddRange(interps);
                 }
             }
             exprs.Add(new StringLiteralExpression(currStr));
