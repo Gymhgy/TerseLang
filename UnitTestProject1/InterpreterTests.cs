@@ -72,5 +72,13 @@ namespace TerseLang.Tests {
             var expected = new List<VObject> { new List<VObject> { new List<VObject> {1 } } };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
         }
+
+        [TestMethod]
+        public void Interpreter_PairLambda() {
+            var interpreter = new Interpreter("电如3了5", new VObject[] { } );
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { Enumerable.Repeat(new VObject(new List<VObject> { 3, 5 }), 100).ToList() };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
+        }
     }
 }

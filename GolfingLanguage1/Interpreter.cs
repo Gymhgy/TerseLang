@@ -163,7 +163,8 @@ namespace TerseLang {
                 string oldAutofill1Name = programState.Autofill1Name;
                 string oldAutofill2Name = programState.Autofill2Name;
                 programState.Autofill1Name = parameterNames[0];
-                programState.Autofill2Name = parameterNames[1];
+                if(lambdaParams > 1)
+                    programState.Autofill2Name = parameterNames[1];
 
                 //Now evaluate the lambda with the parameter variables and autofills properly set
                 var result = Evaluate(lambda);
