@@ -1,0 +1,51 @@
+﻿h1 {
+    color: white;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: white;
+    font-size: 14px;
+    font-family: Roboto,Arial,sans-serif;
+}
+
+.add-remove {
+    color: white;
+    font-size: 14px;
+    font-family: Roboto,Arial,sans-serif;
+}
+
+textarea {
+    font-family: monospace;
+    background-color: #121212;
+    resize: none;
+    width: 100%;
+    color: #ffffff;
+}
+
+    textarea:focus {
+        outline: none;
+    }
+
+.topbutton {
+    background-color: #121212;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.s-24 {
+    font-size: 24px;
+}
+
+#main {
+    display: inline-block;
+    width: calc(100% - 400px);
+    padding: 20px;
+    overflow-y: auto;
+}

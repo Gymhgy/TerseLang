@@ -1,0 +1,1202 @@
+﻿[
+  {
+    "page": "Number Functions",
+    "type": "Number",
+    "intro": "",
+    "unary": [
+      {
+        "name": "经",
+        "description": "Stores the current value into the assignable variable \"间\"",
+        "returns": "Number"
+      },
+      {
+        "name": "妈",
+        "description": "Makes the first autofill in this scope the current value",
+        "returns": "Number"
+      },
+      {
+        "name": "用",
+        "description": "Return length of number, inc. decimal point",
+        "returns": "Number"
+      },
+      {
+        "name": "打",
+        "description": "Negate the number",
+        "returns": "Number"
+      },
+      {
+        "name": "地",
+        "description": "Double the number",
+        "returns": "Number"
+      },
+      {
+        "name": "再",
+        "description": "Halve (not rounded)",
+        "returns": "Number"
+      },
+      {
+        "name": "因",
+        "description": "Increment",
+        "returns": "Number"
+      },
+      {
+        "name": "呢",
+        "description": "Decrement",
+        "returns": "Number"
+      },
+      {
+        "name": "女",
+        "description": "Convert to string",
+        "returns": "String"
+      },
+      {
+        "name": "告",
+        "description": "Convert to base-10 digit array",
+        "returns": "List"
+      },
+      {
+        "name": "最",
+        "description": "Convert to hexadecimal string",
+        "returns": "Number"
+      },
+      {
+        "name": "手",
+        "description": "Convert to binary string",
+        "returns": "Number"
+      },
+      {
+        "name": "前",
+        "description": "1 if 0, else 0",
+        "returns": "Number"
+      },
+      {
+        "name": "找",
+        "description": "Absolute value",
+        "returns": "Number"
+      },
+      {
+        "name": "行",
+        "description": "Factorial (Note: Returns the caller if caller is negative)",
+        "returns": "Number"
+      },
+      {
+        "name": "快",
+        "description": "Square root",
+        "returns": "Number"
+      },
+      {
+        "name": "而",
+        "description": "Square",
+        "returns": "Number"
+      },
+      {
+        "name": "先",
+        "description": "Range [1..x] (inclusive)",
+        "returns": "List"
+      },
+      {
+        "name": "像",
+        "description": "Binary complement",
+        "returns": "Number"
+      },
+      {
+        "name": "等",
+        "description": "Number parity",
+        "returns": "Number"
+      },
+      {
+        "name": "被",
+        "description": "Round up",
+        "returns": "Number"
+      },
+      {
+        "name": "从",
+        "description": "Round down",
+        "returns": "Number"
+      },
+      {
+        "name": "明",
+        "description": "Sign",
+        "returns": "Number"
+      },
+      {
+        "name": "中",
+        "description": "To character",
+        "returns": "String"
+      }
+    ],
+    "binary": [
+      {
+        "name": "和(Number)",
+        "description": "Addition",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "和(String)",
+        "description": "Append s to N",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "和(List)",
+        "description": "Prepend N to l",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "下(Number)",
+        "description": "Subtraction",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "B", "b", "这" ]
+      },
+      {
+        "name": "真(Number)",
+        "description": "Multiplication",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "C", "c", "一" ]
+      },
+      {
+        "name": "现(Number)",
+        "description": "Division",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "D", "d", "他" ]
+      },
+      {
+        "name": "做(Number)",
+        "description": "Range [x..y]",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "E", "e", "么" ]
+      },
+      {
+        "name": "大(Number)",
+        "description": "Modulus",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "F", "f", "在" ]
+      },
+      {
+        "name": "啊(Number)",
+        "description": "Round up to nearest multiple of n",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "G", "g", "有" ]
+      },
+      {
+        "name": "怎(Number)",
+        "description": "Round down to nearest multiple of n",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "H", "h", "个" ]
+      },
+      {
+        "name": "出(Number)",
+        "description": "To nth power of 10, multplied by N",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "I", "i", "好" ]
+      },
+      {
+        "name": "点(Number)",
+        "description": "Compare: N == n -> 0, N > n -> 1, N < n -> -1",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "J", "j", "来" ]
+      },
+      {
+        "name": "起(Number)",
+        "description": "Coprime N to n",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "K", "k", "人" ]
+      },
+      {
+        "name": "天(Number)",
+        "description": "Smaller of caller and argument",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "L", "l", "那" ]
+      },
+      {
+        "name": "把(Number)",
+        "description": "Larger of N and n",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "M", "m", "要" ]
+      },
+      {
+        "name": "开(Number)",
+        "description": "n - N (subtraction but reversed)",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "N", "n", "会" ]
+      },
+      {
+        "name": "让(Number)",
+        "description": "N to nth power",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "O", "o", "就" ]
+      },
+      {
+        "name": "给(Number)",
+        "description": "nth root of N",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "P", "p", "什" ]
+      },
+      {
+        "name": "但(Number)",
+        "description": "Round to nearest multiple of n",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "Q", "q", "没" ]
+      },
+      {
+        "name": "谢(Number)",
+        "description": "Base n string",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "R", "r", "到" ]
+      },
+      {
+        "name": "谢(String)",
+        "description": "Base s string",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "R", "r", "到" ]
+      },
+      {
+        "name": "谢(List)",
+        "description": "Base s list",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "R", "r", "到" ]
+      },
+      {
+        "name": "着(Number)",
+        "description": "DivRem",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "S", "s", "说" ]
+      },
+      {
+        "name": "只(Lambda[Number])",
+        "description": "First integer greater than or equal to x that fulfills the lambda",
+        "argType": "Lambda[Number]",
+        "returns": "Number",
+        "tiers": [ "T", "t", "吗" ]
+      },
+      {
+        "name": "些(String)",
+        "description": "Get Nth character of s",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "U", "u", "为" ]
+      },
+      {
+        "name": "些(List)",
+        "description": "Get Nth character of l",
+        "argType": "List",
+        "returns": "T",
+        "tiers": [ "U", "u", "为" ]
+      },
+      {
+        "name": "如(Lambda[Number])",
+        "description": "Create range [0..N), then map it with Lambda",
+        "argType": "Lambda[Number]",
+        "returns": "List",
+        "tiers": [ "V", "v", "想" ]
+      },
+      {
+        "name": "该(Number)",
+        "description": "Pair",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "该(String)",
+        "description": "Pair",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "该(List)",
+        "description": "Pair",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "当(Number)",
+        "description": "Equals",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      },
+      {
+        "name": "当(String)",
+        "description": "Equals",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      },
+      {
+        "name": "当(List)",
+        "description": "Equals",
+        "argType": "List",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      }
+    ]
+
+  },
+
+  {
+    "page": "String Functions",
+    "type": "String",
+    "intro": "",
+    "unary": [
+      {
+        "name": "经",
+        "description": "Stores the current value into the assignable variable \"间\"",
+        "returns": "String"
+      },
+      {
+        "name": "妈",
+        "description": "Makes the first autofill in this scope the current value",
+        "returns": "String"
+      },
+      {
+        "name": "用",
+        "description": "Length",
+        "returns": "Number"
+      },
+      {
+        "name": "打",
+        "description": "Reverse",
+        "returns": "String"
+      },
+      {
+        "name": "地",
+        "description": "1st char",
+        "returns": "String"
+      },
+      {
+        "name": "再",
+        "description": "Last char",
+        "returns": "String"
+      },
+      {
+        "name": "因",
+        "description": "To number (returns caller string if not parsable)",
+        "returns": "Number/String"
+      },
+      {
+        "name": "呢",
+        "description": "To char array",
+        "returns": "List[String]"
+      },
+      {
+        "name": "女",
+        "description": "Split on \",\"",
+        "returns": "List[String]"
+      },
+      {
+        "name": "告",
+        "description": "Split on newline \"\\n\"",
+        "returns": "String"
+      },
+      {
+        "name": "最",
+        "description": "Array of char values, or just an int if length 1",
+        "returns": "List[Number]/Number"
+      },
+      {
+        "name": "手",
+        "description": "All permutations of the string",
+        "returns": "List[String]"
+      },
+      {
+        "name": "前",
+        "description": "To Upper",
+        "returns": "String"
+      },
+      {
+        "name": "找",
+        "description": "To Lower",
+        "returns": "String"
+      },
+      {
+        "name": "行",
+        "description": "Repeat itself, twice",
+        "returns": "String"
+      },
+      {
+        "name": "快",
+        "description": "Split on newlines, then transpose rows and columns, then rejoin with newlines",
+        "returns": "String"
+      },
+      {
+        "name": "而",
+        "description": "Unique chars in order they appear",
+        "returns": "String"
+      },
+      {
+        "name": "死",
+        "description": "All subsections",
+        "returns": "List[String]"
+      }
+    ],
+
+    "binary": [
+      {
+        "name": "和(String)",
+        "description": "Concatenation",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "和(Number)",
+        "description": "Concatenation",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "和(Number)",
+        "description": "Prepend S to l",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "下(String)",
+        "description": "Split S on s",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "B", "b", "这" ]
+      },
+      {
+        "name": "下(Number)",
+        "description": "Split S on n",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "B", "b", "这" ]
+      },
+      {
+        "name": "真(String)",
+        "description": "Prepend S with s",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "C", "c", "一" ]
+      },
+      {
+        "name": "现(Number)",
+        "description": "Split S into chunks of size n",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "D", "d", "他" ]
+      },
+      {
+        "name": "做(Number)",
+        "description": "Split S into n chunks containing consecutive elements",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "E", "e", "么" ]
+      },
+      {
+        "name": "大(String)",
+        "description": "First index of s within S",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "F", "f", "在" ]
+      },
+      {
+        "name": "啊(String)",
+        "description": "Last index of s within S",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "G", "g", "有" ]
+      },
+      {
+        "name": "怎(String)",
+        "description": "All indexes of s within S",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "H", "h", "个" ]
+      },
+      {
+        "name": "怎(String)",
+        "description": "All indexes of s within S",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "H", "h", "个" ]
+      },
+      {
+        "name": "出(String)",
+        "description": "Delete all instances of s from S",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "I", "i", "好" ]
+      },
+      {
+        "name": "出(List)",
+        "description": "For each pair of strings (s1, s2) in l, replace each instance of s1 in S with s2. If there are odd number of elements in l, for the last element it is replaced with empty string",
+        "argType": "List",
+        "returns": "String",
+        "tiers": [ "I", "i", "好" ]
+      },
+      {
+        "name": "点(Lambda[T,Number])",
+        "description": "Map",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "J", "j", "来" ]
+      },
+      {
+        "name": "起(Lambda[T,Number])",
+        "description": "Filter",
+        "argType": "Lambda[T,Number]",
+        "returns": "String",
+        "tiers": [ "K", "k", "人" ]
+      },
+      {
+        "name": "天(Lambda[T,Number])",
+        "description": "Group By",
+        "argType": "Lambda[T,Number]",
+        "returns": "List[List[String]]",
+        "tiers": [ "L", "l", "那" ]
+      },
+      {
+        "name": "把(Lambda[String,Number])",
+        "description": "Filter out truthy",
+        "argType": "Lambda[String,Number]",
+        "returns": "String",
+        "tiers": [ "M", "m", "要" ]
+      },
+      {
+        "name": "开(Lambda[String,Number])",
+        "description": "Reduce",
+        "argType": "Lambda[String,Number]",
+        "returns": "List",
+        "tiers": [ "N", "n", "会" ]
+      },
+      {
+        "name": "让(Lambda[T,Number])",
+        "description": "Culmulative Reduction",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "O", "o", "就" ]
+      },
+      {
+        "name": "给(String)",
+        "description": "Sum with lambda",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "P", "p", "什" ]
+      },
+      {
+        "name": "但(Lambda[T,Number])",
+        "description": "Cumulative Sum with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "Q", "q", "没" ]
+      },
+      {
+        "name": "谢(Number)",
+        "description": "Take first n elements of S",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "R", "r", "到" ]
+      },
+      {
+        "name": "着(Number)",
+        "description": "Take last n elements of S",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "S", "s", "说" ]
+      },
+      {
+        "name": "只(Lambda[String,Number])",
+        "description": "Take while lambda returns true",
+        "argType": "Lambda[String,Number]",
+        "returns": "String",
+        "tiers": [ "T", "t", "吗" ]
+      },
+      {
+        "name": "些(Number)",
+        "description": "Skip first n elements of S",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "U", "u", "为" ]
+      },
+      {
+        "name": "如(Number)",
+        "description": "Skip last n elements of S",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "V", "v", "想" ]
+      },
+      {
+        "name": "家(Lambda[T,Number])",
+        "description": "Skip while lambda returns true",
+        "argType": "Lambda[T,Number]",
+        "returns": "String",
+        "tiers": [ "W", "w", "能" ]
+      },
+      {
+        "name": "后(Lambda[T,Number])",
+        "description": "Sort with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "X", "x", "上" ]
+      },
+      {
+        "name": "儿(Lambda[T,Number])",
+        "description": "Sort descending with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "Y", "y", "去" ]
+      },
+      {
+        "name": "多(Number)",
+        "description": "Get nth char (negative gets from back)",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "Z", "z", "道" ]
+      },
+      {
+        "name": "多(List)",
+        "description": "Foreach value in l, get nth element (negative gets from back)",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "Z", "z", "道" ]
+      },
+      {
+        "name": "意(Number)",
+        "description": "Contains the certain VObject (in this case number)",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "!", "^", "她" ]
+      },
+      {
+        "name": "意(String)",
+        "description": "Contains the certain VObject (in this case string)",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "!", "^", "她" ]
+      },
+      {
+        "name": "别(String)",
+        "description": "Remove all characters in s from S",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "#", "_", "很" ]
+      },
+      {
+        "name": "别(Number)",
+        "description": "Remove all characters in n from S",
+        "argType": "Number",
+        "returns": "String",
+        "tiers": [ "#", "_", "很" ]
+      },
+      {
+        "name": "所(Number)",
+        "description": "Convert S from base-n string to base-10 integer, else returns itself if invalid (supports base 2 - 36)",
+        "argType": "Number",
+        "returns": "String/Number",
+        "tiers": [ "$", "`", "看" ]
+      },
+      {
+        "name": "所(String)",
+        "description": "Convert S from base-s string to base-10 integer, else returns itself if invalid",
+        "argType": "String",
+        "returns": "String/Number",
+        "tiers": [ "$", "`", "看" ]
+      },
+      {
+        "name": "话(String)",
+        "description": "Remove all",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "%", "{", "可" ]
+      },
+      {
+        "name": "该(String)",
+        "description": "Pair",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "该(Number)",
+        "description": "Pair",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "该(List)",
+        "description": "Pair",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "当(List)",
+        "description": "Equals",
+        "argType": "List",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      },
+      {
+        "name": "当(String)",
+        "description": "Equals",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      },
+      {
+        "name": "当(Number)",
+        "description": "Equals",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      }
+    ]
+  },
+
+  {
+    "page": "List Functions",
+    "type": "List",
+    "intro": "",
+    "unary": [
+      {
+        "name": "经",
+        "description": "Stores the current expression result into the assignable variable \"间\"",
+        "returns": "List"
+      },
+      {
+        "name": "妈",
+        "description": "Makes the first autofill in this scope the current value",
+        "returns": "List"
+      },
+      {
+        "name": "用",
+        "description": "Length",
+        "returns": "Number"
+      },
+      {
+        "name": "打",
+        "description": "Reverse the list",
+        "returns": "List"
+      },
+      {
+        "name": "地",
+        "description": "1st element",
+        "returns": "T"
+      },
+      {
+        "name": "再",
+        "description": "Last element",
+        "returns": "T"
+      },
+      {
+        "name": "因",
+        "description": "Sort",
+        "returns": "List"
+      },
+      {
+        "name": "呢",
+        "description": "Concatenate",
+        "returns": "List"
+      },
+      {
+        "name": "女",
+        "description": "Join w/ \" \"",
+        "returns": "String"
+      },
+      {
+        "name": "告",
+        "description": "Join w/ \"\\n\"",
+        "returns": "String"
+      },
+      {
+        "name": "最",
+        "description": "Sum (Map strings by parsing them or 0, lists to 0)",
+        "returns": "Humber"
+      },
+      {
+        "name": "手",
+        "description": "Product (Map strings by parsing them or 1, lists to 1)",
+        "returns": "Number"
+      },
+      {
+        "name": "前",
+        "description": "Flatten Completely",
+        "returns": "List"
+      },
+      {
+        "name": "找",
+        "description": "Remove first",
+        "returns": "List"
+      },
+      {
+        "name": "行",
+        "description": "Max (Strings to parsed or NegativeInfinity, lists to NegativeInfinity)",
+        "returns": "List"
+      },
+      {
+        "name": "快",
+        "description": "Min (Strings to parsed or PositiveInfinity, lists to PositiveInfinity)",
+        "returns": "Number"
+      },
+      {
+        "name": "而",
+        "description": "Cumulative Sum (Strings to parsed or 0, lists to 0)",
+        "returns": "Number"
+      },
+      {
+        "name": "死",
+        "description": "Subsections (inc. self)",
+        "returns": "List"
+      },
+      {
+        "name": "先",
+        "description": "Permutations",
+        "returns": "List"
+      },
+      {
+        "name": "像",
+        "description": "Combinations",
+        "returns": "List"
+      },
+      {
+        "name": "等",
+        "description": "Group",
+        "returns": "List"
+      }
+    ],
+    "binary": [
+      {
+        "name": "和(List)",
+        "description": "Concatenation",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "和(String)",
+        "description": "Append s to L",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "和(Number)",
+        "description": "Append n to L",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "A", "a", "们" ]
+      },
+      {
+        "name": "下(String)",
+        "description": "Join L on s",
+        "argType": "String",
+        "returns": "String",
+        "tiers": [ "B", "b", "这" ]
+      },
+      {
+        "name": "下(Number)",
+        "description": "Join L on n",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "B", "b", "这" ]
+      },
+      {
+        "name": "真(List)",
+        "description": "Prepend l to L",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "C", "c", "一" ]
+      },
+      {
+        "name": "现(Number)",
+        "description": "Split S into chunks of size n",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "D", "d", "他" ]
+      },
+      {
+        "name": "做(List)",
+        "description": "Split S into n chunks",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "E", "e", "么" ]
+      },
+      {
+        "name": "大(List)",
+        "description": "First index of s within S",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "F", "f", "在" ]
+      },
+      {
+        "name": "啊(List)",
+        "description": "Last index of s within S",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "G", "g", "有" ]
+      },
+      {
+        "name": "怎(List)",
+        "description": "All indexes of s within S",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "H", "h", "个" ]
+      },
+      {
+        "name": "怎(String)",
+        "description": "All indexes of s within S",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "H", "h", "个" ]
+      },
+      {
+        "name": "怎(List)",
+        "description": "All indexes of s within S",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "H", "h", "个" ]
+      },
+      {
+        "name": "出(String)",
+        "description": "Delete all instances of s from L",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "I", "i", "好" ]
+      },
+      {
+        "name": "出(Number)",
+        "description": "Delete all instances of s from L",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "I", "i", "好" ]
+      },
+      {
+        "name": "点(Lambda[T,Number])",
+        "description": "Map",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "J", "j", "来" ]
+      },
+      {
+        "name": "起(Lambda[T,Number])",
+        "description": "Filter",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "K", "k", "人" ]
+      },
+      {
+        "name": "天(Lambda[T,Number])",
+        "description": "Group By",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "L", "l", "那" ]
+      },
+      {
+        "name": "把(Lambda[T,Number])",
+        "description": "Filter out truthy",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "M", "m", "要" ]
+      },
+      {
+        "name": "开(Lambda[T,Number])",
+        "description": "Reduce",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "N", "n", "会" ]
+      },
+      {
+        "name": "让(Lambda[T,Number])",
+        "description": "Culmulative Reduction",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "O", "o", "就" ]
+      },
+      {
+        "name": "给(Lambda[T,Number])",
+        "description": "Sum with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "Number",
+        "tiers": [ "P", "p", "什" ]
+      },
+      {
+        "name": "但(Lambda[T,Number])",
+        "description": "Cumulative Sum with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "Q", "q", "没" ]
+      },
+      {
+        "name": "谢(Number)",
+        "description": "Take first n elements of L",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "R", "r", "到" ]
+      },
+      {
+        "name": "着(Number)",
+        "description": "Take last n elements of L",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "S", "s", "说" ]
+      },
+      {
+        "name": "只(Lambda[T,Number])",
+        "description": "Take while lambda returns true",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "T", "t", "吗" ]
+      },
+      {
+        "name": "些(Number)",
+        "description": "Skip first n elements of L",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "U", "u", "为" ]
+      },
+      {
+        "name": "如(Number)",
+        "description": "Skip last n elements of L",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "V", "v", "想" ]
+      },
+      {
+        "name": "家(Lambda[T,Number])",
+        "description": "Skip while lambda returns true",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "W", "w", "能" ]
+      },
+      {
+        "name": "后(Lambda[T,Number])",
+        "description": "Sort with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "X", "x", "上" ]
+      },
+      {
+        "name": "儿(Lambda[T,Number])",
+        "description": "Sort descending with lambda",
+        "argType": "Lambda[T,Number]",
+        "returns": "List",
+        "tiers": [ "Y", "y", "去" ]
+      },
+      {
+        "name": "多(Number)",
+        "description": "Get nth element (negative gets from back)",
+        "argType": "Number",
+        "returns": "T",
+        "tiers": [ "Z", "z", "道" ]
+      },
+      {
+        "name": "多(List)",
+        "description": "Foreach value in l, get nth element (negative gets from back)",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "Z", "z", "道" ]
+      },
+      {
+        "name": "意(List)",
+        "description": "Contains the certain VObject (in this case list)",
+        "argType": "List",
+        "returns": "Number",
+        "tiers": [ "!", "^", "她" ]
+      },
+      {
+        "name": "意(Number)",
+        "description": "Contains the certain VObject (in this case number)",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "!", "^", "她" ]
+      },
+      {
+        "name": "意(String)",
+        "description": "Contains the certain VObject (in this case string)",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "!", "^", "她" ]
+      },
+      {
+        "name": "别(Lambda[T, Number])",
+        "description": "Given that L is of the structure [l, n] or [n,l], repeatedly pass the last element into the lambda and append it onto l until l is of n length, then return the nth element of l",
+        "argType": "Lambda[T, Number]",
+        "returns": "T",
+        "tiers": [ "#", "_", "很" ]
+      },
+      {
+        "name": "所(Lambda[T, Number])",
+        "description": "Given that L is of the structure [l, n] or [n,l], repeatedly pass the last element into the lambda and append it onto l until l is of n length, then return the first n elements of l",
+        "argType": "Lambda[T, Number]",
+        "returns": "T",
+        "tiers": [ "$", "`", "看" ]
+      },
+      {
+        "name": "该(List)",
+        "description": "Pair",
+        "argType": "List",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "该(Number)",
+        "description": "Pair",
+        "argType": "Number",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "该(String)",
+        "description": "Pair",
+        "argType": "String",
+        "returns": "List",
+        "tiers": [ "@", "了", "样" ]
+      },
+      {
+        "name": "当(List)",
+        "description": "Equals",
+        "argType": "List",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      },
+      {
+        "name": "当(String)",
+        "description": "Equals",
+        "argType": "String",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      },
+      {
+        "name": "当(Number)",
+        "description": "Equals",
+        "argType": "Number",
+        "returns": "Number",
+        "tiers": [ "\\", "不", "也" ]
+      }
+    ]
+  }
+]

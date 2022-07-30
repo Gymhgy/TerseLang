@@ -80,5 +80,13 @@ namespace TerseLang.Tests {
             var expected = new List<VObject> { Enumerable.Repeat(new VObject(new List<VObject> { 3, 5 }), 100).ToList() };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
         }
+
+        [TestMethod]
+        public void Interpreter_MultMapLambda() {
+            var interpreter = new Interpreter("a0点真2", new VObject[] { new int[] { 1, 2, 3 }.ToVList() });
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { new int[] { 2, 4, 6, 0 }.ToVList() };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
+        }
     }
 }

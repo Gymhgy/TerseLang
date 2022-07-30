@@ -6,8 +6,7 @@ namespace TerseLang {
     public static class ErrorHandler {
         public static void Error(string error) {
 #if !DEBUG
-            Console.Error.WriteLine(error);
-            Environment.Exit(1);
+            throw new ProgramErrorException(error);
 #else
             InternalError(error);
 #endif
@@ -15,8 +14,7 @@ namespace TerseLang {
 
         public static void Error(string error, int line, int col) {
 #if !DEBUG
-            Console.Error.WriteLine($"({line}, {col}): {error}");
-            Environment.Exit(1);
+            throw new ProgramErrorException($"({line}, {col}): {error}");
 #else
             InternalError(error);
 #endif
@@ -31,6 +29,11 @@ namespace TerseLang {
 
         }
     }
+    public class ProgramErrorException : Exception {
+        public ProgramErrorException(string error) : base(error) {
 
-    
+        }
+    }
+
+
 }

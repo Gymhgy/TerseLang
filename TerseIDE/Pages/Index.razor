@@ -1,0 +1,139 @@
+﻿@page "/"
+@using TerseLang;
+@using TerseLang.Expressions;
+@inject NavigationManager NavManager
+@inject IJSRuntime JS
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Text;
+
+<div id="main">
+    <h1 style="display:inline; margin-right: 20px">Terse</h1>
+
+    <button class="topbutton" @onclick="@Run"><span class="oi oi-media-play s-24 text-white"></span> Run</button>
+    <button class="topbutton" @onclick="@CopyLinkToClipboard"><span class="oi oi-link-intact s-24 text-white"></span> Link</button>
+    <section>
+        <h2><b>CODE</b></h2>
+        <textarea autofocus rows="5" placeholder="code here" @bind="code"></textarea>
+    </section>
+
+    <section>
+        <h2 style="display:inline-block;"><b>PSEUDOCODE</b></h2>
+        <div style="display:inline-block; float:right; position:relative;" @onclick="@UpdatePsuedocode">
+            <h2><b>Generate</b> <span class="oi oi-media-play text-white"></span></h2>
+        </div>
+        <textarea readonly>@pseudocode</textarea>
+    </section>
+
+    <section>
+        <h2><b>INPUT</b></h2>
+        <span class="add-remove" @onclick="@(_ => input.Add(""))">+ add</span>
+        @for (int i = 0; i < input.Count; i++) {
+            int j = i;
+            <div style="display:block">
+                <span class="add-remove" @onclick="@(_ => input.RemoveAt(j))" style="float: right">- remove</span>
+                <textarea @bind="input[j]" rows="1"></textarea>
+            </div>
+        }
+    </section>
+    <section>
+        <h2><b>OUTPUT</b></h2>
+        <textarea readonly @bind="output"></textarea>
+    </section>
+
+    <section>
+        <h2><b>ERROR INFO</b></h2>
+        <textarea readonly @bind="error"></textarea>
+    </section>
+</div>
+<Documentation OnCodeCharClicked="@(c => { code += c; this.StateHasChanged(); })"></Documentation>
+@code {
+        ObjectType curType;
+        string code = "", pseudocode = "", output = "", error = "";
+        List<string> input = new List<string> { };
+
+    protected override void OnInitialized() {
+        var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
+        var queryStrings = QueryHelpers.ParseQuery(uri.Query);
+        if (queryStrings.TryGetValue("code", out var unprocessed)) {
+            try {
+                var unprocessedCode = (string)unprocessed;
+                var bytes = Convert.FromBase64String(unprocessedCode.PadRight(unprocessedCode.Length + (4 - unprocessedCode.Length % 4) % 4, '='));
+                code = string.Concat(bytes.Select(l => TerseLang.Constants.CHARSET[l]));
+            }
+            catch(Exception e) {
+                Console.WriteLine(e);
+            }
+        }
+        if(queryStrings.TryGetValue("in", out var inputs)) {
+            var arr = (String[])inputs;
+            input = arr.Select(x => {
+                var bytes = Convert.FromBase64String(x.PadRight(x.Length + (4 - x.Length % 4) % 4, '='));
+                return Encoding.UTF8.GetString(bytes);
+
+            }).ToList();
+        }
+
+    }
+
+    void UpdatePsuedocode() {
+        var exprs = Parser.Parse(code);
+
+        var inputs = input.Select(x => {
+            try {
+                if (x == "") return new VObject("");
+                return TerseLang.Program.ParseInput(x);
+            }
+            catch {
+                return null;
+            }
+
+        }).Where(x => x != null).ToArray();
+
+        //Un-parsing!
+        Unparser unparser = new Unparser(code, inputs);
+
+        pseudocode = unparser.Unparse();
+
+        StateHasChanged();
+
+
+
+    }
+
+    void Run() {
+        try {
+            error = "";
+
+            var inputs = input.Select(x => {
+                try {
+                    if (x == "") return new VObject("");
+                    return TerseLang.Program.ParseInput(x);
+                }
+                catch {
+                    error = $"Cannot parse input: {x}. Input ignored\n";
+                    return null;
+                }
+
+            }).Where(x => x != null).ToArray();
+            output = new Interpreter(code, inputs).Interpret().LastOrDefault()?.ToString() ?? "";
+        }
+        catch (TerseLang.InternalErrorException e) {
+            Console.WriteLine(e);
+            error = e.ToString();
+        }
+        catch (Exception e) {
+            Console.WriteLine(e.ToString());
+
+            error = e.ToString();
+        }
+    }
+
+    void CopyLinkToClipboard() {
+        string encodedCode = Convert.ToBase64String(code.Select(x => (byte)TerseLang.Constants.CHARSET.IndexOf(x)).ToArray()).TrimEnd('=');
+        string[] encodedInputs = input.Select(x => "in=" + Convert.ToBase64String(Encoding.UTF8.GetBytes(x)).TrimEnd('=')).ToArray();
+        string query = "?";
+        if (encodedCode != "") query += "code=" + encodedCode;
+        if (encodedInputs.Length != 0) query += (query == "?" ? "" : "&") + string.Join("&", encodedInputs);
+        JS.InvokeVoidAsync("copyToClipboard", NavManager.BaseUri + query);
+    }
+} 

@@ -171,5 +171,15 @@ namespace TerseLang.Tests {
 
 			Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
 		}
-	}
+
+        [TestMethod]
+        public void Parser_M() {
+            var actual = Parser.Parse("a0点下最再");
+            var expected = new List<Expression> {
+
+            };
+
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
+        }
+    }
 }
