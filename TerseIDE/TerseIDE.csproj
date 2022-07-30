@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="../Lib/TerseLang">
-      <HintPath>Lib\TerseLang.dll</HintPath>
+    <Reference Include="TerseLang">
+      <HintPath>..\GolfingLanguage1\bin\Release\net6.0\TerseLang.dll</HintPath>
     </Reference>
   </ItemGroup>
 

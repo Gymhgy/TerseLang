@@ -75,18 +75,32 @@ namespace TerseIDE {
                         Lambda lambda;
                         List<string> parameterList = new List<string>();
                         bool createdLambda = false;
+                        VObject res;
+                        string unparsedLambda;
                         // If an autoexpression is submitted as a lambda, then either use the default lambda or if not available, a lambda that returns the first autofill (the first input)
                         if (funcExpr.Argument is AutoExpression) {
                             lambda = func.DefaultLambda ?? (_ => programState.Autofill_1);
+                            res = func.Invoke(caller, lambda);
+                            unparsedLambda = Unparse(funcExpr.Argument).unparsed;
                         }
                         else {
                             (lambda, parameterList) = CreateLambda(funcExpr.Argument, func.LambdaParameters);
                             createdLambda = true;
+                            //Set the autofill variable names to the names of the parameter variables
+                            //And store the old values into temp variables
+                            string oldAutofill1Name = programState.Autofill1Name;
+                            string oldAutofill2Name = programState.Autofill2Name;
+                            programState.Autofill1Name = parameterList[0];
+                            if (func.LambdaParameters > 1)
+                                programState.Autofill2Name = parameterList[1];
+
+                            //Now evaluate the lambda with the parameter variables and autofills properly set
+                            res = func.Invoke(caller, lambda);
+                            unparsedLambda = Unparse(funcExpr.Argument).unparsed;
+                            //Reset the autofill variable names to what they were before
+                            programState.Autofill1Name = oldAutofill1Name;
+                            programState.Autofill2Name = oldAutofill2Name;
                         }
-
-
-                        //We pass the lambda that we created into the function
-                        var res = func.Invoke(caller, lambda);
 
                         //Re-rotate the parameter variables back
                         //We rotated them in the CreateLambda method
@@ -100,7 +114,7 @@ namespace TerseIDE {
                         var paramDeclare = "(" + string.Join(",", parameterList) + ")";
                         string unparsedFunc = $"{unparsedCaller}.{funcExpr.Function}(default)";
                         if (createdLambda)
-                            unparsedFunc = $"{unparsedCaller}.{funcExpr.Function}({paramDeclare}=>{Unparse(funcExpr.Argument).unparsed})";
+                            unparsedFunc = $"{unparsedCaller}.{funcExpr.Function}({paramDeclare}=>{unparsedLambda})";
                         return (unparsedFunc, res);
                     }
 
@@ -112,7 +126,7 @@ namespace TerseIDE {
                             else res = func.Invoke(caller);
                             return ($"{unparsedCaller}.{funcExpr.Function}()", res);
                         }
-                        catch (TerseLang.InternalErrorException) {
+                        catch (TerseLang.ProgramErrorException) {
                             return ($"{unparsedCaller}.{funcExpr.Function}()", caller);
                         }
                     }
@@ -123,7 +137,7 @@ namespace TerseIDE {
                             BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
                             return ($"{unparsedCaller}.{funcExpr.Function}({unparsedArg})", func.Invoke(caller, arg));
                         }
-                        catch (TerseLang.InternalErrorException) {
+                        catch (TerseLang.ProgramErrorException) {
                             string unparsedArg = funcExpr.Argument is AutoExpression ? programState.Autofill2Name : Unparse(funcExpr.Argument).unparsed;
                             return ($"{unparsedCaller}.{funcExpr.Function}({unparsedArg})", caller);
                         }
@@ -159,20 +173,9 @@ namespace TerseIDE {
                     programState.Variables[paramName] = argVal;
                 });
 
-                //Set the autofill variable names to the names of the parameter variables
-                //And store the old values into temp variables
-                string oldAutofill1Name = programState.Autofill1Name;
-                string oldAutofill2Name = programState.Autofill2Name;
-                programState.Autofill1Name = parameterNames[0];
-                if (lambdaParams > 1)
-                    programState.Autofill2Name = parameterNames[1];
 
                 //Now evaluate the lambda with the parameter variables and autofills properly set
                 var result = Unparse(lambda);
-
-                //Reset the autofill variable names to what they were before
-                programState.Autofill1Name = oldAutofill1Name;
-                programState.Autofill2Name = oldAutofill2Name;
 
                 //Reset the parameter variables to their old values
                 i = 0;
