@@ -16,7 +16,6 @@ namespace TerseLang {
     public enum TokenType {
         Number,
         String,
-        InterpolatedString,
         Variable,
         Function,
         Punctuation,

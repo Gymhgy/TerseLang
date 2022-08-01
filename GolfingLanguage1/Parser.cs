@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 using TerseLang.Expressions;
@@ -72,9 +73,8 @@ namespace TerseLang {
             }
             var tok = tokenizer.Peek();
             if (tok.Type == TokenType.Number) ret = new NumericLiteralExpression(double.Parse(tok.Value));
-            else if (tok.Type == TokenType.String) ret = new StringLiteralExpression(tok.Value);
+            else if (tok.Type == TokenType.String) ret = HandleString(tok.Value);
             else if (tok.Type == TokenType.Variable) ret = new VariableReferenceExpression(tok.Value);
-            else if (tok.Type == TokenType.InterpolatedString) ret = HandleInterpolatedString(tok.Value);
             if(ret is not AutoExpression) {
                 toks--;
                 tokenizer.Next();
@@ -82,13 +82,20 @@ namespace TerseLang {
             return ret;
         }
 
-        private InterpolatedStringExpression HandleInterpolatedString(string str) {
+        private StringExpression HandleString(string str) {
+            if (str.Contains(STRING_LIST_SEPERATOR)) {
+                var strList = str.Split(STRING_LIST_SEPERATOR);
+                return new StringListExpression(strList.Select(HandleString));
+            }
+            bool interpolated = false;
             List<Expression> exprs = new List<Expression>();
             string currStr = "";
             for(int i = 0; i < str.Length; i++) {
                 if (str[i] >= 32 && str[i] <= 126) currStr += str[i];
                 else {
-                    exprs.Add(new StringLiteralExpression(currStr));
+                    interpolated = true;
+                    if(currStr != "")
+                        exprs.Add(new StringLiteralExpression(currStr));
                     currStr = "";
 
                     string currInterpolation = "";
@@ -100,8 +107,11 @@ namespace TerseLang {
                     exprs.AddRange(interps);
                 }
             }
-            exprs.Add(new StringLiteralExpression(currStr));
-
+            if (currStr != "")
+                exprs.Add(new StringLiteralExpression(currStr));
+            if(!interpolated) {
+                return new StringLiteralExpression(currStr);
+            }
             return new InterpolatedStringExpression(exprs);
         }
 

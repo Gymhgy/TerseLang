@@ -77,7 +77,7 @@ namespace TerseLang {
                 return new VObject(s.ToList());
             }
             else if (this.Value is double d) {
-                return new VObject(Enumerable.Range(1, (int)d));
+                return new VObject(Enumerable.Range(1, (int)d).Select(x=>new VObject(x)).ToList());
             }
             else return this;
         }

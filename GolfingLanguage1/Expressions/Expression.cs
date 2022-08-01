@@ -59,21 +59,26 @@ namespace TerseLang.Expressions {
 
         public double Value { get; }
     }
-
-    public class StringLiteralExpression : Expression {
+    public class StringExpression : Expression { }
+    public class StringLiteralExpression : StringExpression {
         public StringLiteralExpression(string value) {
             Value = value;
         }
         public string Value { get; }
     }
 
-    public class InterpolatedStringExpression : Expression {
+    public class InterpolatedStringExpression : StringExpression {
         public IEnumerable<Expression> Expressions { get; }
         public InterpolatedStringExpression(IEnumerable<Expression> expressions) {
             Expressions = expressions;
         }
     }
-
+    public class StringListExpression : StringExpression {
+        public IEnumerable<StringExpression> Strings { get; }
+        public StringListExpression(IEnumerable<StringExpression> strings) {
+            Strings = strings;
+        }
+    }
     public class ConditionalExpression : Expression {
         public ConditionalExpression(Expression condition, Expression trueExpression, Expression falseExpression) {
             Condition = condition;

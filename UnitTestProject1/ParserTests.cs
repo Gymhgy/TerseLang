@@ -173,6 +173,26 @@ namespace TerseLang.Tests {
 		}
 
         [TestMethod]
+        public void Parser_StringListInterpolation() {
+            var actual = Parser.Parse("“abcd定‘efgh‘情ijk");
+            var expected = new List<Expression> {
+                new StringListExpression(new StringExpression[]{
+                    new InterpolatedStringExpression(new List<Expression> {
+                        new StringLiteralExpression("abcd"),
+                        new FunctionInvocationExpression(new AutoExpression(), "定", auto),
+                    }),
+                    new StringLiteralExpression("efgh"),
+                    new InterpolatedStringExpression(new List<Expression> {
+                        new VariableReferenceExpression("情"),
+                        new StringLiteralExpression("ijk")
+                    })
+                })
+            };
+
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump() + expected.Dump());
+        }
+
+        [TestMethod]
         public void Parser_LeftVectorize() {
             var actual = Parser.Parse("3。和3");
             var expected = new List<Expression> {

@@ -43,13 +43,12 @@ namespace TerseLang {
         public const char STRING_DELIMITER = '“';
         public const char COMPRESSED_STRING_DELIMITER = '”';
         public const char COMPRESSED_NUMBER_DELIMITER = '"';
-        public const char NEWLINE_SUB = '￥';
 
         public const char SINGLE_CHAR_STRING = '\'';
         public const char DOUBLE_CHAR_STRING = '’';
         public const char TRIPLE_CHAR_STRING = '‘';
 
-        public const char NEWLINE_SUBSTITUTE = '￥';
+        public const char STRING_LIST_SEPERATOR = '‘';
 
         public const string VARIABLES = "哦情作跟面诉爱已之问错孩斯成它感干法电间";
         public const string PUNCTUATION = "[])}）】.?";

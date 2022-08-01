@@ -102,7 +102,7 @@ namespace TerseLang.Tests {
         [TestMethod]
         public void Tokenizer_InterpolatedString() {
             var actual = GetTokens("“abcd定efgh情ijk");
-            var expected = new List<Token> { new Token("abcd定efgh情ijk", TokenType.InterpolatedString) };
+            var expected = new List<Token> { new Token("abcd定efgh情ijk", TokenType.String) };
             Assert.IsTrue(TokenListEqual(actual, expected), actual.Dump());
 
         }

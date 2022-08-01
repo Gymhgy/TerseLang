@@ -98,14 +98,7 @@ namespace TerseLang {
             TokenType type = TokenType.String;
             while(!EOF() && PeekChar() != STRING_DELIMITER && PeekChar() != '\n') {
                 var ch = ReadChar();
-                if (ch == NEWLINE_SUBSTITUTE) {
-                    str += "\n";
-                }
-                else if (CHARSET.Contains(ch) && (ch > 126 || ch < 32)) {
-                    type = TokenType.InterpolatedString;
-                    str += ch;
-                }
-                else str += ch;
+                str += ch;
             }
             if (!EOF()) ReadChar();
             return new Token(str, type);

@@ -46,9 +46,6 @@ namespace TerseLang {
                 }
             }
 
-            if (program.Contains("\n"))
-                ErrorHandler.Error("Sorry! Programs cannot contain newline characters just yet. Hopefully this will be fixed soon");
-
             var interpreter = new Interpreter(program, inputs.ToArray());
 
             var result = interpreter.Interpret().LastOrDefault() ?? "";

@@ -12,7 +12,6 @@ namespace TerseLang.Tests {
         public static bool EqualByProperties(object self, object to, params string[] ignore) {
             if (self == null || to == null) return self == to;
             Type type = self.GetType();
-            if (type != to.GetType()) return false;
             if (IsSimpleType(type)) return self.Equals(to);
             if (typeof(IEnumerable).IsAssignableFrom(type)) {
                 var selfIEnumerable = ((IEnumerable)self).Cast<object>();
@@ -22,6 +21,7 @@ namespace TerseLang.Tests {
                     return selfIEnumerable.Zip(toEnumerable, (a, b) => (a, b)).All(x => EqualByProperties(x.a, x.b));
                 }
             }
+            else if (type != to.GetType()) return false;
             else {
                 foreach (PropertyInfo pi in type.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
                     if (!ignore.Contains(pi.Name)) {
