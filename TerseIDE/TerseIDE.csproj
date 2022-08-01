@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Reference Include="TerseLang">
-      <HintPath>..\GolfingLanguage1\bin\Release\net6.0\TerseLang.dll</HintPath>
+      <HintPath>..\..\GolfingLanguage1\bin\Release\net6.0\TerseLang.dll</HintPath>
     </Reference>
   </ItemGroup>
 
