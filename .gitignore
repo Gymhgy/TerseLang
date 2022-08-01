@@ -13,6 +13,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# But include TerseLang dll
+
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -26,9 +29,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-# But include TerseLang dll
-!TerseLang.dll
 
+!GolfingLanguage1/bin/
+!GolfingLanguage1/bin/Release
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
