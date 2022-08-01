@@ -27,7 +27,9 @@ namespace TerseLang {
             //For later use
             " \n\t" +
             //For later use
-            "[]【：；。，";
+            "[]【：；" +
+            //Modifiers
+            "。，";
 
         public const string 
             TIER_ZERO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&(*+,-/:;<=>?@\\",
@@ -60,6 +62,10 @@ namespace TerseLang {
         public const string INPUT_VARIABLES = "哦情作跟";
 
         public const char IF = '?';
+
+        public const string MODIFIERS = "。，";
+        public const char LEFT_VECTORIZE = '。';
+        public const char RIGHT_VECTORIZE = '，';
 
         public const string USAGE = "Usage: terse [-f path|-p program] [arguments...]\n" + 
                                     "       terse -i (interactive mode, enter program on first line, enter input on second)";

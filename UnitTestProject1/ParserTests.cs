@@ -173,10 +173,20 @@ namespace TerseLang.Tests {
 		}
 
         [TestMethod]
-        public void Parser_M() {
-            var actual = Parser.Parse("a0点下最再");
+        public void Parser_LeftVectorize() {
+            var actual = Parser.Parse("3。和3");
             var expected = new List<Expression> {
+                new NumericLiteralExpression(3).Invoke("和", new NumericLiteralExpression(3)).LeftVectorize()
 
+            };
+
+            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
+        }
+        public void Parser_RightVectorize() {
+            var actual = Parser.Parse("1，和1该2");
+            var expected = new List<Expression> {
+                new NumericLiteralExpression(1).Invoke("和", new NumericLiteralExpression(1)
+                .Invoke("该", new NumericLiteralExpression(2))).RightVectorize()
             };
 
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());

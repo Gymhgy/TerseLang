@@ -88,5 +88,19 @@ namespace TerseLang.Tests {
             var expected = new List<VObject> { new int[] { 2, 4, 6, 0 }.ToVList() };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
         }
+        [TestMethod]
+        public void Interpreter_RightVectorize() {
+            var interpreter = new Interpreter("1，和1该2", new VObject[] { });
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { new int[] { 2, 3 }.ToVList() };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.ToString());
+        }
+        [TestMethod]
+        public void Interpreter_LeftVectorize() {
+            var interpreter = new Interpreter("3。和3", new VObject[] { });
+            var result = new VObject(interpreter.Interpret());
+            var expected = new List<VObject> { new int[] { 4, 5, 6 }.ToVList() };
+            Assert.IsTrue(result.Equals(new VObject(expected)), result.ToString());
+        }
     }
 }

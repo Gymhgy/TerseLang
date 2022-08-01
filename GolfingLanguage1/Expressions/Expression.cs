@@ -27,17 +27,30 @@ namespace TerseLang.Expressions {
             Function = function;
         }
 
-        public FunctionInvocationExpression(Expression caller, string function, Expression argument) {
+        public FunctionInvocationExpression(Expression caller, string function, Expression argument, 
+            VectorizationMode vectorizationMode = VectorizationMode.None) {
+
             Caller = caller;
             Function = function;
             Argument = argument;
+            VectorizationMode = vectorizationMode;
         }
 
 
         public Expression Caller { get; }
         public string Function { get; }
         public Expression Argument { get; }
+        public VectorizationMode VectorizationMode { get; } = VectorizationMode.None;
+
+        public FunctionInvocationExpression LeftVectorize() {
+            return new FunctionInvocationExpression(this.Caller, this.Function, this.Argument, VectorizationMode.Left);
+        }
+
+        public FunctionInvocationExpression RightVectorize() {
+            return new FunctionInvocationExpression(this.Caller, this.Function, this.Argument, VectorizationMode.Right);
+        }
     }
+    public enum VectorizationMode { None, Left, Right }
 
     public class NumericLiteralExpression : Expression {
         public NumericLiteralExpression(double value) {

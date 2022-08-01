@@ -121,8 +121,26 @@ namespace TerseLang {
                     }
                     else {
                         VObject arg = funcExpr.Argument is AutoExpression ? programState.Autofill_2 : Evaluate(funcExpr.Argument);
-                        BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
-                        return func.Invoke(caller, arg);
+                        if (funcExpr.VectorizationMode != VectorizationMode.None) {
+                            if (funcExpr.VectorizationMode == VectorizationMode.Left) {
+                                caller = caller.ToIterable();
+                                return ((List<VObject>)caller).Select(x => {
+                                    BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, x.ObjectType, arg.ObjectType);
+                                    return func.Invoke(x, arg);
+                                }).ToList();
+                            }
+                            else if (funcExpr.VectorizationMode == VectorizationMode.Right) {
+                                arg = arg.ToIterable();
+                                return ((List<VObject>)arg).Select(x => {
+                                    BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, x.ObjectType);
+                                    return func.Invoke(caller, x);
+                                }).ToList();
+                            }
+                        }
+                        else {
+                            BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
+                            return func.Invoke(caller, arg);
+                        }
                     }
                     throw new Exception();
 

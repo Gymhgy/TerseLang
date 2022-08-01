@@ -72,6 +72,16 @@ namespace TerseLang {
                 throw new ArgumentException("Generic type provided was not a type that VObject supports or contains currently.");
         }
 
+        public VObject ToIterable() {
+            if (this.Value is string s) {
+                return new VObject(s.ToList());
+            }
+            else if (this.Value is double d) {
+                return new VObject(Enumerable.Range(1, (int)d));
+            }
+            else return this;
+        }
+
         public ObjectType ObjectType { get; private set; }
 
         public VObject(object value) {

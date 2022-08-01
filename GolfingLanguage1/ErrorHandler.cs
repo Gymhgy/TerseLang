@@ -5,19 +5,11 @@ using System.Text;
 namespace TerseLang {
     public static class ErrorHandler {
         public static void Error(string error) {
-#if !DEBUG
             throw new ProgramErrorException(error);
-#else
-            InternalError(error);
-#endif
         }
 
         public static void Error(string error, int line, int col) {
-#if !DEBUG
             throw new ProgramErrorException($"({line}, {col}): {error}");
-#else
-            InternalError(error);
-#endif
         }
 
         public static void InternalError(string error) {
