@@ -41,8 +41,8 @@
       "System.Runtime.dll": "sha256-Qx49G0IMZMrWLDW1p6vsaKBivsJbdeRTCHFdwJjj5Aw=",
       "System.Text.Encodings.Web.dll": "sha256-J6k9pMIqz5vsRPswoW9BKuwRFfYPLqO9VFP1X5JGL5w=",
       "System.Text.Json.dll": "sha256-w\/WwRjvnZnUgBoi2DhNTkzAbmg9KM+\/rTHINMenQZwk=",
-      "TerseIDE.dll": "sha256-r2sSpbaUKmfTnFZFx1g3JUuLZ5fkzsvWVPNas6ZP\/Dc=",
-      "TerseLang.dll": "sha256-ZcecalSrhqVV0cyIOP0geTJ52RTRG4niC1ku8UHtMA4="
+      "TerseIDE.dll": "sha256-Fysa\/LAYJLMUAbR4zpbaW620rCj4WgE1EbGMWaW9ouQ=",
+      "TerseLang.dll": "sha256-dOMT3hdWjNhYYGpsALwExhE18whB54dsr0LDMvMpazE="
     },
     "extensions": null,
     "lazyAssembly": null,
