@@ -56,6 +56,9 @@ namespace TerseLang {
                     return new Token(ReadWhile(_ => i++ < 3), TokenType.String);
                 if (next == COMPRESSED_STRING_DELIMITER)
                     return ReadCompressedString();
+                if (next == COMPRESSED_NUMBER_DELIMITER)
+                    return ReadCompressedNumber();
+
                 if (VARIABLES.Contains(next))
                     return new Token(next.ToString(), TokenType.Variable);
                 if (PUNCTUATION.Contains(next))
@@ -65,7 +68,11 @@ namespace TerseLang {
                 if (MODIFIERS.Contains(next))
                     return new Token(next.ToString(), TokenType.Modifier);
             }
-            throw new InvalidOperationException("This shouldn't happen.");
+            throw new InvalidOperationException("Attempted to read next token, but encountered EOF");
+        }
+
+        private Token ReadCompressedNumber() {
+            throw new NotImplementedException("Compressed Numbers are not yet implemented.");
         }
 
         // Handles two cases:

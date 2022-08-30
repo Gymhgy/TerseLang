@@ -16,7 +16,7 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Interpreter_String() {
-            var interpreter = new Interpreter("“Hello, World!", new VObject[0]);
+            var interpreter = new Interpreter("\"Hello, World!", new VObject[0]);
             var result = new VObject(interpreter.Interpret());
             var expected = new List<VObject> { new VObject("Hello, World!") };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());
@@ -51,7 +51,7 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Interpreter_FilterTest() {
-            var interpreter = new Interpreter("“string“起当's", new VObject[0]);
+            var interpreter = new Interpreter("\"string\"起当's", new VObject[0]);
             var result = new VObject(interpreter.Interpret());
             var expected = new List<VObject> { "s" };
             Assert.IsTrue(result.Equals(new VObject(expected)), result.Dump());

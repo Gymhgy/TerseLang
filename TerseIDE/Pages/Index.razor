@@ -42,14 +42,14 @@
 
     <section>
         <h2><b>ERROR INFO</b></h2>
-        <textarea readonly @bind="error"></textarea>
+        <textarea readonly @bind="error" rows="10"></textarea>
     </section>
 </div>
 <Documentation OnCodeCharClicked="@(c => { code += c; this.StateHasChanged(); })"></Documentation>
 @code {
-        ObjectType curType;
-        string code = "", pseudocode = "", output = "", error = "";
-        List<string> input = new List<string> { };
+    ObjectType curType;
+    string code = "", pseudocode = "", output = "", error = "";
+    List<string> input = new List<string> { };
 
     protected override void OnInitialized() {
         var uri = NavManager.ToAbsoluteUri(NavManager.Uri);
@@ -91,9 +91,13 @@
 
         //Un-parsing!
         Unparser unparser = new Unparser(code, inputs);
-
-        pseudocode = unparser.Unparse();
-
+        try {
+            pseudocode = unparser.Unparse();
+        }
+        catch(Exception e) {
+            
+            error = "Could not unparse:\n" + e.ToString();
+        }
         StateHasChanged();
 
 

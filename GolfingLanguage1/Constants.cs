@@ -40,9 +40,9 @@ namespace TerseLang {
         public const string UNARY_FUNCTIONS = "经妈用打地再因呢女告最手前找行快而死先像等被从明中";
 
         //X is a placeholder
-        public const char STRING_DELIMITER = '“';
+        public const char STRING_DELIMITER = '"';
         public const char COMPRESSED_STRING_DELIMITER = '”';
-        public const char COMPRESSED_NUMBER_DELIMITER = '"';
+        public const char COMPRESSED_NUMBER_DELIMITER = '“';
 
         public const char SINGLE_CHAR_STRING = '\'';
         public const char DOUBLE_CHAR_STRING = '’';

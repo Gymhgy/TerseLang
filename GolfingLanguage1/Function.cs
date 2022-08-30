@@ -855,9 +855,14 @@ namespace TerseLang {
 				return x.Zip(x.Skip(1), (a,b) => y(a,b,index++)).ToList(); 
 			}, 3, x => new List<VObject>{ x[0], x[1] })),
 
-			//Function "然", Binary (String, String) -> String
-			//
-			("然", new BinaryFunction<string,string>((x,y) => x)),
+			//Function "然", Binary (String, List[String]) -> String
+			//For each pair of elements (s1, s2) in the the list, replace each instance of s1 with s2
+			("然", new BinaryFunction<string,List<VObject>>((x,y) => {
+				for(int i = 0; i < y.Count / 2; i++) {
+					x = x.Replace(y[0], y[1].ToString());
+                }
+				return x;
+			})),
 
 			//Function "果", Binary (String, String) -> String
 			//

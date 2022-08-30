@@ -60,7 +60,7 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Tokenizer_String() {
-            var actual = GetTokens("“x“");
+            var actual = GetTokens("\"x\"");
             var expected = new List<Token> { new Token("x", TokenType.String) };
             Assert.IsTrue(TokenListEqual(actual, expected));
         }
@@ -94,14 +94,14 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Tokenizer_StringWithNoClosing() {
-            var actual = GetTokens("“hello");
+            var actual = GetTokens("\"hello");
             var expected = new List<Token> { new Token("hello", TokenType.String) };
             Assert.IsTrue(TokenListEqual(actual, expected));
         }
 
         [TestMethod]
         public void Tokenizer_InterpolatedString() {
-            var actual = GetTokens("“abcd定efgh情ijk");
+            var actual = GetTokens("\"abcd定efgh情ijk");
             var expected = new List<Token> { new Token("abcd定efgh情ijk", TokenType.String) };
             Assert.IsTrue(TokenListEqual(actual, expected), actual.Dump());
 

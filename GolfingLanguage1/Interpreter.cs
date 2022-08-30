@@ -147,7 +147,7 @@ namespace TerseLang {
                 case InterpolatedStringExpression intpStr:
                     return string.Concat(intpStr.Expressions.Select(x => Evaluate(x).ToString()));
                 default:
-                    ErrorHandler.InternalError("This shouldn't happen.");
+                    ErrorHandler.InternalError("Unrecognized expression type");
                     throw new Exception();
             }
         }

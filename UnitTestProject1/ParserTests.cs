@@ -142,7 +142,7 @@ namespace TerseLang.Tests {
 
 		[TestMethod]
 		public void Parser_StringInterpolation() {
-			var actual = Parser.Parse("“abcd定efgh情ijk");
+			var actual = Parser.Parse("\"abcd定efgh情ijk");
 			var expected = new List<Expression> {
 				new InterpolatedStringExpression(new List<Expression> {
 					new StringLiteralExpression("abcd"),
@@ -158,7 +158,7 @@ namespace TerseLang.Tests {
 
 		[TestMethod]
 		public void Parser_StringInterpolationWithBrackets() {
-			var actual = Parser.Parse("“abcd定定定）定efgh定定定定】定ijk");
+			var actual = Parser.Parse("\"abcd定定定）定efgh定定定定】定ijk");
 			var expected = new List<Expression> {
 				new InterpolatedStringExpression(new List<Expression> {
                     new StringLiteralExpression("abcd"),
@@ -174,7 +174,7 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Parser_StringListInterpolation() {
-            var actual = Parser.Parse("“abcd定‘efgh‘情ijk");
+            var actual = Parser.Parse("\"abcd定‘efgh‘情ijk");
             var expected = new List<Expression> {
                 new StringListExpression(new StringExpression[]{
                     new InterpolatedStringExpression(new List<Expression> {
