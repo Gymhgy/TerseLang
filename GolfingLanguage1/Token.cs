@@ -19,7 +19,6 @@ namespace TerseLang {
         Variable,
         Function,
         Punctuation,
-        Modifier,
         Auto
     }
 }

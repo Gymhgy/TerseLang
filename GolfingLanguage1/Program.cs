@@ -28,7 +28,7 @@ namespace TerseLang {
                 program = args[1];
             }
 
-            List<VObject> inputs = new List<VObject>();
+            List<dynamic> inputs = new List<dynamic>();
 
             //Interactive Mode
             if(args[0] == "-i") {
@@ -53,7 +53,7 @@ namespace TerseLang {
             Console.WriteLine(result.ToString());
         }
 
-        public static VObject ParseInput(string input) {
+        public static dynamic ParseInput(string input) {
             input = input.Trim();
             if (double.TryParse(input, out double d))
                 return d;
@@ -61,7 +61,7 @@ namespace TerseLang {
                 return input.Substring(1, input.Length - 2);
             }
             if (input[0] == '[' && input.Last() == ']') {
-                var list = new List<VObject>();
+                var list = new List<dynamic>();
                 var contents = input.Substring(1, input.Length - 2);
                 for (int i = 0; i < contents.Length; i++) {
                     bool inStr = false;

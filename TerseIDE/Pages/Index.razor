@@ -47,7 +47,6 @@
 </div>
 <Documentation OnCodeCharClicked="@(c => { code += c; this.StateHasChanged(); })"></Documentation>
 @code {
-    ObjectType curType;
     string code = "", pseudocode = "", output = "", error = "";
     List<string> input = new List<string> { };
 
@@ -80,7 +79,7 @@
 
         var inputs = input.Select(x => {
             try {
-                if (x == "") return new VObject("");
+                if (x == "") return "";
                 return TerseLang.Program.ParseInput(x);
             }
             catch {
@@ -90,9 +89,8 @@
         }).Where(x => x != null).ToArray();
 
         //Un-parsing!
-        Unparser unparser = new Unparser(code, inputs);
         try {
-            pseudocode = unparser.Unparse();
+            pseudocode = "";
         }
         catch(Exception e) {
             
@@ -110,7 +108,7 @@
 
             var inputs = input.Select(x => {
                 try {
-                    if (x == "") return new VObject("");
+                    if (x == "") return "";
                     return TerseLang.Program.ParseInput(x);
                 }
                 catch {

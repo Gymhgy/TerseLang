@@ -121,39 +121,20 @@ namespace TerseLang {
         // toks: the max amount of tokens that should be parsed (determined by tier)
         private Expression ParseExpression(bool topLevel=false, int toks = -1) {
             var val = GetNextValue(ref toks);
-            while (!tokenizer.EOF() && toks != 0 && 
-                (tokenizer.Peek().Type == TokenType.Function || tokenizer.Peek().Type == TokenType.Modifier)) {
+            while (!tokenizer.EOF() && toks != 0 && tokenizer.Peek().Type == TokenType.Function) {
                 var nextTok = tokenizer.Next();
-                bool modified = false;
                 var next = nextTok.Value;
-                if (nextTok.Type == TokenType.Modifier) {
-                    modified = true;
-                    if (tokenizer.EOF()) break;
-                    if (tokenizer.Peek().Type != TokenType.Function) continue;
-                    next = tokenizer.Next().Value;
-                }
+
                 // Another token has been consumed; therefore we need to update the breaks
                 toks--; 
 
-                if(Function.IsUnary(next)) {
+                if(FunctionHandler.IsUnary(next)) {
                     val = new FunctionInvocationExpression(val, next) ;
                 }
                 else {
-                    var tier = Function.GetTier(next);
+                    var tier = FunctionHandler.GetTier(next);
                     var arg = ParseExpression(false, tier);
                     val = new FunctionInvocationExpression(val, next, arg);
-                }
-                if(modified) {
-                    switch(nextTok.Value[0]) {
-                        case LEFT_VECTORIZE:
-                            val = ((FunctionInvocationExpression)val).LeftVectorize();
-                            break;
-                        case RIGHT_VECTORIZE:
-                            val = ((FunctionInvocationExpression)val).RightVectorize();
-                            break;
-                        default:
-                            break;
-                    }
                 }
                 // Get rid of all the brackets if this expression is a top level one
                 // And also clear out all the breaks

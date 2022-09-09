@@ -16,10 +16,10 @@ namespace TerseLang {
         public string Autofill1Name = INPUT_VARIABLES[0].ToString();
         public string Autofill2Name = INPUT_VARIABLES[1].ToString();
 
-        public VObject Autofill_1 => Variables[Autofill1Name];
-        public VObject Autofill_2 => Variables[Autofill2Name];
+        public dynamic Autofill_1 => Variables[Autofill1Name];
+        public dynamic Autofill_2 => Variables[Autofill2Name];
 
-        public Dictionary<string, VObject> Variables = new Dictionary<string, object>
+        public Dictionary<string, dynamic> Variables = new Dictionary<string, object>
         {
             //Inputs
             ["哦"] = 0,
@@ -30,7 +30,7 @@ namespace TerseLang {
             ["面"] = 0,
 
             //Unused variables (for now)
-            ["诉"] = new List<VObject>(),
+            ["诉"] = new List<dynamic>(),
             ["爱"] = 0,
 
             ["已"] = " ",
@@ -54,17 +54,16 @@ namespace TerseLang {
             //Hidden Variables that cannot be changed normally
             ["HiddenAutofill"] = 0,
 
-        }.ToDictionary(x => x.Key, x => new VObject(x.Value));
+        };
 
-        public ProgramState(IList<VObject> Inputs) {
+        public ProgramState(IList<dynamic> Inputs) {
             //Initialize input variables
             INPUT_VARIABLES.Zip(Inputs).Take(4).ToList().ForEach(pair => {
                 var (varName, val) = pair;
                 Variables[varName.ToString()] = val;
             });
             //Initialize input array
-
-            Variables["面"] = new VObject(Inputs.ToList());
+            Variables["面"] = Inputs;
         }
     }
 }

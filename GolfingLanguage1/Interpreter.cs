@@ -4,6 +4,7 @@ using System.Text;
 using TerseLang.Expressions;
 using System.Linq;
 using static TerseLang.Constants;
+using Lambda = System.Func<dynamic[], dynamic>;
 
 namespace TerseLang {
     public class Interpreter {
@@ -14,11 +15,13 @@ namespace TerseLang {
         private IReadOnlyCollection<Expression> AST { get; }
 
         private ProgramState programState { get; }
+        private FunctionHandler functionHandler { get; }
 
-        public Interpreter(string program, VObject[] Input) {
+        public Interpreter(string program, dynamic[] Input) {
             //Pass the program into the parser
             AST = Parser.Parse(program);
             programState = new ProgramState(Input);
+            functionHandler = new FunctionHandler(programState);
             //Initialize parameter variable queue
             //Used for setting up lambdas
             ParamVars = new Queue<string>();
@@ -27,9 +30,9 @@ namespace TerseLang {
             }
         }
 
-        public IList<VObject> Interpret() {
+        public IList<dynamic> Interpret() {
             //For each expression in the pareser, evaluate them and add them to the list or results
-            List<VObject> results = new List<VObject>();
+            List<dynamic> results = new List<dynamic>();
             foreach (var expr in AST) {
                 results.Add(Evaluate(expr));
             }
@@ -58,13 +61,13 @@ namespace TerseLang {
         //   - Use the second autofill
         //   - Else just use the first
 
-        VObject Evaluate(Expression ast) {
+        dynamic Evaluate(Expression ast) {
             switch (ast) {
                 //Self-explanatory
                 case NumericLiteralExpression number:
-                    return new VObject(number.Value);
+                    return number.Value;
                 case StringLiteralExpression str:
-                    return new VObject(str.Value);
+                    return str.Value;
                 case VariableReferenceExpression variable:
                     return programState.Variables[variable.Name];
 
@@ -79,34 +82,36 @@ namespace TerseLang {
                     return programState.Autofill_1;
 
                 case FunctionInvocationExpression funcExpr:
-                    VObject caller;
+                    dynamic caller;
                     if (funcExpr.Caller is AutoExpression)
                         caller = programState.Autofill_1;
                     else
                         caller = Evaluate(funcExpr.Caller);
 
-                    if (Function.IsHigherOrder(funcExpr.Function, caller.ObjectType)) {
-                        HigherOrderFunction func = (HigherOrderFunction)Function.Get(funcExpr.Function, caller.ObjectType);
-                        Lambda lambda;
+                    if (functionHandler.IsHigherOrder(funcExpr.Function, caller)) {
+                        
                         bool createdLambda = false;
+
+                        Lambda lambda;
                         // If an autoexpression is submitted as a lambda, then either use the default lambda or if not available, a lambda that returns the first input
                         if (funcExpr.Argument is AutoExpression) {
-                            lambda = func.DefaultLambda ?? (x => x[0]);
+                            lambda = functionHandler.GetDefaultLambda(funcExpr.Function, caller);
                         }
                         else {
-                            lambda = CreateLambda(funcExpr.Argument, func.LambdaParameters);
+                            lambda = CreateLambda(funcExpr.Argument, functionHandler.NumLambdaParams(funcExpr.Function, caller));
                             createdLambda = true;
                         }
 
 
                         //We pass the lambda that we created into the function
-                        var res = func.Invoke(caller, lambda);
+                        var res = functionHandler.InvokeBinary(funcExpr.Function, caller, lambda);
 
                         //Re-rotate the parameter variables back
                         //We rotated them in the CreateLambda method
                         //Note this only triggers if CreateLambda was called
                         if (createdLambda) {
-                            for (int i = 0; i < PARAMETER_VARIABLES.Length - func.LambdaParameters; i++) {
+                            int numParams = functionHandler.NumLambdaParams(funcExpr.Function, caller);
+                            for (int i = 0; i < PARAMETER_VARIABLES.Length - numParams; i++) {
                                 ParamVars.Enqueue(ParamVars.Dequeue());
                             }
                         }
@@ -114,33 +119,12 @@ namespace TerseLang {
                         return res;
                     }
 
-                    if (Function.IsUnary(funcExpr.Function)) {
-                        UnaryFunction func = (UnaryFunction)Function.Get(funcExpr.Function, caller.ObjectType);
-                        if (func is UnaryFunctionWithProgramState funcWithProgState) return funcWithProgState.Invoke(caller, programState);
-                        else return func.Invoke(caller);
+                    if (FunctionHandler.IsUnary(funcExpr.Function)) {
+                        return functionHandler.InvokeUnary(funcExpr.Function, caller);
                     }
                     else {
-                        VObject arg = funcExpr.Argument is AutoExpression ? programState.Autofill_2 : Evaluate(funcExpr.Argument);
-                        if (funcExpr.VectorizationMode != VectorizationMode.None) {
-                            if (funcExpr.VectorizationMode == VectorizationMode.Left) {
-                                caller = caller.ToIterable();
-                                return ((List<VObject>)caller).Select(x => {
-                                    BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, x.ObjectType, arg.ObjectType);
-                                    return func.Invoke(x, arg);
-                                }).ToList();
-                            }
-                            else if (funcExpr.VectorizationMode == VectorizationMode.Right) {
-                                arg = arg.ToIterable();
-                                return ((List<VObject>)arg).Select(x => {
-                                    BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, x.ObjectType);
-                                    return func.Invoke(caller, x);
-                                }).ToList();
-                            }
-                        }
-                        else {
-                            BinaryFunction func = (BinaryFunction)Function.Get(funcExpr.Function, caller.ObjectType, arg.ObjectType);
-                            return func.Invoke(caller, arg);
-                        }
+                        dynamic arg = funcExpr.Argument is AutoExpression ? programState.Autofill_2 : Evaluate(funcExpr.Argument);
+                        return functionHandler.InvokeBinary(funcExpr.Function, caller, arg);
                     }
                     throw new Exception();
 
@@ -164,9 +148,9 @@ namespace TerseLang {
             }
             //This is the function that will be returned
             //Everytime the lambda is used, this is what is being executed
-            VObject func(VObject[] args) {
+            dynamic func(dynamic[] args) {
                 var paramArgPairs = parameterNames.Zip(args).ToList();
-                var oldValues = new VObject[lambdaParams];
+                var oldValues = new dynamic[lambdaParams];
                 int i = 0;
 
                 //Set the values of the parameter variables to whatever arguments were passed

@@ -65,8 +65,6 @@ namespace TerseLang {
                     return new Token(next.ToString(), TokenType.Punctuation);
                 if (FUNCTIONS.Contains(next))
                     return new Token(next.ToString(), TokenType.Function);
-                if (MODIFIERS.Contains(next))
-                    return new Token(next.ToString(), TokenType.Modifier);
             }
             throw new InvalidOperationException("Attempted to read next token, but encountered EOF");
         }

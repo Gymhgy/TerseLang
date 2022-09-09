@@ -192,16 +192,6 @@ namespace TerseLang.Tests {
             Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump() + expected.Dump());
         }
 
-        [TestMethod]
-        public void Parser_LeftVectorize() {
-            var actual = Parser.Parse("3。和3");
-            var expected = new List<Expression> {
-                new NumericLiteralExpression(3).Invoke("和", new NumericLiteralExpression(3)).LeftVectorize()
-
-            };
-
-            Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-        }
         public void Parser_RightVectorize() {
             var actual = Parser.Parse("1，和1该2");
             var expected = new List<Expression> {
