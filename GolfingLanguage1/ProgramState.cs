@@ -22,37 +22,32 @@ namespace TerseLang {
         public Dictionary<string, dynamic> Variables = new Dictionary<string, object>
         {
             //Inputs
-            ["哦"] = 0,
-            ["情"] = 0,
-            ["作"] = 0,
-            ["跟"] = 0,
+            ["哦"] = 0d,
+            ["情"] = 0d,
+            ["作"] = 0d,
+            ["跟"] = 0d,
             // Input Array
-            ["面"] = 0,
+            ["面"] = 0d,
 
-            //Unused variables (for now)
-            ["诉"] = new List<dynamic>(),
-            ["爱"] = 0,
+            //Assignable Autofill
+            ["爱"] = 0d,
 
             ["已"] = " ",
             ["之"] = "\n",
             ["问"] = "",
-            ["错"] = -1,
-            ["孩"] = 10,
+            ["错"] = -1d,
+            ["孩"] = 10d,
             //Function parameters
-            ["斯"] = 16,
-            ["成"] = 15,
-            ["它"] = 14,
-            ["感"] = 13,
-            ["干"] = 12,
-            ["法"] = 11,
+            ["斯"] = 16d,
+            ["成"] = 15d,
+            ["它"] = 14d,
+            ["感"] = 13d,
+            ["干"] = 12d,
+            ["法"] = 11d,
 
-            ["电"] = 100,
-            //Assign
+            ["电"] = 100d,
 
-            ["间"] = 1000,
-
-            //Hidden Variables that cannot be changed normally
-            ["HiddenAutofill"] = 0,
+            ["间"] = 1000d,
 
         };
 
@@ -64,6 +59,7 @@ namespace TerseLang {
             });
             //Initialize input array
             Variables["面"] = Inputs;
+            if (Inputs.Count == 1) Autofill2Name = INPUT_VARIABLES[0].ToString();
         }
     }
 }

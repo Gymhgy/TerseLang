@@ -204,8 +204,8 @@ namespace TerseLang {
                 },
                 ["从"] = new UnaryFunction {
                     N = x => {
-                        ProgramState.Variables["HiddenAutofill"] = x;
-                        ProgramState.Autofill1Name = "HiddenAutofill";
+                        ProgramState.Variables["间"] = x;
+                        ProgramState.Autofill1Name = "间";
                         return x;
                     }
                 },
@@ -215,7 +215,11 @@ namespace TerseLang {
                 ["中"] = new UnaryFunction {
                     N = x => Range(1, x)
                 },
-
+                ["诉"] = new UnaryFunction {
+                    N = x => x.ToString().Select(a => a.ToString()).ToList(),
+                    S = x => x.Select(a => a.ToString()).ToList(),
+                    L = x => string.Concat(x)
+                }
             });
 
             //Binary Functions:

@@ -127,7 +127,8 @@ namespace TerseLang {
                         return functionHandler.InvokeBinary(funcExpr.Function, caller, arg);
                     }
                     throw new Exception();
-
+                case StringListExpression strList:
+                    return strList.Strings.Select(x => Evaluate(x)).ToList();
                 case InterpolatedStringExpression intpStr:
                     return string.Concat(intpStr.Expressions.Select(x => Evaluate(x).ToString()));
                 default:
@@ -165,6 +166,7 @@ namespace TerseLang {
                 string oldAutofill1Name = programState.Autofill1Name;
                 string oldAutofill2Name = programState.Autofill2Name;
                 programState.Autofill1Name = parameterNames[0];
+                programState.Autofill2Name = parameterNames[0];
                 if(lambdaParams > 1)
                     programState.Autofill2Name = parameterNames[1];
 
