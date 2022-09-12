@@ -45,12 +45,26 @@ namespace TerseLang.Tests {
         }
 
         [TestMethod]
-        [DataRow("也")]
-        public void Interpreter_AdditionVectorization() {
-            var interpreter = new Interpreter("也", new dynamic[] { new DList { 1d, 2d, 3d }, 5d });
+        [DataRow(new object[] { 6d, 7d, 8d }, new object[] { 1d, 2d, 3d }, 5d, DisplayName = "Left Vectorization D1")]
+        [DataRow(new object[] { 6d, 7d, 8d }, 5d, new object[] { 1d, 2d, 3d }, DisplayName = "Right Vectorization D1")]
+        [DataRow(new object[] { 6d, 7d, 8d }, new object[] {5d, 5d, 5d}, new object[] { 1d, 2d, 3d }, DisplayName = "Left-Right Vectorization D1")]
+        [DataRow(new object[] { new object[] { 6d, 7d, 8d } }, new object[] { new object[] { 5d, 5d, 5d } }, new object[] { 1d, 2d, 3d }, DisplayName = "Left-Right Vectorization D2 D1")]
+        [DataRow(new object[] { 6d, 7d, 8d, 5d }, new object[] { 5d, 5d, 5d, 5d }, new object[] { 1d, 2d, 3d }, DisplayName = "Extra elements")]
+        [DataRow(new object[] { new object[] { 2d, 3d, 4d }, new object[] { 2d,3d,4d } }, new object[] { new object[] { 1d, 1d, 1d }, 1d }, new object[] { 1d, 2d, 3d }, DisplayName = "Extra elements vectorize")]
+        [DataRow(new object[] { new object[] { 2d, 3d, 4d }, new object[] { 2d, 3d, 4d } }, new object[] { new object[] { 1d, 1d, 1d }, 1d }, new object[] { 1d, 2d, 3d }, DisplayName = "Extra elements vectorize")]
+        public void Interpreter_AdditionVectorization(object[] expected, params object[] inputs) {
+            DList dExpected = new DList { expected.ToDList() };
+            dynamic[] dInputs = ((object[])inputs ?? new object[0]).ToDList().ToArray();
+            var interpreter = new Interpreter("也", dInputs);
             var result = interpreter.Interpret() as DList;
-            var expected = new List<dynamic> { new DList { 6d, 7d, 8d} };
-            Assert.IsTrue(result.DListEquals(expected));
+            Assert.IsTrue(result.DListEquals(dExpected), result.Dump());
+        }
+
+        [TestMethod]
+        public void Interpreter_FizzBuzz() {
+            var interpreter = new Interpreter("电让一3我5", new dynamic[0]);
+            var result = interpreter.Interpret() as DList;
+            System.Console.WriteLine(result.Dump());
         }
     }
 }

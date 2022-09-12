@@ -19,5 +19,9 @@ namespace TerseLang {
                 return false;
             }).All(x => x);
         }
+
+        public static DList ToDList(this object[] d) {
+            return d.Select(x => x is object[] dx ? dx.ToDList() : x).ToList();
+        }
     }
 }
