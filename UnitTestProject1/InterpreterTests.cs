@@ -62,7 +62,14 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Interpreter_FizzBuzz() {
-            var interpreter = new Interpreter("电让一3我5u\"Fizz‘Buzz\"诉开】先", new dynamic[0]);
+            var interpreter = new Interpreter("电让一3我5u\"Fizz‘Buzz\"死开】而", new dynamic[0]);
+            var result = interpreter.Interpret() as DList;
+            System.Console.WriteLine(result.Dump());
+        }
+
+        [TestMethod]
+        public void Interpreter_FizzaBuzz() {
+            var interpreter = new Interpreter("\"Fizz‘Buzz\"死", new dynamic[0]);
             var result = interpreter.Interpret() as DList;
             System.Console.WriteLine(result.Dump());
         }

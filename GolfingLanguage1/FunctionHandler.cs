@@ -130,7 +130,7 @@ namespace TerseLang {
                     Depth = 1
                 },
                 ["女"] = new UnaryFunction {
-                    N = x => double.Parse(string.Concat(x.ToString().Reverse())),
+                    N = x => Range(1, x).Reverse<dynamic>().ToList(),
                     S = x => string.Concat(x.Reverse()),
                     L = x => x.Reverse<dynamic>().ToList()
                 },
@@ -164,61 +164,72 @@ namespace TerseLang {
                     }
                 },
                 ["找"] = new UnaryFunction {
-                    L = x => x.Sum(a => a),
-                    Depth = 1
-                },
-                ["行"] = new UnaryFunction {
-                    N = x => (char)(int)x + "",
+                    N = x => (char)x + "",
                     S = x => x.Length == 1 ? (double)x[0] : x.Select(a => (dynamic)(double)a).ToList()
                 },
-                ["快"] = new UnaryFunction {
+                ["行"] = new UnaryFunction {
                     N = x => x.ToString(),
-                    S = x => double.Parse(x),
-                    L = x => double.Parse(string.Concat(x)),
+                    S = x => double.Parse(x)
+                },
+                ["快"] = new UnaryFunction {
+                    S = x => x.Split(" ").ToDList(),
+                    L = x => string.Join(" ", x),
                     Depth = 1
                 },
                 ["而"] = new UnaryFunction {
+                    S = x => x.Split("\n").ToDList(),
+                    L = x => string.Join("\n", x),
+                    Depth = 1
+                },
+                ["死"] = new UnaryFunction {
+                    S = x => x.Select(a => (dynamic)(a + "")).ToList(),
+                    L = x => string.Concat(x)
+                },
+                ["先"] = new UnaryFunction {
+                    N = x => Range(1, x),
+                    S = x => Range(1, x.Length),
+                    L = x => Range(1, x.Count)
+                },
+                ["像"] = new UnaryFunction {
+                    N = x => x % 2
+                },
+                ["等"] = new UnaryFunction {
+                    N = x => (double)(x.ToString()[0] - 48),
+                    S = x => x[0] + "",
+                    L = x => x[0]
+                },
+                ["被"] = new UnaryFunction {
+                    N = x => (double)(x.ToString().Last() - 48),
+                    S = x => x.Last() + "",
+                    L = x => x.Last()
+                },
+                ["从"] = new UnaryFunction {
+
+                },
+                ["明"] = new UnaryFunction {
+
+                },
+                ["中"] = new UnaryFunction {
                     N = x => new DList { x },
                     S = x => new DList { x },
                     L = x => new DList { x }
                 },
-                ["死"] = new UnaryFunction {
-                    S = x => x.Split(" ").ToList(),
-                    L = x => string.Join(" ", x),
-                    Depth = 1
-                },
-                ["先"] = new UnaryFunction {
-                    S = x => x.Split("\n").ToList(),
-                    L = x => string.Join("\n", x),
-                    Depth = 1
-                },
-                ["像"] = new UnaryFunction {
-                    L = x => x.Min(a => a)
-                },
-                ["等"] = new UnaryFunction {
-                    S = x => string.Concat(x.OrderBy(a => a)),
-                    L = x => x.OrderBy(a => a).ToList()
-                },
-                ["被"] = new UnaryFunction {
-                    L = x => x.Max(a => a)
-                },
-                ["从"] = new UnaryFunction {
+                ["诉"] = new UnaryFunction {
                     N = x => {
                         ProgramState.Variables["间"] = x;
                         ProgramState.Autofill1Name = "间";
                         return x;
+                    },
+                    S = x => {
+                        ProgramState.Variables["间"] = x;
+                        ProgramState.Autofill1Name = "间";
+                        return x;
+                    },
+                    L = x => {
+                        ProgramState.Variables["间"] = x;
+                        ProgramState.Autofill1Name = "间";
+                        return x;
                     }
-                },
-                ["明"] = new UnaryFunction {
-                    N = x => x % 2
-                },
-                ["中"] = new UnaryFunction {
-                    N = x => Range(1, x)
-                },
-                ["诉"] = new UnaryFunction {
-                    N = x => x.ToString().Select(a => a.ToString()).ToList(),
-                    S = x => x.Select(a => a.ToString()).ToList(),
-                    L = x => string.Concat(x)
                 }
             });
 
@@ -404,7 +415,6 @@ namespace TerseLang {
                 },
                 ["如"] = new BinaryFunction {
                     NN = (x, y) => x - y
-
                 },
                 ["家"] = new BinaryFunction {
                     //Cartesian product
@@ -495,10 +505,13 @@ namespace TerseLang {
                 ["心"] = new BinaryFunction {
                     NLambda = (x, f) => Range(1, (int)x).Aggregate((a, b) => f(new dynamic[] { a, b })),
                     NLambdaParams = 2,
+                    NDefaultLambda = x => x[0] + x[1],
                     SLambda = (x, f) => x.Aggregate("", (a, b) => f(new dynamic[] { a.ToString(), b.ToString() })),
                     SLambdaParams = 2,
+                    SDefaultLambda = x => x[0] + x[1],
                     LLambda = (x, f) => x.Aggregate((a, b) => f(new dynamic[] { a, b })),
-                    LLambdaParams = 2
+                    LLambdaParams = 2,
+                    LDefaultLambda = x => x[0] + x[1]
                 },
                 ["走"] = new BinaryFunction {
                     NN = (x, y) => new DList { x, y },
@@ -518,10 +531,32 @@ namespace TerseLang {
                     LN = (x, y) => x[(int)y],
                 },
                 ["听"] = new BinaryFunction {
-
+                    SN = (x, y) => x.Split(y.ToString()).ToDList(),
+                    SS = (x, y) => x.Split(y).ToDList(),
+                    SL = (x, y) => string.Join(x, y),
+                    LN = (x, y) => string.Join(y.ToString(), x),
+                    LS = (x, y) => string.Join(y, x),
                 },
                 ["觉"] = new BinaryFunction {
-
+                    SN = (x, y) => x.Replace(y.ToString(), ""),
+                    SS = (x, y) => x.Replace(y, ""),
+                    SL = (x, y) => {
+                        for(int i = 0; i < y.Count; i+=2) {
+                            x = x.Replace(y[i], y[i + 1]);
+                        }
+                        return x;
+                    },
+                    LN = (x, y) => x.Where(a => a != y).ToList(),
+                    LS = (x, y) => x.Where(a => a != y).ToList(),
+                    LL = (x, y) => {
+                        x = x.ToList();
+                        for (int i = 0; i < y.Count; i += 2) {
+                            for(int j = 0; j < x.Count; j++) {
+                                if (x[j] == y[i]) x[j] = y[i + 1];
+                            }
+                        }
+                        return x;
+                    },
                 }
             });
         }

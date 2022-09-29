@@ -20,6 +20,10 @@ namespace TerseLang {
             }).All(x => x);
         }
 
+        public static string DListToString(this DList list) {
+            return "[" + string.Join(", ", list.Select(x => x is DList d ? d.DListToString() : x is string s ? "\"" + s + "\"" : x.ToString())) + "]";
+        }
+
         public static DList ToDList(this object[] d) {
             return d.Select(x => x is object[] dx ? dx.ToDList() : x).ToList();
         }

@@ -93,7 +93,7 @@
             pseudocode = "";
         }
         catch(Exception e) {
-            
+
             error = "Could not unparse:\n" + e.ToString();
         }
         StateHasChanged();
@@ -117,7 +117,10 @@
                 }
 
             }).Where(x => x != null).ToArray();
-            output = new Interpreter(code, inputs).Interpret().LastOrDefault()?.ToString() ?? "";
+            var result = new Interpreter(code, inputs).Interpret().LastOrDefault();
+            if(result != null) {
+                if (result is List<dynamic> d) output = d.DListToString();
+            }
         }
         catch (TerseLang.InternalErrorException e) {
             Console.WriteLine(e);

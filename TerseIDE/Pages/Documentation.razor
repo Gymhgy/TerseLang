@@ -4,7 +4,7 @@
 @inject IJSRuntime JS
 
 <article id="docs">
-    @if (pages == null) {
+    @if (docPage == null) {
         <span style="color:white;">Loading...</span>
     }
     else {
@@ -12,36 +12,25 @@
         //Load!
 
         <div id="doc-topbar">
-            <span class="topbar-item" id="section-title">@currentPage.Page</span>
-            <span class="oi oi-menu text-white topbar-item" id="dropdown-button" tabindex="0" @onclick="@(() => {
-                                                                                                              Hide = !Hide; dropdown.FocusAsync();
-                                                                                                          })"></span>
-
+            <span class="topbar-item" id="section-title">Functions</span>
         </div>
 
-        <ul hidden="@Hide" id="contents-dropdown" tabindex="1" @onfocusout="@(() => Hide = true)" @ref="dropdown">
-            @for (int i = 0; i < pages.Length; i++) {
-                int j = i;
-                <li @onclick="_=>ToPage(j)" style="@(currentPage == pages[j] ? "background-color: #121212" : "")">@pages[i].Page</li>
-            }
-        </ul>
-
         <article id="docs-body">
-            @currentPage.Intro
-            @foreach (var func in currentPage.Unary) {
-                <div class="func-header" @onclick="@(() => OnCodeCharClicked(func.Name[0].ToString()))">@func.Name → @func.Returns</div>
-                <div>@func.Description</div>
+            @((MarkupString)string.Join("<br>", @docPage.Intro))
+            @foreach (var func in docPage.Unary) {
+                <div class="func-header" @onclick="@(() => OnCodeCharClicked(func.Name[0].ToString()))">@func.Name</div>
+                <div>@((MarkupString)string.Join("<br>", @func.Description))</div>
             }
-            @foreach (var func in currentPage.Binary) {
+            @foreach (var func in docPage.Binary) {
                 <div class="func-header" @onclick="@(() => OnCodeCharClicked(func.Name[0].ToString()))">
-                    @func.Name → @func.Returns
+                    @func.Name
                     <span style="float:right">
                         @foreach (var tChar in func.Tiers) {
                             <code @onclick="@(() => OnCodeCharClicked(tChar))" @onclick:stopPropagation="true">@tChar</code>
                         }
                     </span>
                 </div>
-                <div>@func.Description</div>
+                <div>@((MarkupString)string.Join("<br>", @func.Description))</div>
             }
         </article>
 
@@ -52,39 +41,25 @@
 @code {
     [Parameter]
     public Action<string> OnCodeCharClicked { get; set; }
-
-    ElementReference dropdown;
-    bool Hide = true;
-    int currentPageNum = 0;
-    void ToPage(int i) {
-        currentPageNum = i;
-        Hide = true;
-    }
-
-    DocPage currentPage => pages[currentPageNum];
-
-    DocPage[] pages;
+    DocPage docPage;
     public class DocPage {
-        public string Intro { get; set; }
-        public string Page { get; set; }
-        public string Type { get; set; }
+        public string[] Intro { get; set; }
         public UnaryFunc[] Unary { get; set; }
         public BinaryFunc[] Binary { get; set; }
     }
     public class UnaryFunc {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string Returns { get; set; }
+        public string[] Description { get; set; }
+        public string Details { get; set; }
     }
     public class BinaryFunc {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string ArgType { get; set; }
-        public string Returns { get; set; }
+        public string[] Description { get; set; }
+        public string Details { get; set; }
         public string[] Tiers { get; set; }
     }
 
     protected async override Task OnInitializedAsync() {
-        pages = await Http.GetFromJsonAsync<DocPage[]>("docs/page.json", new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        docPage = await Http.GetFromJsonAsync<DocPage>("docs/page.json", new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 }

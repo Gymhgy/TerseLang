@@ -146,12 +146,6 @@ namespace TerseLang {
                 else
                     ProcessBrackets();
             }
-            //If a '?' follows this expression, it means it's a conditional expression
-            if (!tokenizer.EOF() && tokenizer.Peek().Type == TokenType.Punctuation && tokenizer.Peek().Value == IF.ToString())
-            {
-                tokenizer.Next();
-                val = new ConditionalExpression(val, ParseExpression(), ParseExpression());
-            }
             return val;
         }
     }

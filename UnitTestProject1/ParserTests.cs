@@ -130,17 +130,6 @@ namespace TerseLang.Tests {
         }
 
 		[TestMethod]
-		public void Parser_SimpleIf()
-		{
-			var actual = Parser.Parse("1?2..3");
-			var expected = new List<Expression>
-			{
-				new ConditionalExpression(new NumericLiteralExpression(1), new NumericLiteralExpression(2), new NumericLiteralExpression(0.3))
-			};
-			Assert.IsTrue(EqualByProperties(actual, expected), actual.Dump());
-		}
-
-		[TestMethod]
 		public void Parser_StringInterpolation() {
 			var actual = Parser.Parse("\"abcd定efgh情ijk");
 			var expected = new List<Expression> {
