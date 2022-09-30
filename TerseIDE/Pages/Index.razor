@@ -120,6 +120,7 @@
             var result = new Interpreter(code, inputs).Interpret().LastOrDefault();
             if(result != null) {
                 if (result is List<dynamic> d) output = d.DListToString();
+                else output = result.ToString();
             }
         }
         catch (TerseLang.InternalErrorException e) {
