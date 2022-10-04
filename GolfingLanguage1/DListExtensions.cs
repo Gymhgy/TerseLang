@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,8 +24,9 @@ namespace TerseLang {
             return "[" + string.Join(", ", list.Select(x => x is DList d ? d.DListToString() : x is string s ? "\"" + s + "\"" : x.ToString())) + "]";
         }
 
-        public static DList ToDList(this object[] d) {
-            return d.Select(x => x is object[] dx ? dx.ToDList() : x).ToList();
+        
+        public static DList ToDList(this IEnumerable d) {
+            return d.Cast<object>().Select(x => x is IEnumerable dx ? dx.ToDList() : x).ToList();
         }
     }
 }

@@ -259,7 +259,7 @@ namespace TerseLang {
                     NS = (x, y) => x.ToString() == y ? 1 : 0,
                     NL = (x, y) => 0,
                     SN = (x, y) => x == y.ToString() ? 1 : 0,
-                    SS = (x, y) => x == y,
+                    SS = (x, y) => x == y ? 1 : 0,
                     SL = (x, y) => 0,
                     LN = (x, y) => 0,
                     LS = (x, y) => 0,
@@ -407,7 +407,7 @@ namespace TerseLang {
                     NS = (x, y) => x.ToString() == y ? 0 : 1,
                     NL = (x, y) => 1,
                     SN = (x, y) => x == y.ToString() ? 0 : 1,
-                    SS = (x, y) => x == y,
+                    SS = (x, y) => x == y ? 0 : 1,
                     SL = (x, y) => 1,
                     LN = (x, y) => 1,
                     LS = (x, y) => 1,
@@ -436,11 +436,12 @@ namespace TerseLang {
                     LL = (x, y) => x.Concat(y).ToList()
                 },
                 ["多"] = new BinaryFunction {
-                    //Count
+                    LN = (x, y) => x.Count(a => a == y),
+                    LS = (x, y) => x.Count(a => a == y),
 
                 },
                 ["意"] = new BinaryFunction {
-                    NLambda = (x, f) => Range(1, x).Count(a => f(new dynamic[] { a })),
+                    NLambda = (x, f) => Range(1, x).Count(a => Truthy(f(new dynamic[] { a }))),
                     NLambdaParams = 1,
                     SLambda = (x, f) => x.Select((a, i) => new dynamic[] { a.ToString(), i }).Count(a => Truthy(f(a))),
                     SLambdaParams = 2,
@@ -463,16 +464,24 @@ namespace TerseLang {
                     LL = (x, y) => x.IndexOf(y) + 1
                 },
                 ["话"] = new BinaryFunction {
-                    //Indices of occurences
-
+                    NL = (x, y) => y.Select((a, i) => a == x ? i : -1).Where(a => a != -1).ToDList(),
+                    SS = (x, y) => x.Select((_, i) => x[i..].StartsWith(y) ? i : -1).Where(a => a != -1).ToDList(),
+                    SL = (x, y) => y.Select((a, i) => a == x ? i : -1).Where(a => a != -1).ToDList(),
+                    LN = (x, y) => x.Select((a, i) => a == y ? i : -1).Where(a => a != -1).ToDList(),
+                    LS = (x, y) => x.Select((a, i) => a == y ? i : -1).Where(a => a != -1).ToDList(),
+                    LL = (x, y) => y.Select((a, i) => a is DList d ? d.DListEquals(x) ?  i : -1 : -1).Where(a => a != -1).ToDList()
                 },
                 ["小"] = new BinaryFunction {
-                    //Interleave
-
+                    NLambda = (x, f) => Range(1, x).Any(a => Truthy(f(new dynamic[] { a }))),
+                    NLambdaParams = 1,
+                    SLambda = (x, f) => Range(1, x.Length).Any(a => Truthy(f(new dynamic[] { x[a]+"", a }))),
+                    SLambdaParams = 2,
+                    LLambda = (x, f) => Range(1, x.Count).Any(a => Truthy(f(new dynamic[] { x[a], a }))),
+                    LLambdaParams = 2
                 },
                 ["自"] = new BinaryFunction {
-                    //Rotate
-
+                    LN = (x, y) => y >= 0 ? x.Skip((int)y).Concat(x.Take((int)y)) : x.TakeLast(-(int)y).Concat(x.SkipLast(-(int)y)),
+                    SN = (x, y) => y >= 0 ? x[(int)y..] + x[..(int)y] : x[(^(int)-y)..] + x[..(^(int)-y)]
                 },
                 ["回"] = new BinaryFunction {
                     NS = (x, y) => (int)x < 0 ? y[..^((int)-x)] : y[(int)x..],
@@ -493,8 +502,12 @@ namespace TerseLang {
                     LLambdaParams = 1
                 },
                 ["发"] = new BinaryFunction {
-                    //Subsections
-
+                    NLambda = (x, f) => Range(1, x).Any(a => Truthy(f(new dynamic[] { a }))),
+                    NLambdaParams = 1,
+                    SLambda = (x, f) => Range(1, x.Length).Any(a => Truthy(f(new dynamic[] { x[a] + "", a }))),
+                    SLambdaParams = 2,
+                    LLambda = (x, f) => Range(1, x.Count).Any(a => Truthy(f(new dynamic[] { x[a], a }))),
+                    LLambdaParams = 2
                 },
                 ["见"] = new BinaryFunction {
                     NS = (x, y) => (int)x < 0 ? y[..^((int)-x)] : y[..(int)x],
@@ -568,10 +581,14 @@ namespace TerseLang {
         public Func<DList, dynamic> L { get; set; }
         public dynamic Invoke(dynamic x) {
             try {
-                return Behavior(x);
+                dynamic d = Behavior(x);
+                if (d is int i) return (double)i;
+                if (d is System.Collections.IEnumerable e) return e.ToDList();
+                if (d is bool b) return b ? 1d : 0d;
+                return d;
             }
             catch(NullReferenceException) {
-                return null;
+                return 0;
             }
         }
         private dynamic Behavior(double x) {
@@ -592,7 +609,16 @@ namespace TerseLang {
 
         public dynamic Invoke(dynamic x, dynamic y) {
             //Let the type checker do its work...
-            return Behavior(x, y);
+            try {
+                dynamic d = Behavior(x, y);
+                if (d is int i) return (double)i;
+                if (d is System.Collections.IEnumerable e) return e.ToDList();
+                if (d is bool b) return b ? 1d : 0d;
+                return d;
+            }
+            catch (NullReferenceException) {
+                return 0;
+            }
         }
         public Func<double, double, dynamic> NN { get; set; }
         private dynamic Behavior(double x, double y) {
