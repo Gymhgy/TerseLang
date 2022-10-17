@@ -21,6 +21,7 @@ h2 {
 textarea {
     font-family: monospace;
     background-color: #121212;
+    overflow: hidden;
     resize: none;
     width: 100%;
     color: #ffffff;

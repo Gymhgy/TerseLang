@@ -18,6 +18,8 @@ namespace TerseLang {
 
         public const string FUNCTIONS = TIER_ZERO + TIER_ONE + TIER_TWO + TIER_UNLIMITED + UNARY_FUNCTIONS;
 
+        public const char ADDITIONAL_FUNCTIONS = '，';
+
         public const char STRING_DELIMITER = '"';
         public const char COMPRESSED_STRING_DELIMITER = '”';
         public const char COMPRESSED_NUMBER_DELIMITER = '“';
@@ -57,6 +59,8 @@ namespace TerseLang {
             //For later use
             " \n\t" +
             //For later use
-            "[]【：；。，";
+            "[]【：；。" +
+            //Modifier
+            "，";
     }
 }

@@ -26,7 +26,7 @@ namespace TerseLang {
 
         
         public static DList ToDList(this IEnumerable d) {
-            return d.Cast<object>().Select(x => x is IEnumerable dx ? dx.ToDList() : x).ToList();
+            return d.Cast<object>().Select(x => x is IEnumerable dx && x is not string ? dx.ToDList() : x).ToList();
         }
     }
 }

@@ -19,14 +19,17 @@ namespace TerseLang {
         private static string GetBase(string func) {
             //Also checks if func is actually a function
             var tier = GetTier(func);
+            var last = func.Last();
+            var replaced = last;
             if (!IsUnary(func)) {
                 var tierList = new[] { TIER_UNLIMITED, TIER_ZERO, TIER_ONE, TIER_TWO }[tier + 1];
-                func = TIER_UNLIMITED[tierList.IndexOf(func)].ToString();
+                replaced = TIER_UNLIMITED[tierList.IndexOf(last)];
             }
-            return func;
+            return func.Replace(last, replaced);
         }
 
         public static int GetTier(String func) {
+            func = func.Last().ToString();
             if (IsUnary(func)) return 0;
             if (TIER_ZERO.Contains(func)) return 0;
             if (TIER_ONE.Contains(func)) return 1;
@@ -36,7 +39,7 @@ namespace TerseLang {
         }
 
         public static bool IsUnary(String next) {
-            return UNARY_FUNCTIONS.Contains(next);
+            return UNARY_FUNCTIONS.Contains(next.Last()+"");
         }
         public bool IsHigherOrder(string func, dynamic caller) {
             func = GetBase(func);
@@ -582,6 +585,7 @@ namespace TerseLang {
         public dynamic Invoke(dynamic x) {
             try {
                 dynamic d = Behavior(x);
+                if (d is string s) return s;
                 if (d is int i) return (double)i;
                 if (d is System.Collections.IEnumerable e) return e.ToDList();
                 if (d is bool b) return b ? 1d : 0d;
@@ -611,6 +615,7 @@ namespace TerseLang {
             //Let the type checker do its work...
             try {
                 dynamic d = Behavior(x, y);
+                if (d is string s) return s;
                 if (d is int i) return (double)i;
                 if (d is System.Collections.IEnumerable e) return e.ToDList();
                 if (d is bool b) return b ? 1d : 0d;

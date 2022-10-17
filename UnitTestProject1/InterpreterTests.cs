@@ -69,7 +69,7 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Interpreter_FizzaBuzz() {
-            var interpreter = new Interpreter("\"Fizz‘Buzz\"死", new dynamic[0]);
+            var interpreter = new Interpreter("5u\"Fizz\"", new dynamic[0]);
             var result = interpreter.Interpret() as DList;
             System.Console.WriteLine(result.Dump());
         }

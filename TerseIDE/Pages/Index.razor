@@ -12,16 +12,9 @@
     <button class="topbutton" @onclick="@Run"><span class="oi oi-media-play s-24 text-white"></span> Run</button>
     <button class="topbutton" @onclick="@CopyLinkToClipboard"><span class="oi oi-link-intact s-24 text-white"></span> Link</button>
     <section>
-        <h2><b>CODE</b></h2>
-        <textarea autofocus rows="5" placeholder="code here" @bind="code"></textarea>
-    </section>
-
-    <section>
-        <h2 style="display:inline-block;"><b>PSEUDOCODE</b></h2>
-        <div style="display:inline-block; float:right; position:relative;" @onclick="@UpdatePsuedocode">
-            <h2><b>Generate</b> <span class="oi oi-media-play text-white"></span></h2>
-        </div>
-        <textarea readonly>@pseudocode</textarea>
+        
+        <h2><b>CODE</b> - @this.code.Length byte@(this.code.Length == 1 ? "" : "s")</h2>
+        <textarea autofocus rows="@(Math.Max(code.Split('\n').Length, 5))" placeholder="code here" @bind="code" @bind:event="oninput"></textarea>
     </section>
 
     <section>
@@ -31,23 +24,23 @@
             int j = i;
             <div style="display:block">
                 <span class="add-remove" @onclick="@(_ => input.RemoveAt(j))" style="float: right">- remove</span>
-                <textarea @bind="input[j]" rows="1"></textarea>
+                <textarea oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" @bind="input[j]" rows="1"></textarea>
             </div>
         }
     </section>
     <section>
         <h2><b>OUTPUT</b></h2>
-        <textarea readonly @bind="output"></textarea>
+        <textarea rows="@(Math.Max(output.Split('\n').Length, 2))" readonly @bind="output"></textarea>
     </section>
 
     <section>
         <h2><b>ERROR INFO</b></h2>
-        <textarea readonly @bind="error" rows="10"></textarea>
+        <textarea rows="@(Math.Max(error.Split('\n').Length, 2))" readonly @bind="error"></textarea>
     </section>
 </div>
 <Documentation OnCodeCharClicked="@(c => { code += c; this.StateHasChanged(); })"></Documentation>
 @code {
-    string code = "", pseudocode = "", output = "", error = "";
+    string code = "", output = "", error = "";
     List<string> input = new List<string> { };
 
     protected override void OnInitialized() {
@@ -74,33 +67,6 @@
 
     }
 
-    void UpdatePsuedocode() {
-        var exprs = Parser.Parse(code);
-
-        var inputs = input.Select(x => {
-            try {
-                if (x == "") return "";
-                return TerseLang.Program.ParseInput(x);
-            }
-            catch {
-                return null;
-            }
-
-        }).Where(x => x != null).ToArray();
-
-        //Un-parsing!
-        try {
-            pseudocode = "";
-        }
-        catch(Exception e) {
-
-            error = "Could not unparse:\n" + e.ToString();
-        }
-        StateHasChanged();
-
-
-
-    }
 
     void Run() {
         try {
