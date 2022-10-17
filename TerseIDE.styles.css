@@ -114,6 +114,7 @@ h2[b-kvuk1t29nt] {
 textarea[b-kvuk1t29nt] {
     font-family: monospace;
     background-color: #121212;
+    overflow: hidden;
     resize: none;
     width: 100%;
     color: #ffffff;
