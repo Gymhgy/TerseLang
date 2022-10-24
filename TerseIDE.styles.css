@@ -111,13 +111,24 @@ h2[b-kvuk1t29nt] {
     font-family: Roboto,Arial,sans-serif;
 }
 
-textarea[b-kvuk1t29nt] {
+.textbox[b-kvuk1t29nt] {
+    min-height: 100px;
+}
+
+textarea[b-kvuk1t29nt], .textbox[b-kvuk1t29nt] {
     font-family: monospace;
     background-color: #121212;
     overflow: hidden;
     resize: none;
     width: 100%;
     color: #ffffff;
+    border-radius: 0;
+    letter-spacing: 1px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(118, 118, 118);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
     textarea:focus[b-kvuk1t29nt] {
@@ -142,4 +153,12 @@ textarea[b-kvuk1t29nt] {
     width: calc(100% - 400px);
     padding: 20px;
     overflow-y: auto;
+}
+
+#editor[b-kvuk1t29nt] {
+    background-color: transparent;
+    color: transparent;
+    caret-color: white;
+    z-index: 2;
+    position: relative;
 }

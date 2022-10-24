@@ -24,3 +24,49 @@ html, body {
     width: 100%;
     background-color: #212121;
 }
+
+
+
+
+#backdrop {
+    position: absolute;
+    padding: 2px;
+    letter-spacing: 1px;
+    font-family: monospace;
+    width: 100%;
+    color: white;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    border: 1px solid transparent;
+    top: 0;
+    z-index: 1;
+}
+.markup {
+}
+.markup.string {
+    color: orange;
+}
+
+.markup.tier0 {
+    color: blueviolet;
+}
+
+.markup.tier1 {
+   color: yellow;
+}
+
+.markup.tier2 {
+    color: lightgreen;
+}
+
+.markup.tierunlimited {
+    color: lightcoral;
+}
+
+.markup.unary {
+    color: lightblue;
+}
+
+.markup.number {
+
+}
