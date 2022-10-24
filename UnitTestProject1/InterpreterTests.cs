@@ -11,21 +11,21 @@ namespace TerseLang.Tests {
         [TestMethod]
         public void Interpreter_Number() {
             var interpreter = new Interpreter("22222", new dynamic[0]);
-            var result = interpreter.Interpret().ToList();
-            var expected = new List<dynamic> { 22222d };
-            Assert.IsTrue(result.DListEquals(expected), result.Dump());
+            var result = interpreter.Interpret() as object;
+            var expected = 22222d;
+            Assert.IsTrue(D.Equals(result, expected), result.Dump());
         }
 
         [TestMethod]
         public void Interpreter_String() {
             var interpreter = new Interpreter("\"Hello, World!", new dynamic[0]);
-            var result = interpreter.Interpret().ToList();
-            var expected = new List<dynamic> { "Hello, World!" };
-            Assert.IsTrue(result.DListEquals(expected), result.Dump());
+            var result = interpreter.Interpret() as object;
+            var expected = "Hello, World!";
+            Assert.IsTrue(D.Equals(result, expected), result.Dump());
         }
 
         [TestMethod]
-        [DataRow("22样", new object[] { 22d }, null, DisplayName = "Absolute Value")]
+        [DataRow("22样", 22d, null, DisplayName = "Absolute Value")]
         /*[DataRow("22用", new object[] { 2 }, null, DisplayName = "Number Length")]
         [DataRow("22打", new object[] { -22 }, null, DisplayName = "Negation")]
         [DataRow("22地", new object[] { 44 }, null, DisplayName = "Double")]
@@ -34,14 +34,13 @@ namespace TerseLang.Tests {
         [DataRow("22呢", new object[] { 21 }, null, DisplayName = "Decrement")]
         [DataRow("22女", new object[] { "22" }, null, DisplayName = "Convert to String")]*/
 
-        public void Interpreter_NumberUnaryFunctions(string program, object[] expected, object[] inputs = null) {
+        public void Interpreter_NumberUnaryFunctions(string program, dynamic expected, object[] inputs = null) {
             inputs ??= new object[0];
             dynamic[] dInputs = inputs.ToArray();
-            List<dynamic> dExpected = expected.ToList();
 
             var interpreter = new Interpreter(program, dInputs);
-            var result = interpreter.Interpret() as DList;
-            Assert.IsTrue(result.DListEquals(dExpected), result.Dump());
+            var result = interpreter.Interpret() as object;
+            Assert.IsTrue(D.Equals(result, expected), result.Dump());
         }
 
         [TestMethod]
@@ -53,24 +52,31 @@ namespace TerseLang.Tests {
         [DataRow(new object[] { new object[] { 2d, 3d, 4d }, new object[] { 2d,3d,4d } }, new object[] { new object[] { 1d, 1d, 1d }, 1d }, new object[] { 1d, 2d, 3d }, DisplayName = "Extra elements vectorize")]
         [DataRow(new object[] { new object[] { 2d, 3d, 4d }, new object[] { 2d, 3d, 4d } }, new object[] { new object[] { 1d, 1d, 1d }, 1d }, new object[] { 1d, 2d, 3d }, DisplayName = "Extra elements vectorize")]
         public void Interpreter_AdditionVectorization(object[] expected, params object[] inputs) {
-            DList dExpected = new DList { expected.ToDList() };
             dynamic[] dInputs = ((object[])inputs ?? new object[0]).ToDList().ToArray();
+            var dExpected = expected.ToDList();
             var interpreter = new Interpreter("也", dInputs);
-            var result = interpreter.Interpret() as DList;
-            Assert.IsTrue(result.DListEquals(dExpected), result.Dump());
+            var result = interpreter.Interpret() as object;
+            Assert.IsTrue(D.Equals(result, dExpected), result.Dump());
         }
 
         [TestMethod]
         public void Interpreter_FizzBuzz() {
             var interpreter = new Interpreter("电让一3我5u\"Fizz‘Buzz\"死开】而", new dynamic[0]);
-            var result = interpreter.Interpret() as DList;
+            var result = interpreter.Interpret() as object;
             System.Console.WriteLine(result.Dump());
         }
 
         [TestMethod]
         public void Interpreter_FizzaBuzz() {
             var interpreter = new Interpreter("5u\"Fizz\"", new dynamic[0]);
-            var result = interpreter.Interpret() as DList;
+            var result = interpreter.Interpret() as object;
+            System.Console.WriteLine(result.Dump());
+        }
+
+        [TestMethod]
+        public void Interpreter_Rule110() {
+            var interpreter = new Interpreter("0^^0{3让打子220打)死哦，下】", new dynamic[] {"00000000000001", 10d});
+            var result = interpreter.Interpret() as object;
             System.Console.WriteLine(result.Dump());
         }
     }

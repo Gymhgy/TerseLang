@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,7 @@ namespace TerseLang {
         }
         public static bool DListEquals(this DList l1, DList l2) {
             return l1.Count == l2.Count && l1.Zip(l2, (a, b) => {
-                
-                if (a is DList la && b is DList lb) return DListEquals(la, lb);
-                if (a is double da && b is double db) return da == db;
-                if (a is string sa && b is string sb) return sa == sb;
-                return false;
+                return D.Equals(a, b);
             }).All(x => x);
         }
 
@@ -27,6 +24,15 @@ namespace TerseLang {
         
         public static DList ToDList(this IEnumerable d) {
             return d.Cast<object>().Select(x => x is IEnumerable dx && x is not string ? dx.ToDList() : x).ToList();
+        }
+    }
+    public static class D {
+        public static new bool Equals(dynamic x, dynamic y) {
+            Console.WriteLine(x.GetType());
+            if (x is string && y is string) return x == y;
+            if (x is DList dx && y is DList dy) return dx.DListEquals(dy);
+            if (x is double && y is double) return x == y;
+            return false;
         }
     }
 }

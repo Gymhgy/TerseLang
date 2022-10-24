@@ -16,11 +16,11 @@ namespace TerseLang {
 
         private ProgramState programState { get; }
         private FunctionHandler functionHandler { get; }
-
+        public int CurrentExpression { get; private set; }
         public Interpreter(string program, dynamic[] Input) {
             //Pass the program into the parser
             AST = Parser.Parse(program);
-            programState = new ProgramState(Input);
+            programState = new ProgramState(Input, this);
             functionHandler = new FunctionHandler(programState);
             //Initialize parameter variable queue
             //Used for setting up lambdas
@@ -30,13 +30,19 @@ namespace TerseLang {
             }
         }
 
-        public IList<dynamic> Interpret() {
+        //Execute the nth expression
+        public dynamic ExecuteNth(int n) {
+            int old = CurrentExpression;
+            CurrentExpression = n;
+            var res = Evaluate(AST.ElementAt(n-1));
+            CurrentExpression = old;
+            return res;
+        }
+
+        public dynamic Interpret() {
             //For each expression in the pareser, evaluate them and add them to the list or results
-            List<dynamic> results = new List<dynamic>();
-            foreach (var expr in AST) {
-                results.Add(Evaluate(expr));
-            }
-            return results;
+            CurrentExpression = AST.Count;
+            return Evaluate(AST.Last());
         }
 
 
@@ -181,7 +187,7 @@ namespace TerseLang {
                 i = 0;
                 paramArgPairs.ForEach((paramArgPair) => {
                     var (paramName, _) = paramArgPair;
-                    programState.Variables[paramName] = oldValues[i];
+                    programState.Variables[paramName] = oldValues[i++];
                 });
 
                 return result;

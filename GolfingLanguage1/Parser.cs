@@ -126,13 +126,14 @@ namespace TerseLang {
                 var next = nextTok.Value;
 
                 // Another token has been consumed; therefore we need to update the breaks
-                toks--; 
-
+                toks--;
+                bool unlimited = false;
                 if(FunctionHandler.IsUnary(next)) {
                     val = new FunctionInvocationExpression(val, next) ;
                 }
                 else {
                     var tier = FunctionHandler.GetTier(next);
+                    if (tier == -1) unlimited = true;
                     var arg = ParseExpression(false, tier);
                     val = new FunctionInvocationExpression(val, next, arg);
                 }
@@ -143,8 +144,9 @@ namespace TerseLang {
                     while (IsBracket())
                         tokenizer.Next();
                 }
-                else
+                if (unlimited) {
                     ProcessBrackets();
+                }
             }
             return val;
         }

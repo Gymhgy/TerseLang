@@ -452,12 +452,38 @@ namespace TerseLang {
                     LLambdaParams = 2
                 },
                 ["别"] = new BinaryFunction {
-                    NLambda = (x, f) => Range(1, x).GroupBy(a => f(new dynamic[] { a })).Select(a => a.ToList()).ToList(),
-                    NLambdaParams = 1,
-                    SLambda = (x, f) => x.Select(a => a.ToString()).GroupBy(a => f(new dynamic[] { a })).Select(a => a.ToList()).ToList(),
-                    SLambdaParams = 1,
-                    LLambda = (x, f) => x.GroupBy(a => f(new dynamic[] { a })).Select(a => a.ToList()).ToList(),
-                    LLambdaParams = 1
+                    NS = (x, y) => {
+                        DList subsections = new();
+                        int size = (int)x;
+                        for (int i = 0; i <= y.Length - size; i++) {
+                            subsections.Add(y.Substring(i, size));
+                        }
+                        return subsections;
+                    },
+                    NL = (x, y) => {
+                        DList subsections = new();
+                        int size = (int)x;
+                        for (int i = 0; i <= y.Count - size; i++) {
+                            subsections.Add(y.Skip(i).Take(size).ToList());
+                        }
+                        return subsections;
+                    },
+                    SN = (x, y) => {
+                        DList subsections = new();
+                        int size = (int)y;
+                        for (int i = 0; i <= x.Length - size; i++) {
+                            subsections.Add(x.Substring(i, size));
+                        }
+                        return subsections;
+                    },
+                    LN = (x, y) => {
+                        DList subsections = new();
+                        int size = (int)y;
+                        for (int i = 0; i <= x.Count - size; i++) {
+                            subsections.Add(x.Skip(i).Take(size).ToList());
+                        }
+                        return subsections;
+                    },
                 },
                 ["所"] = new BinaryFunction {
                     SN = (x, y) => x.IndexOf(y.ToString()) + 1,
@@ -467,12 +493,12 @@ namespace TerseLang {
                     LL = (x, y) => x.IndexOf(y) + 1
                 },
                 ["话"] = new BinaryFunction {
-                    NL = (x, y) => y.Select((a, i) => a == x ? i : -1).Where(a => a != -1).ToDList(),
-                    SS = (x, y) => x.Select((_, i) => x[i..].StartsWith(y) ? i : -1).Where(a => a != -1).ToDList(),
-                    SL = (x, y) => y.Select((a, i) => a == x ? i : -1).Where(a => a != -1).ToDList(),
-                    LN = (x, y) => x.Select((a, i) => a == y ? i : -1).Where(a => a != -1).ToDList(),
-                    LS = (x, y) => x.Select((a, i) => a == y ? i : -1).Where(a => a != -1).ToDList(),
-                    LL = (x, y) => y.Select((a, i) => a is DList d ? d.DListEquals(x) ?  i : -1 : -1).Where(a => a != -1).ToDList()
+                    NLambda = (x, f) => Range(1, x).Where(a => Truthy(f(new dynamic[] { a }))).ToList(),
+                    NLambdaParams = 1,
+                    SLambda = (x, f) => Range(1, x.Length).Where(a => Truthy(f(new dynamic[] { x[a] }))).ToList(),
+                    SLambdaParams = 1,
+                    LLambda = (x, f) => Range(1, x.Count).Where(a => Truthy(f(new dynamic[] { x[a] }))).ToList(),
+                    LLambdaParams = 1
                 },
                 ["小"] = new BinaryFunction {
                     NLambda = (x, f) => Range(1, x).Any(a => Truthy(f(new dynamic[] { a }))),
@@ -541,10 +567,10 @@ namespace TerseLang {
                     LL = (x, y) => new DList { x, y }
                 },
                 ["定"] = new BinaryFunction {
-                    NS = (x, y) => y[(int)x].ToString(),
-                    NL = (x, y) => y[(int)x],
-                    SN = (x, y) => x[(int)y].ToString(),
-                    LN = (x, y) => x[(int)y],
+                    NS = (x, y) => y[(int)((x % y.Length + y.Length-1) % y.Length)].ToString(),
+                    NL = (x, y) => y[(int)((x % y.Count + y.Count - 1) % y.Count)],
+                    SN = (x, y) => x[(int)((y % x.Length + x.Length - 1) % x.Length)].ToString(),
+                    LN = (x, y) => x[(int)((y % x.Count + x.Count - 1) % x.Count)],
                 },
                 ["听"] = new BinaryFunction {
                     SN = (x, y) => x.Split(y.ToString()).ToDList(),
@@ -573,6 +599,75 @@ namespace TerseLang {
                         }
                         return x;
                     },
+                },
+                //样也和下真现做大啊怎出点起天把开让给但谢着只些如家后儿多意别所话小自回然果发见心走定听觉
+                ["，样"] = new BinaryFunction {
+                    NN = (x, y) => ProgramState.ExecuteNth((int)y, x),
+                    SN = (x, y) => ProgramState.ExecuteNth((int)y, x),
+                    LN = (x, y) => ProgramState.ExecuteNth((int)y, x)
+                },
+                ["，也"] = new BinaryFunction {
+                    NN = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    NS = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    NL = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    SN = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    SS = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    SL = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    LN = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    LS = (x, y) => ProgramState.ExecutePrevious(x, y),
+                    LL = (x, y) => ProgramState.ExecutePrevious(x, y),
+                },
+                ["，和"] = new BinaryFunction {
+                    NLambda = (x, f) => {
+                        while(Truthy(f(new dynamic[] { x }))) {
+                            x = ProgramState.ExecutePrevious(x);
+                        }
+                        return x;
+                    },
+                    NLambdaParams = 1,
+                    SLambda = (x, f) => {
+                        while (Truthy(f(new dynamic[] { x }))) {
+                            x = ProgramState.ExecutePrevious(x);
+                        }
+                        return x;
+                    },
+                    SLambdaParams = 1,
+                    LLambda = (x, f) => {
+                        while (Truthy(f(new dynamic[] { x }))) {
+                            x = ProgramState.ExecutePrevious(x);
+                        }
+                        return x;
+                    },
+                    LLambdaParams = 1
+                },
+                ["，下"] = new BinaryFunction {
+                    NN = (x, y) => {
+                        double value = x;
+                        DList results = new();
+                        for(int i = 1; i <= (int)y; i++) {
+                            results.Add(value);
+                            value = ProgramState.ExecutePrevious(value, i);
+                        }
+                        return results;
+                    },
+                    SN = (x, y) => {
+                        string value = x;
+                        DList results = new();
+                        for (int i = 1; i <= (int)y; i++) {
+                            results.Add(value);
+                            value = ProgramState.ExecutePrevious(value, i);
+                        }
+                        return results;
+                    },
+                    LN = (x, y) => {
+                        DList value = x;
+                        DList results = new();
+                        for (int i = 1; i <= (int)y; i++) {
+                            results.Add(value);
+                            value = ProgramState.ExecutePrevious(value, i);
+                        }
+                        return results;
+                    }
                 }
             });
         }
@@ -658,7 +753,9 @@ namespace TerseLang {
         public Func<DList, double, dynamic> LN { get; set; }
         private dynamic Behavior(DList x, double y) {
             if ((LDepth.HasValue && x.Depth() > LDepth) || LN == null) {
-                    return x.Select(item => Behavior(item, y)).ToList();
+                var s = x.Select(item => Behavior(item, y)).ToList();
+                Console.WriteLine(s.GetType());
+                return s;
             }
             return LN(x, y);
         }

@@ -48,7 +48,7 @@ namespace TerseLang {
 
             var interpreter = new Interpreter(program, inputs.ToArray());
 
-            var result = interpreter.Interpret().LastOrDefault() ?? "";
+            var result = interpreter.Interpret();
 
             Console.WriteLine(result.ToString());
         }

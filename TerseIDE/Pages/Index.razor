@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Web
 @using TerseLang;
 @using TerseLang.Expressions;
 @inject NavigationManager NavManager
@@ -12,9 +13,11 @@
     <button class="topbutton" @onclick="@Run"><span class="oi oi-media-play s-24 text-white"></span> Run</button>
     <button class="topbutton" @onclick="@CopyLinkToClipboard"><span class="oi oi-link-intact s-24 text-white"></span> Link</button>
     <section>
-        
         <h2><b>CODE</b> - @this.code.Length byte@(this.code.Length == 1 ? "" : "s")</h2>
-        <textarea autofocus rows="@(Math.Max(code.Split('\n').Length, 5))" placeholder="code here" @bind="code" @bind:event="oninput"></textarea>
+        <div class="position-relative">
+            <textarea autofocus rows="@(Math.Max(code.Split('\n').Length, 5))" placeholder="code here" @bind="code" @bind:event="oninput" id="editor"></textarea>
+            <div id="backdrop">@((MarkupString)Markup(code))</div>
+        </div>
     </section>
 
     <section>
@@ -30,17 +33,25 @@
     </section>
     <section>
         <h2><b>OUTPUT</b></h2>
-        <textarea rows="@(Math.Max(output.Split('\n').Length, 2))" readonly @bind="output"></textarea>
+        <div class="textbox">@output</div>
     </section>
 
     <section>
         <h2><b>ERROR INFO</b></h2>
-        <textarea rows="@(Math.Max(error.Split('\n').Length, 2))" readonly @bind="error"></textarea>
+        <div class="textbox">@error</div>
     </section>
+    <section>
+        <h2><b>PARSER OUTPUT</b></h2>
+        <div style="display:inline-block; float:right; position:relative;" @onclick="@ShowParsed">
+            <h2><b>Generate</b> <span class="oi oi-media-play text-white"></span></h2>
+        </div>
+        <div class="textbox">@((MarkupString)System.Text.RegularExpressions.Regex.Replace(HttpUtility.HtmlEncode(parsed), "\r?\n|\r", "<br />"))</div>
+    </section>
+
 </div>
 <Documentation OnCodeCharClicked="@(c => { code += c; this.StateHasChanged(); })"></Documentation>
 @code {
-    string code = "", output = "", error = "";
+    string code = "", output = "", error = "", parsed = "";
     List<string> input = new List<string> { };
 
     protected override void OnInitialized() {
@@ -49,6 +60,8 @@
         if (queryStrings.TryGetValue("code", out var unprocessed)) {
             try {
                 var unprocessedCode = (string)unprocessed;
+                unprocessedCode = unprocessedCode.Replace('_', '/').Replace('-', '+');
+                Console.WriteLine(unprocessedCode);
                 var bytes = Convert.FromBase64String(unprocessedCode.PadRight(unprocessedCode.Length + (4 - unprocessedCode.Length % 4) % 4, '='));
                 code = string.Concat(bytes.Select(l => TerseLang.Constants.CHARSET[l]));
             }
@@ -59,14 +72,45 @@
         if(queryStrings.TryGetValue("in", out var inputs)) {
             var arr = (String[])inputs;
             input = arr.Select(x => {
+                x = x.Replace('_', '/').Replace('-', '+');
                 var bytes = Convert.FromBase64String(x.PadRight(x.Length + (4 - x.Length % 4) % 4, '='));
                 return Encoding.UTF8.GetString(bytes);
 
             }).ToList();
         }
-
+        StateHasChanged();
     }
 
+    string Markup(string str) {
+        string markup = "";
+        bool inStr = false;
+        foreach(var c in str) {
+            if (c == Constants.STRING_DELIMITER) {
+                inStr = !inStr;
+            }
+
+            string css = "markup ";
+            if (inStr)
+                css += "string";
+            else if (Constants.TIER_ZERO.Contains(c))
+                css += "tier0";
+            else if (Constants.TIER_ONE.Contains(c))
+                css += "tier1";
+            else if (Constants.TIER_TWO.Contains(c))
+                css += "tier2";
+            else if (Constants.TIER_UNLIMITED.Contains(c))
+                css += "tierunlimited";
+            else if (Constants.UNARY_FUNCTIONS.Contains(c))
+                css += "unary";
+            markup += $"<span class=\"{css}\">" + c + "</span>";
+        }
+        return markup;
+    }
+
+    void ShowParsed() {
+        List<TerseLang.Expressions.Expression> ast = Parser.Parse(code);
+        parsed = ObjectDumper.Dump(ast);
+    }
 
     void Run() {
         try {
@@ -83,7 +127,7 @@
                 }
 
             }).Where(x => x != null).ToArray();
-            var result = new Interpreter(code, inputs).Interpret().LastOrDefault();
+            var result = new Interpreter(code, inputs).Interpret();
             if(result != null) {
                 if (result is List<dynamic> d) output = d.DListToString();
                 else output = result.ToString();
@@ -101,8 +145,10 @@
     }
 
     void CopyLinkToClipboard() {
-        string encodedCode = Convert.ToBase64String(code.Select(x => (byte)TerseLang.Constants.CHARSET.IndexOf(x)).ToArray()).TrimEnd('=');
-        string[] encodedInputs = input.Select(x => "in=" + Convert.ToBase64String(Encoding.UTF8.GetBytes(x)).TrimEnd('=')).ToArray();
+        string encodedCode = Convert.ToBase64String(code.Select(x => (byte)TerseLang.Constants.CHARSET.IndexOf(x)).ToArray());
+        encodedCode = encodedCode.TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        string[] encodedInputs = input.Select(x => "in=" + Convert.ToBase64String(Encoding.UTF8.GetBytes(x))
+                                    .TrimEnd('=').Replace('+', '-').Replace('/', '_')).ToArray();
         string query = "?";
         if (encodedCode != "") query += "code=" + encodedCode;
         if (encodedInputs.Length != 0) query += (query == "?" ? "" : "&") + string.Join("&", encodedInputs);
