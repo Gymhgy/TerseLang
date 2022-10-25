@@ -250,6 +250,10 @@ namespace TerseLang {
                         ProgramState.Autofill1Name = "间";
                         return x;
                     }
+                },
+                //太该当经妈用打地再因呢女告最手前找行快而死先像等被从明中
+                ["，太"] = new UnaryFunction {
+
                 }
             });
 
@@ -437,8 +441,26 @@ namespace TerseLang {
                     NN = (x, y) => x - y
                 },
                 ["家"] = new BinaryFunction {
-                    //Cartesian product
-
+                    SN = (x, y) => {
+                        var result = new DList { "" };
+                        for (int i = 0; i < (int)y; i++) {
+                            result = (from seq in result
+                                      from c in x
+                                      select seq + c).ToDList();
+                        }
+                        return result;
+                    },
+                    SS = (x, y) => from xx in x from yy in y select xx + "" + yy,
+                    LN = (x, y) => {
+                        var result = new DList { new DList { } };
+                        for (int i = 0; i < (int)y; i++) {
+                            result = (from seq in result
+                                      from item in x
+                                      select seq.Concat(new[] { item })).ToDList();
+                        }
+                        return result;
+                    },
+                    LL = (x, y) => from xx in x from yy in y select new DList { xx, yy },
                 },
                 ["后"] = new BinaryFunction {
                     //Chunk
