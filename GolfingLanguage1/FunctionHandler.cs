@@ -112,8 +112,25 @@ namespace TerseLang {
                 },
                 ["打"] = new UnaryFunction {
                     N = x => Convert.ToString((int)x, 2),
-                    S = x => (double)Convert.ToInt32(x, 2),
-                    L = x => (double)Convert.ToInt32(string.Concat(x), 2),
+                    S = x => {
+                        int m = 1;
+                        double cur = 0;
+                        for (int i = x.Length - 1; i >= 0; i--) {
+                            cur += (x[i] - 48) * m;
+                            m *= 2;
+                        }
+                        return cur;
+                    },
+                    L = x => {
+                        int m = 1;
+                        double cur = 0;
+                        for (int i = x.Count - 1; i >= 0; i--) {
+                            cur += (x[i] is string ? double.Parse(x[i]) : x[i]) * m;
+                            m *= 2;
+                        }
+                        return cur;
+                    },
+                    Depth = 1
                 },
                 ["地"] = new UnaryFunction {
                     N = x => x.ToString().Length,
