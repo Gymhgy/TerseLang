@@ -79,5 +79,12 @@ namespace TerseLang.Tests {
             var result = interpreter.Interpret() as object;
             System.Console.WriteLine(result.Dump());
         }
+
+        [TestMethod]
+        public void Interpreter_HyperbinaryVectorization() {
+            var interpreter = new Interpreter("让该K让0k2Y打#)是'/", new dynamic[] { 3 });
+            var result = interpreter.Interpret() as object;
+            System.Console.WriteLine(result.Dump());
+        }
     }
 }

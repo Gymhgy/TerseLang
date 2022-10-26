@@ -227,7 +227,9 @@ namespace TerseLang {
 
                 },
                 ["明"] = new UnaryFunction {
-
+                    N = x => ProgramState.ExecutePrevious(x),
+                    S = x => ProgramState.ExecutePrevious(x),
+                    L = x => ProgramState.ExecutePrevious(x)
                 },
                 ["中"] = new UnaryFunction {
                     N = x => new DList { x },
@@ -456,7 +458,7 @@ namespace TerseLang {
                         for (int i = 0; i < (int)y; i++) {
                             result = (from seq in result
                                       from item in x
-                                      select seq.Concat(new[] { item })).ToDList();
+                                      select ((DList)seq).Concat(new[] { item })).ToDList();
                         }
                         return result;
                     },
@@ -532,9 +534,9 @@ namespace TerseLang {
                     LL = (x, y) => x.IndexOf(y) + 1
                 },
                 ["话"] = new BinaryFunction {
-                    NLambda = (x, f) => Range(1, x).Where(a => Truthy(f(new dynamic[] { a }))).ToList(),
+                    NLambda = (x, f) => Range(0, x-1).Select(a => f(new dynamic[] { a })).ToList(),
                     NLambdaParams = 1,
-                    SLambda = (x, f) => Range(1, x.Length).Where(a => Truthy(f(new dynamic[] { x[a] }))).ToList(),
+                    SLambda = (x, f) => Range(1, x.Length).Where(a => Truthy(f(new dynamic[] { x[a].ToString() }))).ToList(),
                     SLambdaParams = 1,
                     LLambda = (x, f) => Range(1, x.Count).Where(a => Truthy(f(new dynamic[] { x[a] }))).ToList(),
                     LLambdaParams = 1
@@ -617,6 +619,8 @@ namespace TerseLang {
                     SL = (x, y) => string.Join(x, y),
                     LN = (x, y) => string.Join(y.ToString(), x),
                     LS = (x, y) => string.Join(y, x),
+                    LDepth = 1,
+                    RDepth = 1
                 },
                 ["觉"] = new BinaryFunction {
                     SN = (x, y) => x.Replace(y.ToString(), ""),

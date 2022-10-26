@@ -9,7 +9,7 @@ using DList = System.Collections.Generic.List<dynamic>;
 namespace TerseLang {
     public static class DListExtensions {
         public static int Depth(this DList l) {
-            return 1 + l.Max(x => x is DList ? Depth(x) : 0);
+            return 1 + l.Append(0).Max(x => x is DList ? Depth(x) : 0);
         }
         public static bool DListEquals(this DList l1, DList l2) {
             return l1.Count == l2.Count && l1.Zip(l2, (a, b) => {
