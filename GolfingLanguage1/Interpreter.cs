@@ -34,15 +34,15 @@ namespace TerseLang {
         public dynamic ExecuteNth(int n) {
             int old = CurrentExpression;
             CurrentExpression = n;
-            var res = Evaluate(AST.ElementAt(n-1));
+            var res = Evaluate(AST.ElementAt( (n+AST.Count) % AST.Count ));
             CurrentExpression = old;
             return res;
         }
 
         public dynamic Interpret() {
             //For each expression in the pareser, evaluate them and add them to the list or results
-            CurrentExpression = AST.Count;
-            return Evaluate(AST.Last());
+            CurrentExpression = AST.Count-1;
+            return AST.Any() ? Evaluate(AST.Last()) : "Thanks for using Terse! But maybe run something other than an empty program...";
         }
 
 

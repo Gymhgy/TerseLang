@@ -10,7 +10,7 @@
 <div id="main">
     <h1 style="display:inline; margin-right: 20px">Terse</h1>
 
-    <button class="topbutton" @onclick="@Run"><span class="oi oi-media-play s-24 text-white"></span> Run</button>
+    <button class="topbutton" @onclick="@Run"><span class="@(running ? "spinner-border" : "oi oi-media-play s-24") text-white"></span> Run</button>
     <button class="topbutton" @onclick="@CopyLinkToClipboard"><span class="oi oi-link-intact s-24 text-white"></span> Link</button>
     <section>
         <h2><b>CODE</b> - @this.code.Length byte@(this.code.Length == 1 ? "" : "s")</h2>
@@ -112,7 +112,9 @@
         parsed = ObjectDumper.Dump(ast);
     }
 
-    void Run() {
+    bool running = false;
+    async void Run() {
+        running = true;
         try {
             error = "";
 
@@ -127,7 +129,7 @@
                 }
 
             }).Where(x => x != null).ToArray();
-            var result = new Interpreter(code, inputs).Interpret();
+            var result = await Task.Run(() => new Interpreter(code, inputs).Interpret());
             if(result != null) {
                 if (result is List<dynamic> d) output = d.DListToString();
                 else output = result.ToString();
@@ -142,6 +144,8 @@
 
             error = e.ToString();
         }
+        running = false;
+        StateHasChanged();
     }
 
     void CopyLinkToClipboard() {
