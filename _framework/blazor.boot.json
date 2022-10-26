@@ -53,7 +53,7 @@
       "System.Private.Xml.dll": "sha256-k1SqvvSeRDudQ1F5417JHY47\/gJmMr2z7RbjWGvZCWY=",
       "System.Private.Xml.Linq.dll": "sha256-NDsedCJpFk4gl16V2fpZQo43d8OsrXIhHSEBxLj0mXA=",
       "System.Runtime.CompilerServices.Unsafe.dll": "sha256-KnGWySQzKvUilRoxb7PASlEVdFAEt4\/5Wm8ugh5TLCw=",
-      "System.Runtime.dll": "sha256-Z4rsBVBORz4RI3bvLuLYy2gb76stqL+CcsiErmQ9zIg=",
+      "System.Runtime.dll": "sha256-rXBIO6ZZfgnIaJSHCmVNimxrAGy1h8BpSKAfk7dbkLA=",
       "System.Runtime.Numerics.dll": "sha256-wcOhGQspP7B5w8sw85fiDvb5PoqoVglL1w6McQI9aos=",
       "System.Runtime.Serialization.Formatters.dll": "sha256-3a5O7rdKGFKGMhKP7IiC55ZB7wu95diy9IQsxjqD4OM=",
       "System.Runtime.Serialization.Primitives.dll": "sha256-SdI5LdDlLWcScpQMjrXtZxJycJFs0Y6EbfTEsZymWFc=",
@@ -63,7 +63,7 @@
       "System.Text.Json.dll": "sha256-VpnjjB102\/oXAusoz5DmFPRcRfp7JcPvp8ZEvCBD4yM=",
       "System.Text.RegularExpressions.dll": "sha256-U2DpO1SfN1yNbRpzB4aVkpxM03v0v21d6vmBDDoYtEI=",
       "System.Web.HttpUtility.dll": "sha256-zywdW8bK0Cf4+UYLCbcCovMRhhbJ57hpoL3lOAinf8M=",
-      "TerseIDE.dll": "sha256-9WbsedIbFNMaDiBfHP6MepVJ2KYztMS4QrbNmuFiaus=",
+      "TerseIDE.dll": "sha256-POOdgKk28xArTOi6NvssagLViW1HgjAuWqmCAA8KfCM=",
       "TerseLang.dll": "sha256-vM506oi7xA+r5wSAxewQvAx1xi5v3rkaW9ri8Rt053Q="
     },
     "extensions": null,
