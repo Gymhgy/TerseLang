@@ -14,7 +14,7 @@
     <button class="topbutton" @onclick="@CopyLinkToClipboard"><span class="oi oi-link-intact s-24 text-white"></span> Link</button>
     <section>
         <h2><b>CODE</b> - @this.code.Length byte@(this.code.Length == 1 ? "" : "s")</h2>
-        <div class="position-relative">
+        <div class="position-relative" id="edit-wrapper">
             <textarea autofocus rows="@(Math.Max(code.Split('\n').Length, 5))" placeholder="code here" @bind="code" @bind:event="oninput" id="editor"></textarea>
             <div id="backdrop">@((MarkupString)Markup(code))</div>
         </div>
