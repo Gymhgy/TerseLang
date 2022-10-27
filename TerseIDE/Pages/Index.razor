@@ -85,14 +85,34 @@
     string Markup(string str) {
         string markup = "";
         bool inStr = false;
+        int chars = 0;
         foreach(var c in str) {
+            string css = "markup ";
             if (c == Constants.STRING_DELIMITER) {
                 inStr = !inStr;
-            }
-
-            string css = "markup ";
-            if (inStr)
                 css += "string";
+                chars = -1;
+            }
+            else if (inStr) {
+                css += "string";
+                chars--;
+                if (chars == 0) inStr = false;
+            }
+            else if (c == Constants.SINGLE_CHAR_STRING) {
+                inStr = true;
+                css += "string";
+                chars = 1;
+            }
+            else if (c == Constants.DOUBLE_CHAR_STRING) {
+                inStr = true;
+                css += "string";
+                chars = 2;
+            }
+            else if (c == Constants.TRIPLE_CHAR_STRING) {
+                inStr = true;
+                css += "string";
+                chars = 3;
+            }
             else if (Constants.TIER_ZERO.Contains(c))
                 css += "tier0";
             else if (Constants.TIER_ONE.Contains(c))
