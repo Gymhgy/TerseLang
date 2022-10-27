@@ -50,6 +50,7 @@
 
 </div>
 <Documentation OnCodeCharClicked="@(c => { code += c; this.StateHasChanged(); })"></Documentation>
+
 @code {
     string code = "", output = "", error = "", parsed = "";
     List<string> input = new List<string> { };
@@ -113,8 +114,10 @@
     }
 
     bool running = false;
-    async void Run() {
+    int timeout = 10000;
+    async Task Run() {
         running = true;
+        output = "";
         try {
             error = "";
 
@@ -129,11 +132,20 @@
                 }
 
             }).Where(x => x != null).ToArray();
-            var result = await Task.Run(() => new Interpreter(code, inputs).Interpret());
-            if(result != null) {
-                if (result is List<dynamic> d) output = d.DListToString();
-                else output = result.ToString();
+
+
+            try {
+                var result = await Task.Run(() => new Interpreter(code, inputs).Interpret()).WaitAsync(TimeSpan.FromMilliseconds(timeout));
+                StateHasChanged();
+                if (result != null) {
+                    if (result is List<dynamic> d) output = d.DListToString();
+                    else output = result.ToString();
+                }
             }
+            catch(TimeoutException) {
+                error = "Timeout. Code took more than " + (timeout / 1000d) + " seconds to execute.";
+            }
+
         }
         catch (TerseLang.InternalErrorException e) {
             Console.WriteLine(e);

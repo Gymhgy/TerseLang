@@ -5,7 +5,7 @@
   "unary": [
     {
       "name": "太",
-      "description": ["Absolute Value"],
+      "description": [ "Absolute Value" ],
       "overloads": {
         "L": "Vectorizes"
       }
@@ -108,7 +108,7 @@
     },
     {
       "name": "最",
-      "description": ["Square"],
+      "description": [ "Square" ],
       "overloads": {
         "L": "Vectorizes"
       }
@@ -210,30 +210,22 @@
     {
       "name": "从",
       "description": [ "" ],
-      "overloads": {
-
-      }
+      "details": ""
     },
     {
       "name": "明",
       "description": [ "Execute previous expression, with caller as input" ],
-      "overloads": {
-
-      }
+      "details": ""
     },
     {
       "name": "中",
       "description": [ "Wrap (x -> [x])" ],
-      "overloads": {
-
-      }
+      "details": ""
     },
     {
       "name": "诉",
       "description": [ "Store into variable 间 and set as first autofill" ],
-      "overloads": {
-
-      }
+      "details": ""
     }
   ],
   "binary": [
@@ -257,7 +249,7 @@
       "name": "和",
       "description": [ "" ],
       "overloads": {
-        
+
       },
       "tiers": [ "C", "c", "这" ]
     },
@@ -350,7 +342,7 @@
       "name": "天",
       "description": [ "Less than" ],
       "overloads": {
-        
+
       },
       "tiers": [ "N", "n", "要" ]
     },
@@ -431,17 +423,13 @@
     {
       "name": "些",
       "description": [ "Not equals" ],
-      "overloads": {
-
-      },
+      "details": "",
       "tiers": [ "W", "w", "想" ]
     },
     {
       "name": "如",
       "description": [ "Subtract" ],
-      "overloads": {
-
-      },
+      "details": "",
       "tiers": [ "X", "x", "能" ]
     },
     {
@@ -544,7 +532,7 @@
     },
     {
       "name": "然",
-      "description": [ "" ],
+      "description": [],
       "overloads": {
       },
       "tiers": [ "-", "￥", "还" ]
@@ -579,7 +567,7 @@
       "name": "心",
       "description": [ "Reduce" ],
       "overloads": {
-        
+
       },
       "tiers": [ "<", "你", "都" ]
     },

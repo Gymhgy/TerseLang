@@ -81,7 +81,7 @@
     display: none;
 }
 
-#docs-body code {
+.tier {
     background-color: #121212;
     border-radius: 2px;
     padding: 0 4px;

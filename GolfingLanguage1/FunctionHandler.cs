@@ -386,18 +386,7 @@ namespace TerseLang {
                 },
                 ["只"] = new BinaryFunction {
                     NN = (x, y) => {
-                        DList combos = new DList();
-                        DList source = Range(1, x);
-                        void Iterate(IEnumerable<int> indices, int s, int j, int n) {
-                            if (j == n) {
-                                combos.Add(indices.Select(l => source[l]).ToList());
-                            }
-                            else for (int i = s; i < x; i++) {
-                                    Iterate(indices.Prepend(i), i + 1, j + 1, n);
-                                }
-                        }
-                        Iterate(Enumerable.Empty<int>(), 0, 0, (int)y);
-                        return combos;
+                        return 0d;
                     },
                     SN = (x, y) => {
                         DList combos = new DList();

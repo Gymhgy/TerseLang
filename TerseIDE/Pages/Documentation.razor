@@ -17,10 +17,26 @@
 
         <article id="docs-body">
             @((MarkupString)string.Join("<br>", @docPage.Intro))
+            @{int i = 0;}
             @foreach (var func in docPage.Unary) {
                 if (func.Description[0] != "") {
                     <div class="func-header" @onclick="@(() => OnCodeCharClicked(func.Name[0].ToString()))">@func.Name</div>
                     <div>@((MarkupString)string.Join("<br>", @func.Description))</div>
+                    {Console.WriteLine(func.Name);}
+                    if(func.Overloads.Any()) {
+                        <button class="btn btn-outline-light btn-sm mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#details@(++i)" aria-expanded="false">
+                            Details
+                        </button>
+                        <div class="collapse card card-body text-white" style="background:#121212" id="details@(i)">
+                            @foreach(var (k,v) in func.Overloads) {
+                                <div>
+                                    <code>@FromShorthand(k,func.Name)</code>
+                                     <div>@((MarkupString)System.Text.RegularExpressions.Regex.Replace(v,"`(.+?)`","<code>$1</code>"))</div>
+                                </div>
+                            }
+                        </div>
+                    }
+          
                 }
             }
             @foreach (var func in docPage.Binary) {
@@ -29,11 +45,25 @@
                         @func.Name
                         <span style="float:right">
                             @foreach (var tChar in func.Tiers) {
-                                <code @onclick="@(() => OnCodeCharClicked(tChar))" @onclick:stopPropagation="true">@tChar</code>
+                                <code class="tier" @onclick="@(() => OnCodeCharClicked(tChar))" @onclick:stopPropagation="true">@tChar</code>
                             }
                         </span>
                     </div>
                     <div>@((MarkupString)string.Join("<br>", @func.Description))</div>
+
+                    if(func.Overloads.Any()) {
+                        <button class="btn btn-outline-light btn-sm mt-1" type="button" data-bs-toggle="collapse" data-bs-target="#details@(func.Name)" aria-expanded="false">
+                            Details
+                        </button>
+                        <div class="collapse card card-body text-white" style="background:#121212" id="details@(func.Name)">
+                            @foreach(var (k,v) in func.Overloads) {
+                                <div>
+                                    <code>@FromShorthand(k,func.Name)</code>
+                                    <div>@((MarkupString)System.Text.RegularExpressions.Regex.Replace(v,"`(.+?)`","<code>$1</code>"))</div>
+                                </div>
+                            }
+                        </div>
+                    }
                 }
             }
         </article>
@@ -43,6 +73,21 @@
 
 
 @code {
+    Dictionary<string, string> shorthands = new Dictionary<string, string> {
+        {"N", "Number"},
+        {"S", "String"},
+        {"L", "List"},
+        {"A", "Any"},
+        {"f", "Function"},
+        {"p", "Predicate"}
+    };
+    string FromShorthand(string shorthand, string func) {
+        string[] args = shorthand.Split(',');
+        var argsStr = args.Select((a, i) => $"[{"xy"[i]}: {string.Join("/", a.Split('/').Select(c => shorthands[c]))}]").ToList();
+        if (argsStr.Count == 1) argsStr.Add("");
+        return string.Join(func, argsStr);
+    }
+
     [Parameter]
     public Action<string> OnCodeCharClicked { get; set; }
     DocPage docPage;
@@ -54,13 +99,15 @@
     public class UnaryFunc {
         public string Name { get; set; }
         public string[] Description { get; set; }
-        public string Details { get; set; }
+        public Dictionary<string, string> Overloads { get; set; }
+
     }
     public class BinaryFunc {
         public string Name { get; set; }
         public string[] Description { get; set; }
-        public string Details { get; set; }
         public string[] Tiers { get; set; }
+        public Dictionary<string, string> Overloads { get; set; }
+
     }
 
     protected async override Task OnInitializedAsync() {
