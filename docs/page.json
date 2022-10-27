@@ -257,7 +257,7 @@
       "name": "和",
       "description": [ "" ],
       "overloads": {
-        
+
       },
       "tiers": [ "C", "c", "这" ]
     },
@@ -350,7 +350,7 @@
       "name": "天",
       "description": [ "Less than" ],
       "overloads": {
-        
+
       },
       "tiers": [ "N", "n", "要" ]
     },
@@ -579,7 +579,7 @@
       "name": "心",
       "description": [ "Reduce" ],
       "overloads": {
-        
+
       },
       "tiers": [ "<", "你", "都" ]
     },
@@ -610,13 +610,36 @@
       "tiers": [ "@", "是", "生" ]
     },
     {
-      "name": "觉",
-      "description": [ "Replace" ],
+      "name": "，样",
+      "description": [ "Execute the nth expression, with caller as input" ],
       "overloads": {
-        "S,S": "Replace all occurences of `y` within `x` with \"\"",
-        "S,L": "For each consecutive pair `[a,b]` in `y`, replace all occurences of `a` within `x` with `b`"
+
       },
-      "tiers": [ "\\", "了", "时" ]
+      "tiers": [ "，A", "，a", "，不" ]
+    },
+    {
+      "name": "，也",
+      "description": [ "Execute previous expression, with caller and argument as inputs" ],
+      "overloads": {
+
+      },
+      "tiers": [ "，B", "，b", "，们" ]
+    },
+    {
+      "name": "，和",
+      "description": [ "Repeatedly execute previous expression until a condition is met" ],
+      "overloads": {
+        "A,p": "Repeatedly execute previous expression with `x` as initial input, until `p` is satisfied."
+      },
+      "tiers": [ "，C", "，c", "，这" ]
+    },
+    {
+      "name": "，下",
+      "description": [ "Repeatedly execute previous expression specified amount of times." ],
+      "overloads": {
+        "A,N": "Repeatedly execute previous expression with `x` as initial input `y` times."
+      },
+      "tiers": [ "，D", "，d", "，一" ]
     }
   ]
 }
