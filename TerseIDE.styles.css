@@ -162,3 +162,13 @@ textarea[b-kvuk1t29nt], .textbox[b-kvuk1t29nt] {
     z-index: 2;
     position: relative;
 }
+
+#edit-wrapper[b-kvuk1t29nt]::before {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-color:#121212;
+    content: "";
+}
