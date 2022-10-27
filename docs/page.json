@@ -637,7 +637,7 @@
       "name": "，下",
       "description": [ "Repeatedly execute previous expression specified amount of times." ],
       "overloads": {
-        "A,N": "Repeatedly execute previous expression with `x` as initial input `y` times."
+        "A,N": "Repeatedly execute previous expression with `x` as initial input `y` times, collecting intermediate results."
       },
       "tiers": [ "，D", "，d", "，一" ]
     }
