@@ -151,8 +151,4 @@ namespace TerseLang {
             return val;
         }
     }
-
-    public enum Modifier {
-        Vectorize
-    }
 }

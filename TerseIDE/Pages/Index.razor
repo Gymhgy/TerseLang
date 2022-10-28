@@ -10,7 +10,7 @@
 <div id="main">
     <h1 style="display:inline; margin-right: 20px">Terse</h1>
 
-    <button class="topbutton" @onclick="@Run"><span class="@(running ? "spinner-border" : "oi oi-media-play s-24") text-white"></span> Run</button>
+    <button class="topbutton" @onclick="@Run"><span class="@(running ? "spinner-border" : "oi oi-media-play") text-white" style="height:24px;width:24px;"></span> Run</button>
     <button class="topbutton" @onclick="@CopyLinkToClipboard"><span class="oi oi-link-intact s-24 text-white"></span> Link</button>
     <section>
         <h2><b>CODE</b> - @this.code.Length byte@(this.code.Length == 1 ? "" : "s")</h2>
