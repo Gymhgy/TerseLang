@@ -6,7 +6,7 @@ Welcome to Terse, the shortest coding language. Terse aims to be able to write p
 Go to the [wiki](https://github.com/Gymhgy/TerseLang/wiki). It has all the info you need to construct programs in Terse.
 
 ## Run Online!
-Work in Progress Online Interpreter: https://gymhgy.github.io/TerseIDE/
+Work in Progress Online Interpreter: https://gymhgy.github.io/TerseLang/
 
 ## How do I run this from the command line?
 Non-windows: you will need to have mono installed
