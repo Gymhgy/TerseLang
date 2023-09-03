@@ -27,7 +27,7 @@ namespace TerseLang {
             }
             return func.Replace(last, replaced);
         }
-
+            
         public static int GetTier(String func) {
             func = func.Last().ToString();
             if (IsUnary(func)) return 0;
@@ -337,26 +337,26 @@ namespace TerseLang {
                     NN = (x, y) => x < y ? 1 : 0
                 },
                 ["把"] = new BinaryFunction {
-                    NN = (x, y) => x == 0 ? x : y,
-                    NS = (x, y) => x == 0 ? x : y,
-                    NL = (x, y) => x == 0 ? x : y,
-                    SN = (x, y) => x == "" ? x : y,
-                    SS = (x, y) => x == "" ? x : y,
-                    SL = (x, y) => x == "" ? x : y,
-                    LN = (x, y) => x.Count == 0 ? x : y,
-                    LS = (x, y) => x.Count == 0 ? x : y,
-                    LL = (x, y) => x.Count == 0 ? x : y
+                    NLambda = (x, f) => x == 0 ? x : f(new dynamic[0]),
+                    NLambdaParams = 0,
+                    NDefaultLambda = _ => ProgramState.Autofill_1,
+                    SLambda = (x, f) => x == "" ? x : f(new dynamic[0]),
+                    SLambdaParams = 0,
+                    SDefaultLambda = _ => ProgramState.Autofill_1,
+                    LLambda = (x, f) => x.Count == 0 ? x : f(new dynamic[0]),
+                    LLambdaParams = 0,
+                    LDefaultLambda = _ => ProgramState.Autofill_1
                 },
                 ["开"] = new BinaryFunction {
-                    NN = (x, y) => x != 0 ? x : y,
-                    NS = (x, y) => x != 0 ? x : y,
-                    NL = (x, y) => x != 0 ? x : y,
-                    SN = (x, y) => x != "" ? x : y,
-                    SS = (x, y) => x != "" ? x : y,
-                    SL = (x, y) => x != "" ? x : y,
-                    LN = (x, y) => x.Count != 0 ? x : y,
-                    LS = (x, y) => x.Count != 0 ? x : y,
-                    LL = (x, y) => x.Count != 0 ? x : y
+                    NLambda = (x, f) => x != 0 ? x : f(new dynamic[0]),
+                    NLambdaParams = 0,
+                    NDefaultLambda = _ => ProgramState.Autofill_1,
+                    SLambda = (x, f) => x != "" ? x : f(new dynamic[0]),
+                    SLambdaParams = 0,
+                    SDefaultLambda = _ => ProgramState.Autofill_1,
+                    LLambda = (x, f) => x.Count != 0 ? x : f(new dynamic[0]),
+                    LLambdaParams = 0,
+                    LDefaultLambda = _ => ProgramState.Autofill_1
                 },
                 ["让"] = new BinaryFunction {
                     NLambda = (x, f) => Enumerable.Range(1, (int)x).Select(a => f(new dynamic[] { (double)a })).ToList(),
@@ -575,7 +575,8 @@ namespace TerseLang {
                     LN = (x, y) => (int)y < 0 ? x.SkipLast((int)-y) : x.Skip((int)y).ToList()
                 },
                 ["心"] = new BinaryFunction {
-                    NLambda = (x, f) => Range(1, (int)x).Aggregate((a, b) => f(new dynamic[] { a, b })),
+                    NLambda = (x, f) => Enumerable.Aggregate<dynamic, dynamic>(Range(1, (int)x), ProgramState.Autofill_1, 
+                        new Func<dynamic,dynamic,dynamic>((a, b) => f(new dynamic[] { a, b }))),
                     NLambdaParams = 2,
                     NDefaultLambda = x => x[0] + x[1],
                     SLambda = (x, f) => x.Aggregate("", (a, b) => f(new dynamic[] { a.ToString(), b.ToString() })),

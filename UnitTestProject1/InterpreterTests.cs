@@ -63,7 +63,10 @@ namespace TerseLang.Tests {
         public void Interpreter_FizzBuzz() {
             var interpreter = new Interpreter("电让一3我5u\"Fizz‘Buzz\"死开】而", new dynamic[0]);
             var result = interpreter.Interpret() as object;
-            System.Console.WriteLine(result.Dump());
+
+            var expected = string.Join("\n",Enumerable.Range(1, 100).Select(x => x%15==0?"FizzBuzz":x%5==0?"Buzz":x%3==0?"Fizz":x+""));
+
+            Assert.IsTrue(D.Equals(result, expected), result.Dump());
         }
 
         [TestMethod]
@@ -82,7 +85,14 @@ namespace TerseLang.Tests {
 
         [TestMethod]
         public void Interpreter_HyperbinaryVectorization() {
-            var interpreter = new Interpreter("让该K让0k2Y打#)是'/", new dynamic[] { 3 });
+            var interpreter = new Interpreter("0k2Y打#哦让该明^'/^明", new dynamic[] { 3 });
+            var result = interpreter.Interpret() as object;
+            System.Console.WriteLine(result.Dump());
+        }
+
+        [TestMethod]
+        public void Interpreter_ReduceLoop() {
+            var interpreter = new Interpreter("3心地儿哦", new dynamic[] { "abacadabra" });
             var result = interpreter.Interpret() as object;
             System.Console.WriteLine(result.Dump());
         }
